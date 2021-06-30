@@ -160,7 +160,7 @@ export async function fetchPoolTransactions(
     }
   }
 
-  const mints = data.mints.map((m) => {
+  const mints = data?.mints.map((m) => {
     return {
       type: TransactionType.MINT,
       hash: m.transaction.id,
@@ -175,7 +175,7 @@ export async function fetchPoolTransactions(
       amountToken1: parseFloat(m.amount1),
     }
   })
-  const burns = data.burns.map((m) => {
+  const burns = data?.burns.map((m) => {
     return {
       type: TransactionType.BURN,
       hash: m.transaction.id,
@@ -191,7 +191,7 @@ export async function fetchPoolTransactions(
     }
   })
 
-  const swaps = data.swaps.map((m) => {
+  const swaps = data?.swaps.map((m) => {
     return {
       type: TransactionType.SWAP,
       hash: m.transaction.id,

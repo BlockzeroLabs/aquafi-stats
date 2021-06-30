@@ -16,7 +16,7 @@ import { formatDollarAmount, formatAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
-import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
+import { usePoolDatas, usePoolChartData } from 'state/pools/hooks'
 import LineChart from 'components/LineChart/alt'
 import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
@@ -79,7 +79,7 @@ export default function PoolPage({
   // token data
   const poolData = usePoolDatas([address])[0]
   const chartData = usePoolChartData(address)
-  const transactions = usePoolTransactions(address)
+  // const transactions = usePoolTransactions(address)
 
   const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
@@ -177,7 +177,7 @@ export default function PoolPage({
                 </StyledInternalLink>
               </ResponsiveRow>
             </AutoColumn>
-            <AutoColumn gap="lg">
+            {/* <AutoColumn gap="lg">
               <RowFixed>
                 <StyledExternalLink
                   href={`https://app.uniswap.org/#/add/${poolData.token0.id}/${poolData.token1.id}/${poolData.feeTier}`}
@@ -197,7 +197,7 @@ export default function PoolPage({
                   </ButtonPrimary>
                 </StyledExternalLink>
               </RowFixed>
-            </AutoColumn>
+            </AutoColumn> */}
           </ResponsiveRow>
           <ContentLayout>
             <DarkGreyCard>
@@ -232,16 +232,13 @@ export default function PoolPage({
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>TVL</TYPE.main>
                   <TYPE.label fontSize="24px">{formatDollarAmount(parseFloat(poolData.totalValueLocked))}</TYPE.label>
-                  <Percent
-                    value={
-                      0
-                      // poolData.tvlUSDChange
-                    }
-                  />
+                  <Percent value={parseFloat(poolData.totalValueLocked)} />
                 </AutoColumn>
                 <AutoColumn gap="4px">
-                  <TYPE.main fontWeight={400}>Volume 24h</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(parseFloat(poolData.totalValueLocked))}</TYPE.label>
+                  <TYPE.main fontWeight={400}>Aqua Premium</TYPE.main>
+                  <TYPE.label fontSize="24px">
+                    {formatDollarAmount(parseFloat(poolData.aquaPremiumCollectedUSD))}
+                  </TYPE.label>
                   <Percent
                     value={
                       0
@@ -250,12 +247,8 @@ export default function PoolPage({
                   />
                 </AutoColumn>
                 <AutoColumn gap="4px">
-                  <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
-                  <TYPE.label fontSize="24px">
-                    {formatDollarAmount(
-                      (parseFloat(poolData.totalValueLocked) * parseFloat(poolData.feeTier)) / 1000000
-                    )}
-                  </TYPE.label>
+                  <TYPE.main fontWeight={400}>Premium %</TYPE.main>
+                  <TYPE.label fontSize="24px">{parseFloat(poolData.aquaPremium) / 100}%</TYPE.label>
                 </AutoColumn>
               </AutoColumn>
             </DarkGreyCard>
@@ -326,10 +319,10 @@ export default function PoolPage({
               )}
             </DarkGreyCard>
           </ContentLayout>
-          <TYPE.main fontSize="24px">Transactions</TYPE.main>
+          {/* <TYPE.main fontSize="24px">Transactions</TYPE.main>
           <DarkGreyCard>
             {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
-          </DarkGreyCard>
+          </DarkGreyCard> */}
         </AutoColumn>
       ) : (
         <Loader />

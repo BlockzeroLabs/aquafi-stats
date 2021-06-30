@@ -197,10 +197,10 @@ export default function Home() {
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>
         </RowBetween>
         <PoolTable poolDatas={poolDatas} />
-        <RowBetween>
-          <TYPE.main>Transactions</TYPE.main>
+        {/* <RowBetween> */}
+        {/* <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} /> : null}
+        {transactions ? <TransactionsTable transactions={transactions} /> : null} */}
       </AutoColumn>
     </PageWrapper>
   )

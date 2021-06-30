@@ -19,8 +19,6 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
       whitelistedPools(where: {id_in: ${poolString}},` +
     (block ? `block: {number: ${block}} ,` : ``) +
     ` orderBy: totalValueLocked, orderDirection: desc) {
-      
-
       id
     createdAtTimestamp
     createdAtBlockNumber

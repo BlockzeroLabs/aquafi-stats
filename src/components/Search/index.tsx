@@ -218,7 +218,10 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
     [showWatchlist, tokens, watchListTokenData]
   )
   const poolForList = useMemo(
-    () => (showWatchlist ? watchListPoolData ?? [] : pools.sort((p0, p1) => (p0.volumeUSD > p1.volumeUSD ? -1 : 1))),
+    () =>
+      showWatchlist
+        ? watchListPoolData ?? []
+        : pools.sort((p0, p1) => (p0.totalValueLocked > p1.totalValueLocked ? -1 : 1)),
     [pools, showWatchlist, watchListPoolData]
   )
 
@@ -341,37 +344,37 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               </HideSmall>
             </ResponsiveGrid>
             {poolForList
-              .filter((p) => !POOL_HIDE.includes(p.address))
+              .filter((p) => !POOL_HIDE.includes(p.id))
               .slice(0, poolsShown)
               .map((p, i) => {
                 return (
-                  <HoverRowLink onClick={() => handleNav('/pools/' + p.address)} key={i}>
+                  <HoverRowLink onClick={() => handleNav('/pools/' + p.id)} key={i}>
                     <ResponsiveGrid key={i}>
                       <RowFixed>
-                        <DoubleCurrencyLogo address0={p.token0.address} address1={p.token1.address} />
+                        <DoubleCurrencyLogo address0={p.token0.id} address1={p.token1.id} />
                         <TYPE.label ml="10px" style={{ whiteSpace: 'nowrap' }}>
                           <HoverInlineText maxCharacters={12} text={`${p.token0.symbol} / ${p.token1.symbol}`} />
                         </TYPE.label>
-                        <GreyBadge ml="10px">{feeTierPercent(p.feeTier)}</GreyBadge>
+                        <GreyBadge ml="10px">{feeTierPercent(parseFloat(p.feeTier))}</GreyBadge>
                         <SavedIcon
                           id="watchlist-icon"
                           size={'16px'}
                           style={{ marginLeft: '10px' }}
-                          fill={savedPools.includes(p.address)}
+                          fill={savedPools.includes(p.id)}
                           onClick={(e) => {
                             e.stopPropagation()
-                            addSavedPool(p.address)
+                            addSavedPool(p.id)
                           }}
                         />
                       </RowFixed>
                       <HideSmall>
-                        <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
+                        <TYPE.label textAlign="end">{formatDollarAmount(parseFloat(p.totalValueLocked))}</TYPE.label>
                       </HideSmall>
                       <HideSmall>
-                        <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
+                        <TYPE.label textAlign="end">{formatDollarAmount(parseFloat(p.totalValueLocked))}</TYPE.label>
                       </HideSmall>
                       <HideSmall>
-                        <TYPE.label textAlign="end">{formatDollarAmount(p.token0Price)}</TYPE.label>
+                        <TYPE.label textAlign="end">{formatDollarAmount(parseFloat(p.token0Price))}</TYPE.label>
                       </HideSmall>
                     </ResponsiveGrid>
                   </HoverRowLink>

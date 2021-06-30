@@ -187,11 +187,11 @@ export default function Home() {
             </RowBetween>
           </DarkGreyCard>
         </HideSmall>
-        <RowBetween>
+        {/* <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
           <StyledInternalLink to="/tokens">Explore</StyledInternalLink>
         </RowBetween>
-        <TokenTable tokenDatas={formattedTokens} />
+        <TokenTable tokenDatas={formattedTokens} /> */}
         <RowBetween>
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>

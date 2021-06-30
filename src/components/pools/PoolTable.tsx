@@ -65,28 +65,28 @@ const SORT_FIELD = {
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
   return (
-    <LinkWrapper to={'/pools/' + poolData.address}>
+    <LinkWrapper to={'/pools/' + poolData.id}>
       <ResponsiveGrid>
         <Label fontWeight={400}>{index + 1}</Label>
         <Label fontWeight={400}>
           <RowFixed>
-            <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} />
+            <DoubleCurrencyLogo address0={poolData.token0.id} address1={poolData.token1.id} />
             <TYPE.label ml="8px">
               {poolData.token0.symbol}/{poolData.token1.symbol}
             </TYPE.label>
             <GreyBadge ml="10px" fontSize="14px">
-              {feeTierPercent(poolData.feeTier)}
+              {feeTierPercent(parseFloat(poolData.feeTier))}
             </GreyBadge>
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.tvlUSD)}
+          {formatDollarAmount(parseFloat(poolData.totalValueLocked))}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSD)}
+          {formatDollarAmount(parseFloat(poolData.aquaPremiumCollectedUSD))}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSDWeek)}
+          {parseFloat(poolData.aquaPremium) / 100}%
         </Label>
       </ResponsiveGrid>
     </LinkWrapper>
@@ -117,7 +117,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   const sortedPools = useMemo(() => {
     return poolDatas
       ? poolDatas
-          .filter((x) => !!x && !POOL_HIDE.includes(x.address))
+          .filter((x) => !!x && !POOL_HIDE.includes(x.id))
           .sort((a, b) => {
             if (a && b) {
               return a[sortField as keyof PoolData] > b[sortField as keyof PoolData]
@@ -155,22 +155,28 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
       {sortedPools.length > 0 ? (
         <AutoColumn gap="16px">
           <ResponsiveGrid>
-            <Label color={theme.text2}>#</Label>
+            {' '}
+            <Label color={theme.text2}>#</Label>{' '}
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
-              Pool {arrow(SORT_FIELD.feeTier)}
-            </ClickableText>
+              {' '}
+              Pool {arrow(SORT_FIELD.feeTier)}{' '}
+            </ClickableText>{' '}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-              TVL {arrow(SORT_FIELD.tvlUSD)}
-            </ClickableText>
+              {' '}
+              TVL {arrow(SORT_FIELD.tvlUSD)}{' '}
+            </ClickableText>{' '}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-              Volume 24H {arrow(SORT_FIELD.volumeUSD)}
-            </ClickableText>
+              {' '}
+              Aqua Premium {arrow(SORT_FIELD.volumeUSD)}{' '}
+            </ClickableText>{' '}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-              Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
-            </ClickableText>
+              {' '}
+              Premium % {arrow(SORT_FIELD.volumeUSDWeek)}{' '}
+            </ClickableText>{' '}
           </ResponsiveGrid>
           <Break />
           {sortedPools.map((poolData, i) => {
+            console.log('SORTED POOlS======', sortedPools)
             if (poolData) {
               return (
                 <React.Fragment key={i}>

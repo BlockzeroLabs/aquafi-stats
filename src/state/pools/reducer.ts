@@ -11,48 +11,47 @@ export interface Pool {
   token1: SerializedToken
 }
 
+// export interface PoolData2 {
+//   // basic token info
+//   feeTier: number
+//   token0: {
+//     symbol: string
+//   }
+//   token1: {
+//     symbol: string
+//   }
+//   totalValueLocked: number
+//   aquaPremium: number
+//   aquaPremiumCollectedUSD: number
+// }
 export interface PoolData {
-  // basic token info
-  address: string
-  feeTier: number
+  id: string
+  createdAtTimestamp: string
 
   token0: {
-    name: string
+    id: string
     symbol: string
-    address: string
-    decimals: number
-    derivedETH: number
+    name: string
+    decimals: string
   }
-
   token1: {
-    name: string
+    id: string
     symbol: string
-    address: string
-    decimals: number
-    derivedETH: number
+    name: string
+    decimals: string
   }
+  feeTier: string
+  token0Price: string
+  token1Price: string
+  aquaPremium: string
 
-  // for tick math
-  liquidity: number
-  sqrtPrice: number
-  tick: number
-
-  // volume
-  volumeUSD: number
-  volumeUSDChange: number
-  volumeUSDWeek: number
-
-  // liquidity
-  tvlUSD: number
-  tvlUSDChange: number
-
-  // prices
-  token0Price: number
-  token1Price: number
-
-  // token amounts
-  tvlToken0: number
-  tvlToken1: number
+  totalValueLockedToken0: string
+  totalValueLockedToken1: string
+  totalValueLocked: string
+  aquaPremiumCollected: string
+  aquaPremiumCollectedUSD: string
+  stakeCount: string
+  unstakeCount: string
 }
 
 export type PoolChartEntry = {
@@ -81,8 +80,8 @@ export default createReducer(initialState, (builder) =>
     .addCase(updatePoolData, (state, { payload: { pools } }) => {
       pools.map(
         (poolData) =>
-          (state.byAddress[poolData.address] = {
-            ...state.byAddress[poolData.address],
+          (state.byAddress[poolData.id] = {
+            ...state.byAddress[poolData.id],
             data: poolData,
             lastUpdated: currentTimestamp(),
           })

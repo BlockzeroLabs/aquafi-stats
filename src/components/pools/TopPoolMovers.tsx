@@ -29,21 +29,32 @@ const Wrapper = styled(GreyCard)`
 
 const DataCard = ({ poolData }: { poolData: PoolData }) => {
   return (
-    <Container to={'pools/' + poolData.address}>
+    <Container to={'pools/' + poolData.id}>
       <Wrapper>
         <AutoColumn gap="sm">
           <RowFixed>
-            <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={16} />
+            <DoubleCurrencyLogo address0={poolData.token0.id} address1={poolData.token1.id} size={16} />
             <TYPE.label ml="8px">
               <HoverInlineText maxCharacters={10} text={`${poolData.token0.symbol}/${poolData.token1.symbol}`} />
             </TYPE.label>
             <GreyBadge ml="10px" fontSize="12px">
-              {feeTierPercent(poolData.feeTier)}
+              {feeTierPercent(parseFloat(poolData.feeTier))}
             </GreyBadge>
           </RowFixed>
           <RowFixed>
-            <TYPE.label mr="6px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
-            <Percent fontSize="14px" value={poolData.volumeUSDChange} />
+            <TYPE.label mr="6px">
+              {formatDollarAmount(
+                0
+                // poolData.volumeUSD
+              )}
+            </TYPE.label>
+            <Percent
+              fontSize="14px"
+              value={
+                0
+                // poolData.volumeUSDChange
+              }
+            />
           </RowFixed>
         </AutoColumn>
       </Wrapper>
@@ -57,7 +68,7 @@ export default function TopPoolMovers() {
   const topVolume = useMemo(() => {
     return Object.values(allPools)
       .sort(({ data: a }, { data: b }) => {
-        return a && b ? (a?.volumeUSDChange > b?.volumeUSDChange ? -1 : 1) : -1
+        return a && b ? (a?.totalValueLocked > b?.totalValueLocked ? -1 : 1) : -1
       })
       .slice(0, Math.min(20, Object.values(allPools).length))
   }, [allPools])
@@ -69,7 +80,7 @@ export default function TopPoolMovers() {
   return (
     <ScrollableX>
       {topVolume.map((entry) =>
-        entry.data ? <DataCard key={'top-card-pool-' + entry.data.address} poolData={entry.data} /> : null
+        entry.data ? <DataCard key={'top-card-pool-' + entry.data.id} poolData={entry.data} /> : null
       )}
     </ScrollableX>
   )

@@ -1,17 +1,18 @@
 import { useMemo } from 'react'
+
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 
 export const TOP_POOLS = gql`
   query topPools {
-    pools(first: 50, orderBy: totalValueLockedUSD, orderDirection: desc) {
+    whitelistedPools(orderBy: totalValueLocked, orderDirection: desc) {
       id
     }
   }
 `
 
 interface TopPoolsResponse {
-  pools: {
+  whitelistedPools: {
     id: string
   }[]
 }
@@ -25,12 +26,13 @@ export function useTopPoolAddresses(): {
   addresses: string[] | undefined
 } {
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
+    // client: aquaV3Client,
     fetchPolicy: 'network-only',
   })
-
+  console.log('data=========', data)
   const formattedData = useMemo(() => {
     if (data) {
-      return data.pools.map((p) => p.id)
+      return data.whitelistedPools.map((p) => p.id)
     } else {
       return undefined
     }

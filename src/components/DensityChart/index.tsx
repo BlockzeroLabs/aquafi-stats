@@ -87,19 +87,19 @@ export default function DensityChart({ address }: DensityChartProps) {
 
   // poolData
   const poolData: PoolData = usePoolDatas([address])[0]
-  const formattedAddress0 = isAddress(poolData.token0.address)
-  const formattedAddress1 = isAddress(poolData.token1.address)
+  const formattedAddress0 = isAddress(poolData.token0.id)
+  const formattedAddress1 = isAddress(poolData.token1.id)
   const feeTier = poolData?.feeTier
 
   // parsed tokens
   const token0 = useMemo(() => {
     return poolData && formattedAddress0 && formattedAddress1
-      ? new Token(1, formattedAddress0, poolData.token0.decimals)
+      ? new Token(1, formattedAddress0, parseInt(poolData.token0.decimals))
       : undefined
   }, [formattedAddress0, formattedAddress1, poolData])
   const token1 = useMemo(() => {
     return poolData && formattedAddress1 && formattedAddress1
-      ? new Token(1, formattedAddress1, poolData.token1.decimals)
+      ? new Token(1, formattedAddress1, parseInt(poolData.token1.decimals))
       : undefined
   }, [formattedAddress1, poolData])
 
@@ -131,7 +131,7 @@ export default function DensityChart({ address }: DensityChartProps) {
           poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
             const active = t.tickIdx === poolTickData.activeTickIdx
             const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(t.tickIdx)
-            const feeAmount: FeeAmount = poolData.feeTier
+            const feeAmount: FeeAmount = parseInt(poolData.feeTier)
             const mockTicks = [
               {
                 index: t.tickIdx - TICK_SPACINGS[feeAmount],
@@ -146,7 +146,7 @@ export default function DensityChart({ address }: DensityChartProps) {
             ]
             const pool =
               token0 && token1 && feeTier
-                ? new Pool(token0, token1, feeTier, sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
+                ? new Pool(token0, token1, parseInt(feeTier), sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
                 : undefined
             const nextSqrtX96 = poolTickData.ticksProcessed[i - 1]
               ? TickMath.getSqrtRatioAtTick(poolTickData.ticksProcessed[i - 1].tickIdx)
@@ -278,7 +278,7 @@ export default function DensityChart({ address }: DensityChartProps) {
           >
             <Tooltip
               content={(props) => (
-                <CustomToolTip chartProps={props} poolData={poolData} currentPrice={poolData.token0Price} />
+                <CustomToolTip chartProps={props} poolData={poolData} currentPrice={parseInt(poolData.token0Price)} />
               )}
             />
             <XAxis reversed={true} tick={false} />

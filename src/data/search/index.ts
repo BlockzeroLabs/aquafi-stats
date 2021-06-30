@@ -219,7 +219,7 @@ export function useFetchSearchResults(
   }, [combinedTokens, value])
 
   const newPools = useMemo(() => {
-    return poolDatasFull.filter((p) => !Object.keys(allPools).includes(p.address))
+    return poolDatasFull.filter((p) => !Object.keys(allPools).includes(p.id))
   }, [allPools, poolDatasFull])
 
   const combinedPools = useMemo(() => {
@@ -235,10 +235,11 @@ export function useFetchSearchResults(
     return combinedPools.filter((t) => {
       const regexMatches = Object.keys(t).map((key) => {
         const isAddress = value.slice(0, 2) === '0x'
-        if (key === 'address' && isAddress) {
+        if (key === 'id' && isAddress) {
           return t[key].match(new RegExp(escapeRegExp(value), 'i'))
         }
         if ((key === 'token0' || key === 'token1') && !isAddress) {
+          console.log('KEY======', t, key)
           return (
             t[key].name.match(new RegExp(escapeRegExp(value), 'i')) ||
             t[key].symbol.toLocaleLowerCase().match(new RegExp(escapeRegExp(value.toLocaleLowerCase()), 'i'))

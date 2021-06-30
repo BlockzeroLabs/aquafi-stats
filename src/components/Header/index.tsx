@@ -249,9 +249,9 @@ export default function Header() {
           <StyledNavLink id={`stake-nav-link`} to={'/pools'}>
             Pools
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/tokens'}>
+          {/* <StyledNavLink id={`stake-nav-link`} to={'/tokens'}>
             Tokens
-          </StyledNavLink>
+          </StyledNavLink> */}
           {/* <StyledNavLink id={`stake-nav-link`} to={'/wallet'}>
             Wallet
           </StyledNavLink> */}

@@ -129,7 +129,7 @@ export default function PoolPage({
               </StyledInternalLink>
               <TYPE.main>{` > `}</TYPE.main>
               <TYPE.label>{` ${poolData.token0.symbol} / ${poolData.token1.symbol} ${feeTierPercent(
-                poolData.feeTier
+                parseFloat(poolData.feeTier)
               )} `}</TYPE.label>
             </AutoRow>
             <RowFixed gap="10px" align="center">
@@ -142,33 +142,33 @@ export default function PoolPage({
           <ResponsiveRow align="flex-end">
             <AutoColumn gap="lg">
               <RowFixed gap="4px">
-                <DoubleCurrencyLogo address0={poolData.token0.address} address1={poolData.token1.address} size={24} />
+                <DoubleCurrencyLogo address0={poolData.token0.id} address1={poolData.token1.id} size={24} />
                 <TYPE.label
                   ml="8px"
                   mr="8px"
                   fontSize="24px"
                 >{` ${poolData.token0.symbol} / ${poolData.token1.symbol} `}</TYPE.label>
-                <GreyBadge>{feeTierPercent(poolData.feeTier)}</GreyBadge>
+                <GreyBadge>{feeTierPercent(parseFloat(poolData.feeTier))}</GreyBadge>
               </RowFixed>
               <ResponsiveRow>
-                <StyledInternalLink to={'/tokens/' + poolData.token0.address}>
+                <StyledInternalLink to={'/tokens/' + poolData.token0.id}>
                   <TokenButton>
                     <RowFixed>
-                      <CurrencyLogo address={poolData.token0.address} size={'20px'} />
+                      <CurrencyLogo address={poolData.token0.id} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token0.symbol} =  ${formatAmount(poolData.token1Price, 4)} ${
+                        {`1 ${poolData.token0.symbol} =  ${formatAmount(parseFloat(poolData.token1Price), 4)} ${
                           poolData.token1.symbol
                         }`}
                       </TYPE.label>
                     </RowFixed>
                   </TokenButton>
                 </StyledInternalLink>
-                <StyledInternalLink to={'/tokens/' + poolData.token1.address}>
+                <StyledInternalLink to={'/tokens/' + poolData.token1.id}>
                   <TokenButton ml="10px">
                     <RowFixed>
-                      <CurrencyLogo address={poolData.token1.address} size={'20px'} />
+                      <CurrencyLogo address={poolData.token1.id} size={'20px'} />
                       <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token1.symbol} =  ${formatAmount(poolData.token0Price, 4)} ${
+                        {`1 ${poolData.token1.symbol} =  ${formatAmount(parseFloat(poolData.token0Price), 4)} ${
                           poolData.token0.symbol
                         }`}
                       </TYPE.label>
@@ -180,7 +180,7 @@ export default function PoolPage({
             <AutoColumn gap="lg">
               <RowFixed>
                 <StyledExternalLink
-                  href={`https://app.uniswap.org/#/add/${poolData.token0.address}/${poolData.token1.address}/${poolData.feeTier}`}
+                  href={`https://app.uniswap.org/#/add/${poolData.token0.id}/${poolData.token1.id}/${poolData.feeTier}`}
                 >
                   <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
                     <RowBetween>
@@ -190,7 +190,7 @@ export default function PoolPage({
                   </ButtonGray>
                 </StyledExternalLink>
                 <StyledExternalLink
-                  href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
+                  href={`https://app.uniswap.org/#/swap?inputCurrency=${poolData.token0.id}&outputCurrency=${poolData.token1.id}`}
                 >
                   <ButtonPrimary width="100px" style={{ height: '44px' }}>
                     Trade
@@ -207,38 +207,54 @@ export default function PoolPage({
                     <TYPE.main>Total Tokens Locked</TYPE.main>
                     <RowBetween>
                       <RowFixed>
-                        <CurrencyLogo address={poolData.token0.address} size={'20px'} />
+                        <CurrencyLogo address={poolData.token0.id} size={'20px'} />
                         <TYPE.label fontSize="14px" ml="8px">
                           {poolData.token0.symbol}
                         </TYPE.label>
                       </RowFixed>
-                      <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken0)}</TYPE.label>
+                      <TYPE.label fontSize="14px">
+                        {formatAmount(parseFloat(poolData.totalValueLockedToken0))}
+                      </TYPE.label>
                     </RowBetween>
                     <RowBetween>
                       <RowFixed>
-                        <CurrencyLogo address={poolData.token1.address} size={'20px'} />
+                        <CurrencyLogo address={poolData.token1.id} size={'20px'} />
                         <TYPE.label fontSize="14px" ml="8px">
                           {poolData.token1.symbol}
                         </TYPE.label>
                       </RowFixed>
-                      <TYPE.label fontSize="14px">{formatAmount(poolData.tvlToken1)}</TYPE.label>
+                      <TYPE.label fontSize="14px">
+                        {formatAmount(parseFloat(poolData.totalValueLockedToken1))}
+                      </TYPE.label>
                     </RowBetween>
                   </AutoColumn>
                 </GreyCard>
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>TVL</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(poolData.tvlUSD)}</TYPE.label>
-                  <Percent value={poolData.tvlUSDChange} />
+                  <TYPE.label fontSize="24px">{formatDollarAmount(parseFloat(poolData.totalValueLocked))}</TYPE.label>
+                  <Percent
+                    value={
+                      0
+                      // poolData.tvlUSDChange
+                    }
+                  />
                 </AutoColumn>
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>Volume 24h</TYPE.main>
-                  <TYPE.label fontSize="24px">{formatDollarAmount(poolData.volumeUSD)}</TYPE.label>
-                  <Percent value={poolData.volumeUSDChange} />
+                  <TYPE.label fontSize="24px">{formatDollarAmount(parseFloat(poolData.totalValueLocked))}</TYPE.label>
+                  <Percent
+                    value={
+                      0
+                      // poolData.volumeUSDChange
+                    }
+                  />
                 </AutoColumn>
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>24h Fees</TYPE.main>
                   <TYPE.label fontSize="24px">
-                    {formatDollarAmount(poolData.volumeUSD * (poolData.feeTier / 1000000))}
+                    {formatDollarAmount(
+                      (parseFloat(poolData.totalValueLocked) * parseFloat(poolData.feeTier)) / 1000000
+                    )}
                   </TYPE.label>
                 </AutoColumn>
               </AutoColumn>

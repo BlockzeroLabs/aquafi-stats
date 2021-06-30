@@ -232,19 +232,14 @@ export default function PoolPage({
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>TVL</TYPE.main>
                   <TYPE.label fontSize="24px">{formatDollarAmount(parseFloat(poolData.totalValueLocked))}</TYPE.label>
-                  <Percent value={parseFloat(poolData.totalValueLocked)} />
+                  <Percent value={poolData.tvlUSDChange} />
                 </AutoColumn>
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>Aqua Premium</TYPE.main>
                   <TYPE.label fontSize="24px">
                     {formatDollarAmount(parseFloat(poolData.aquaPremiumCollectedUSD))}
                   </TYPE.label>
-                  <Percent
-                    value={
-                      0
-                      // poolData.volumeUSDChange
-                    }
-                  />
+                  <Percent value={poolData.aquaPremiumCollectedUSDChange} />
                 </AutoColumn>
                 <AutoColumn gap="4px">
                   <TYPE.main fontWeight={400}>Premium %</TYPE.main>

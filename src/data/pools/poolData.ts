@@ -79,6 +79,9 @@ interface PoolFields {
   aquaPremiumCollectedUSD: string
   stakeCount: string
   unstakeCount: string
+  // tvlUSD: number
+  aquaPremiumCollectedUSDChange: number
+  tvlUSDChange: number
 }
 
 interface PoolDataResponse {
@@ -167,21 +170,27 @@ export function usePoolDatas(
 
     // const [volumeUSD, volumeUSDChange] =
     //   current && oneDay && twoDay
-    //     ? get2DayChange(current.volumeUSD, oneDay.volumeUSD, twoDay.volumeUSD)
+    //     ? get2DayChange(current.totalValueLocked, oneDay.totalValueLocked, twoDay.totalValueLocked)
     //     : current
-    //     ? [parseFloat(current.volumeUSD), 0]
+    //     ? [parseFloat(current.totalValueLocked), 0]
     //     : [0, 0]
 
     // const volumeUSDWeek =
     //   current && week
-    //     ? parseFloat(current.volumeUSD) - parseFloat(week.volumeUSD)
+    //     ? parseFloat(current.totalValueLocked) - parseFloat(week.totalValueLocked)
     //     : current
-    //     ? parseFloat(current.volumeUSD)
+    //     ? parseFloat(current.totalValueLocked)
     //     : 0
 
+    const aquaPremiumCollectedUSDChange: number =
+      current && oneDay
+        ? ((parseFloat(current.aquaPremiumCollectedUSD) - parseFloat(oneDay.aquaPremiumCollectedUSD)) /
+            parseFloat(oneDay.aquaPremiumCollectedUSD)) *
+          100
+        : 0
     const tvlUSD = current ? parseFloat(current.totalValueLocked) : 0
 
-    const tvlUSDChange =
+    const tvlUSDChange: number =
       current && oneDay
         ? ((parseFloat(current.totalValueLocked) - parseFloat(oneDay.totalValueLocked)) /
             parseFloat(oneDay.totalValueLocked)) *
@@ -224,7 +233,8 @@ export function usePoolDatas(
         stakeCount: current.stakeCount,
         unstakeCount: current.unstakeCount,
         // tvlUSD,
-        // tvlUSDChange,
+        aquaPremiumCollectedUSDChange,
+        tvlUSDChange,
         // tvlToken0,
         // tvlToken1,
       }

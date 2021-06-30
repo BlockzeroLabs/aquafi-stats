@@ -52,6 +52,9 @@ export interface PoolData {
   aquaPremiumCollectedUSD: string
   stakeCount: string
   unstakeCount: string
+  // tvlUSD: number
+  aquaPremiumCollectedUSDChange: number
+  tvlUSDChange: number
 }
 
 export type PoolChartEntry = {

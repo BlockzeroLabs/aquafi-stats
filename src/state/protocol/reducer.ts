@@ -4,21 +4,14 @@ import { createReducer } from '@reduxjs/toolkit'
 import { ChartDayData, Transaction } from 'types'
 
 export interface ProtocolData {
-  // volume
-  volumeUSD: number
-  volumeUSDChange: number
-
-  // in range liquidity
+  // id: string
+  // aquaPremium: string
   tvlUSD: number
-  tvlUSDChange: number
-
-  // fees
-  feesUSD: number
-  feeChange: number
-
-  // transactions
-  txCount: number
-  txCountChange: number
+  activeTvlUSD: number
+  aquaPremiumUSD: number
+  // stakeCount: string
+  // activeStakeCount: string
+  // unstakeCount: string
 }
 
 export interface ProtocolState {

@@ -59,7 +59,7 @@ export interface PoolData {
 
 export type PoolChartEntry = {
   date: number
-  volumeUSD: number
+  aquaPremiumUSD: number
   totalValueLockedUSD: number
 }
 

@@ -239,7 +239,7 @@ export function useFetchSearchResults(
           return t[key].match(new RegExp(escapeRegExp(value), 'i'))
         }
         if ((key === 'token0' || key === 'token1') && !isAddress) {
-          console.log('KEY======', t, key)
+          // console.log('KEY======', t, key)
           return (
             t[key].name.match(new RegExp(escapeRegExp(value), 'i')) ||
             t[key].symbol.toLocaleLowerCase().match(new RegExp(escapeRegExp(value.toLocaleLowerCase()), 'i'))

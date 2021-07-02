@@ -40,7 +40,7 @@ export default function Home() {
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
-
+  console.log('Protocol DATA=========', protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
@@ -55,16 +55,16 @@ export default function Home() {
   }, [allPoolData])
 
   // if hover value undefined, reset to current day value
-  useEffect(() => {
-    if (!volumeHover && protocolData) {
-      setVolumeHover(protocolData.volumeUSD)
-    }
-  }, [protocolData, volumeHover])
-  useEffect(() => {
-    if (!liquidityHover && protocolData) {
-      setLiquidityHover(protocolData.tvlUSD)
-    }
-  }, [liquidityHover, protocolData])
+  // useEffect(() => {
+  //   if (!volumeHover && protocolData) {
+  //     setVolumeHover(protocolData.volumeUSD)
+  //   }
+  // }, [protocolData, volumeHover])
+  // useEffect(() => {
+  //   if (!liquidityHover && protocolData) {
+  //     setLiquidityHover(protocolData.tvlUSD)
+  //   }
+  // }, [liquidityHover, protocolData])
 
   const formattedTvlData = useMemo(() => {
     if (chartData) {
@@ -166,21 +166,21 @@ export default function Home() {
             <RowBetween>
               <RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Volume 24H: </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
-                  <Percent value={protocolData?.volumeUSDChange} wrap={true} />
+                  <TYPE.main mr="4px">Aqua Premium </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.aquaPremiumUSD)}</TYPE.label>
+                  {/* <Percent value={protocolData?.aquaPremiumUSD} wrap={true} /> */}
                 </RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Fees 24H: </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.feesUSD)}</TYPE.label>
-                  <Percent value={protocolData?.feeChange} wrap={true} />
+                  <TYPE.main mr="4px">Active TVL : </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.activeTvlUSD)}</TYPE.label>
+                  {/* <Percent value={protocolData?.activeTvlUSD} wrap={true} /> */}
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
                     <TYPE.main mr="4px">TVL: </TYPE.main>
                     <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
                     <TYPE.main></TYPE.main>
-                    <Percent value={protocolData?.tvlUSDChange} wrap={true} />
+                    {/* <Percent value={protocolData?.tvlUSD} wrap={true} /> */}
                   </RowFixed>
                 </HideMedium>
               </RowFixed>

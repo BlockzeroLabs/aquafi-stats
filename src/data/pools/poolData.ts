@@ -114,7 +114,7 @@ export function usePoolDatas(
   )
 
   useEffect(() => {
-    console.log('data24=======', data24, error24)
+    // console.log('data24=======', data24, error24)
   }, [data24, error24])
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(

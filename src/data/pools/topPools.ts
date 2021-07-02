@@ -29,7 +29,7 @@ export function useTopPoolAddresses(): {
     // client: aquaV3Client,
     fetchPolicy: 'network-only',
   })
-  console.log('data=========', data)
+  // console.log('data=========', data)
   const formattedData = useMemo(() => {
     if (data) {
       return data.whitelistedPools.map((p) => p.id)

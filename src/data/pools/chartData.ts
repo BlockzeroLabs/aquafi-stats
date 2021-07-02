@@ -10,27 +10,23 @@ import { PoolChartEntry } from 'state/pools/reducer'
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 const ONE_DAY_UNIX = 24 * 60 * 60
-
+// ($startTime: Int!, $skip: Int!, $address: Bytes!)
+// (where: { pool: $address, date_gt: $startTime }, orderBy: date, orderDirection: asc)
 const POOL_CHART = gql`
-  query poolDayDatas($startTime: Int!, $skip: Int!, $address: Bytes!) {
-    poolDayDatas(
-      first: 1000
-      skip: $skip
-      where: { pool: $address, date_gt: $startTime }
-      orderBy: date
-      orderDirection: asc
-    ) {
+  query poolDayDatas($startTime: Int!, $address: Bytes!) {
+    whitelistedPoolDayDatas(where: { pool: $address, date_gt: $startTime }, orderBy: date, orderDirection: asc) {
+      pool
       date
-      volumeUSD
+      aquaPremiumUSD
       tvlUSD
     }
   }
 `
 
 interface ChartResults {
-  poolDayDatas: {
+  whitelistedPoolDayDatas: {
     date: number
-    volumeUSD: string
+    aquaPremiumUSD: string
     tvlUSD: string
   }[]
 }
@@ -38,7 +34,7 @@ interface ChartResults {
 export async function fetchPoolChartData(address: string) {
   let data: {
     date: number
-    volumeUSD: string
+    aquaPremiumUSD: string
     tvlUSD: string
   }[] = []
   const startTimestamp = 1619170975
@@ -59,14 +55,16 @@ export async function fetchPoolChartData(address: string) {
         },
         fetchPolicy: 'cache-first',
       })
+
       if (!loading) {
         skip += 1000
-        if (chartResData.poolDayDatas.length < 1000 || error) {
+        if (chartResData.whitelistedPoolDayDatas.length < 1000 || error) {
           allFound = true
         }
         if (chartResData) {
-          data = data.concat(chartResData.poolDayDatas)
+          data = data.concat(chartResData.whitelistedPoolDayDatas)
         }
+        // console.log('DATA===', data)
       }
     }
   } catch {
@@ -78,7 +76,7 @@ export async function fetchPoolChartData(address: string) {
       const roundedDate = parseInt((dayData.date / ONE_DAY_UNIX).toFixed(0))
       accum[roundedDate] = {
         date: dayData.date,
-        volumeUSD: parseFloat(dayData.volumeUSD),
+        aquaPremiumUSD: parseFloat(dayData.aquaPremiumUSD),
         totalValueLockedUSD: parseFloat(dayData.tvlUSD),
       }
       return accum
@@ -95,7 +93,7 @@ export async function fetchPoolChartData(address: string) {
       if (!Object.keys(formattedExisting).includes(currentDayIndex.toString())) {
         formattedExisting[currentDayIndex] = {
           date: nextDay,
-          volumeUSD: 0,
+          aquaPremiumUSD: 0,
           totalValueLockedUSD: latestTvl,
         }
       } else {

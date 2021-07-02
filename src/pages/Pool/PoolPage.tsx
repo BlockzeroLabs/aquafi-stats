@@ -103,7 +103,7 @@ export default function PoolPage({
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.volumeUSD,
+          value: day.aquaPremiumUSD,
         }
       })
     } else {
@@ -151,30 +151,30 @@ export default function PoolPage({
                 <GreyBadge>{feeTierPercent(parseFloat(poolData.feeTier))}</GreyBadge>
               </RowFixed>
               <ResponsiveRow>
-                <StyledInternalLink to={'/tokens/' + poolData.token0.id}>
-                  <TokenButton>
-                    <RowFixed>
-                      <CurrencyLogo address={poolData.token0.id} size={'20px'} />
-                      <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token0.symbol} =  ${formatAmount(parseFloat(poolData.token1Price), 4)} ${
-                          poolData.token1.symbol
-                        }`}
-                      </TYPE.label>
-                    </RowFixed>
-                  </TokenButton>
-                </StyledInternalLink>
-                <StyledInternalLink to={'/tokens/' + poolData.token1.id}>
-                  <TokenButton ml="10px">
-                    <RowFixed>
-                      <CurrencyLogo address={poolData.token1.id} size={'20px'} />
-                      <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
-                        {`1 ${poolData.token1.symbol} =  ${formatAmount(parseFloat(poolData.token0Price), 4)} ${
-                          poolData.token0.symbol
-                        }`}
-                      </TYPE.label>
-                    </RowFixed>
-                  </TokenButton>
-                </StyledInternalLink>
+                {/* <StyledInternalLink to={'/tokens/' + poolData.token0.id}> */}
+                <TokenButton>
+                  <RowFixed>
+                    <CurrencyLogo address={poolData.token0.id} size={'20px'} />
+                    <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
+                      {`1 ${poolData.token0.symbol} =  ${formatAmount(parseFloat(poolData.token1Price), 4)} ${
+                        poolData.token1.symbol
+                      }`}
+                    </TYPE.label>
+                  </RowFixed>
+                </TokenButton>
+                {/* </StyledInternalLink> */}
+                {/* <StyledInternalLink to={'/tokens/' + poolData.token1.id}> */}
+                <TokenButton ml="10px">
+                  <RowFixed>
+                    <CurrencyLogo address={poolData.token1.id} size={'20px'} />
+                    <TYPE.label fontSize="16px" ml="4px" style={{ whiteSpace: 'nowrap' }} width={'fit-content'}>
+                      {`1 ${poolData.token1.symbol} =  ${formatAmount(parseFloat(poolData.token0Price), 4)} ${
+                        poolData.token0.symbol
+                      }`}
+                    </TYPE.label>
+                  </RowFixed>
+                </TokenButton>
+                {/* </StyledInternalLink> */}
               </ResponsiveRow>
             </AutoColumn>
             {/* <AutoColumn gap="lg">
@@ -204,7 +204,7 @@ export default function PoolPage({
               <AutoColumn gap="lg">
                 <GreyCard padding="16px">
                   <AutoColumn gap="md">
-                    <TYPE.main>Total Tokens Locked</TYPE.main>
+                    <TYPE.main>Total Value Locked</TYPE.main>
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo address={poolData.token0.id} size={'20px'} />
@@ -267,13 +267,6 @@ export default function PoolPage({
                 </AutoColumn>
                 <ToggleWrapper width="200px">
                   <ToggleElementFree
-                    isActive={view === ChartView.VOL}
-                    fontSize="12px"
-                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
-                  >
-                    Volume
-                  </ToggleElementFree>
-                  <ToggleElementFree
                     isActive={view === ChartView.TVL}
                     fontSize="12px"
                     onClick={() => (view === ChartView.TVL ? setView(ChartView.DENSITY) : setView(ChartView.TVL))}
@@ -281,12 +274,19 @@ export default function PoolPage({
                     TVL
                   </ToggleElementFree>
                   <ToggleElementFree
+                    isActive={view === ChartView.VOL}
+                    fontSize="12px"
+                    onClick={() => (view === ChartView.VOL ? setView(ChartView.TVL) : setView(ChartView.VOL))}
+                  >
+                    Aqua Premium
+                  </ToggleElementFree>
+                  {/* <ToggleElementFree
                     isActive={view === ChartView.DENSITY}
                     fontSize="12px"
                     onClick={() => (view === ChartView.DENSITY ? setView(ChartView.VOL) : setView(ChartView.DENSITY))}
                   >
                     Liquidity
-                  </ToggleElementFree>
+                  </ToggleElementFree> */}
                 </ToggleWrapper>
               </RowBetween>
               {view === ChartView.TVL ? (

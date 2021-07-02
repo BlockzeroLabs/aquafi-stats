@@ -84,7 +84,7 @@ export default function Home() {
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.volumeUSD,
+          value: day.aquaPremiumUSD,
         }
       })
     } else {
@@ -145,7 +145,7 @@ export default function Home() {
               label={rightLabel}
               topLeft={
                 <AutoColumn gap="4px">
-                  <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
+                  <TYPE.mediumHeader fontSize="16px">Aqua Premium</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">
                     <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>
                   </TYPE.largeHeader>

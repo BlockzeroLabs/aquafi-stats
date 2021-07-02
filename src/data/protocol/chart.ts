@@ -13,28 +13,34 @@ const ONE_DAY_UNIX = 24 * 60 * 60
 
 const GLOBAL_CHART = gql`
   query uniswapDayDatas($startTime: Int!, $skip: Int!) {
-    uniswapDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
+    aquaUniswapV3DayDatas(
+      first: 1000
+      skip: $skip
+      where: { date_gt: $startTime }
+      orderBy: date
+      orderDirection: asc
+    ) {
       id
       date
-      volumeUSD
+      aquaPremiumUSD
       tvlUSD
     }
   }
 `
 
 interface ChartResults {
-  uniswapDayDatas: {
+  aquaUniswapV3DayDatas: {
     date: number
-    volumeUSD: string
-    tvlUSD: string
+    aquaPremiumUSD: number
+    tvlUSD: number
   }[]
 }
 
 async function fetchChartData() {
   let data: {
     date: number
-    volumeUSD: string
-    tvlUSD: string
+    aquaPremiumUSD: number
+    tvlUSD: number
   }[] = []
   const startTimestamp = 1619170975
   const endTimestamp = dayjs.utc().unix()
@@ -55,11 +61,11 @@ async function fetchChartData() {
       })
       if (!loading) {
         skip += 1000
-        if (chartResData.uniswapDayDatas.length < 1000 || error) {
+        if (chartResData.aquaUniswapV3DayDatas.length < 1000 || error) {
           allFound = true
         }
         if (chartResData) {
-          data = data.concat(chartResData.uniswapDayDatas)
+          data = data.concat(chartResData.aquaUniswapV3DayDatas)
         }
       }
     }
@@ -72,8 +78,8 @@ async function fetchChartData() {
       const roundedDate = parseInt((dayData.date / ONE_DAY_UNIX).toFixed(0))
       accum[roundedDate] = {
         date: dayData.date,
-        volumeUSD: parseFloat(dayData.volumeUSD),
-        tvlUSD: parseFloat(dayData.tvlUSD),
+        aquaPremiumUSD: dayData.aquaPremiumUSD,
+        tvlUSD: dayData.tvlUSD,
       }
       return accum
     }, {})
@@ -89,7 +95,7 @@ async function fetchChartData() {
       if (!Object.keys(formattedExisting).includes(currentDayIndex.toString())) {
         formattedExisting[currentDayIndex] = {
           date: nextDay,
-          volumeUSD: 0,
+          aquaPremiumUSD: 0,
           tvlUSD: latestTvl,
         }
       } else {

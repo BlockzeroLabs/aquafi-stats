@@ -350,14 +350,14 @@ export default function TokenPage({
             <DarkGreyCard>
               <PoolTable poolDatas={poolDatas} />
             </DarkGreyCard>
-            {/* <TYPE.main>Transactions</TYPE.main>
+            <TYPE.main>Transactions</TYPE.main>
             <DarkGreyCard>
               {transactions ? (
                 <TransactionTable transactions={transactions} color={backgroundColor} />
               ) : (
                 <LocalLoader fill={false} />
               )}
-            </DarkGreyCard> */}
+            </DarkGreyCard>
           </AutoColumn>
         )
       ) : (

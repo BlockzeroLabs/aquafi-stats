@@ -5,7 +5,7 @@ export interface Block {
 
 export interface ChartDayData {
   date: number
-  volumeUSD: number
+  aquaPremiumUSD: number
   tvlUSD: number
 }
 

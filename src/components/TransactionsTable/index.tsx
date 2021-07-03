@@ -78,18 +78,35 @@ const SortText = styled.button<{ active: boolean }>`
 `
 
 const SORT_FIELD = {
-  amountUSD: 'amountUSD',
-  timestamp: 'timestamp',
-  sender: 'sender',
-  amountToken0: 'amountToken0',
-  amountToken1: 'amountToken1',
-}
+  pool: {
+    feeTier: 'feeTier',
+    token0: {
+      id: 'id',
+      symbol: 'symbol',
+    },
+    token1: {
+      id: 'id',
 
+      symbol: 'symbol',
+    },
+  },
+  tokenId: 'tokenId',
+  totalValueLocked: 'totalValueLocked',
+  staker: 'staker',
+  stakeTime: 'stakeTime',
+
+  // amountUSD: 'amountUSD',
+  // timestamp: 'timestamp',
+  // sender: 'sender',
+  // amountToken0: 'amountToken0',
+  // amountToken1: 'amountToken1',
+}
+console.log('SORT FIED=====', SORT_FIELD)
 const DataRow = ({ transaction, color }: { transaction: Transaction; color?: string }) => {
-  const abs0 = Math.abs(transaction.amountToken0)
-  const abs1 = Math.abs(transaction.amountToken1)
-  const outputTokenSymbol = transaction.amountToken0 < 0 ? transaction.token0Symbol : transaction.token1Symbol
-  const inputTokenSymbol = transaction.amountToken1 < 0 ? transaction.token0Symbol : transaction.token1Symbol
+  // const abs0 = Math.abs(transaction.amountToken0)
+  // const abs1 = Math.abs(transaction.amountToken1)
+  // const outputTokenSymbol = transaction.amountToken0 < 0 ? transaction.token0Symbol : transaction.token1Symbol
+  // const inputTokenSymbol = transaction.amountToken1 < 0 ? transaction.token0Symbol : transaction.token1Symbol
 
   const theme = useTheme()
 
@@ -97,29 +114,38 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
     <ResponsiveGrid>
       <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction')}>
         <Label color={color ?? theme.blue1} fontWeight={400}>
-          {transaction.type === TransactionType.MINT
-            ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
-            : transaction.type === TransactionType.SWAP
-            ? `Swap ${inputTokenSymbol} for ${outputTokenSymbol}`
-            : `Remove ${transaction.token0Symbol} and ${transaction.token1Symbol}`}
+          {
+            transaction.type === TransactionType.MINT
+              ? `Stake`
+              : // : transaction.type === TransactionType.SWAP
+                `Unstake`
+            // : `Remove ${transaction.pool.token0.symbol} and ${transaction.pool.token1.symbol
+          }
         </Label>
       </ExternalLink>
       <Label end={1} fontWeight={400}>
-        {formatDollarAmount(transaction.amountUSD)}
+        {formatDollarAmount(parseFloat(transaction.tokenId))}
       </Label>
       <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs0)}  ${transaction.token0Symbol}`} maxCharacters={16} />
+        weth/eth
+        {/* {parseInt(transaction.pool.token0.symbol / transaction.pool.token1.symbol)} */}
       </Label>
       <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1Symbol}`} maxCharacters={16} />
+        {formatDollarAmount(parseFloat(transaction.totalValueLocked))}
+      </Label>
+      {/* <Label end={1} fontWeight={400}>
+        <HoverInlineText text={`  ${transaction.}`} maxCharacters={16} />
       </Label>
       <Label end={1} fontWeight={400}>
-        <ExternalLink href={getEtherscanLink(1, transaction.sender, 'address')} style={{ color: color ?? theme.blue1 }}>
-          {shortenAddress(transaction.sender)}
+        <HoverInlineText text={` ${transaction.token1Symbol}`} maxCharacters={16} />
+      </Label> */}
+      <Label end={1} fontWeight={400}>
+        <ExternalLink href={getEtherscanLink(1, transaction.staker, 'address')} style={{ color: color ?? theme.blue1 }}>
+          {shortenAddress(transaction.staker)}
         </ExternalLink>
       </Label>
       <Label end={1} fontWeight={400}>
-        {formatTime(transaction.timestamp)}
+        {formatTime(transaction.stakeTime)}
       </Label>
     </ResponsiveGrid>
   )
@@ -138,7 +164,7 @@ export default function TransactionTable({
   const theme = useTheme()
 
   // for sorting
-  const [sortField, setSortField] = useState(SORT_FIELD.timestamp)
+  const [sortField, setSortField] = useState(SORT_FIELD.stakeTime)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
   // pagination
@@ -208,21 +234,21 @@ export default function TransactionTable({
             >
               All
             </SortText>
-            <SortText
+            {/* <SortText
               onClick={() => {
                 setTxFilter(TransactionType.SWAP)
               }}
               active={txFilter === TransactionType.SWAP}
             >
               Swaps
-            </SortText>
+            </SortText> */}
             <SortText
               onClick={() => {
                 setTxFilter(TransactionType.MINT)
               }}
               active={txFilter === TransactionType.MINT}
             >
-              Adds
+              Stakes
             </SortText>
             <SortText
               onClick={() => {
@@ -230,23 +256,26 @@ export default function TransactionTable({
               }}
               active={txFilter === TransactionType.BURN}
             >
-              Removes
+              Unstakes
             </SortText>
           </RowFixed>
-          <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.amountUSD)} end={1}>
-            Total Value {arrow(SORT_FIELD.amountUSD)}
+          <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.tokenId)} end={1}>
+            NFT {arrow(SORT_FIELD.tokenId)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken0)}>
-            Token Amount {arrow(SORT_FIELD.amountToken0)}
+          <ClickableText color={theme.text2} end={1}>
+            Pool
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalValueLocked)}>
+            TVL {arrow(SORT_FIELD.totalValueLocked)}
+          </ClickableText>
+          {/* <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
             Token Amount {arrow(SORT_FIELD.amountToken1)}
+          </ClickableText> */}
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.staker)}>
+            Staker {arrow(SORT_FIELD.staker)}
           </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.sender)}>
-            Account {arrow(SORT_FIELD.sender)}
-          </ClickableText>
-          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.timestamp)}>
-            Time {arrow(SORT_FIELD.timestamp)}
+          <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.stakeTime)}>
+            Time {arrow(SORT_FIELD.stakeTime)}
           </ClickableText>
         </ResponsiveGrid>
         <Break />

@@ -5,60 +5,35 @@ import { formatTokenSymbol } from 'utils/tokens'
 
 const GLOBAL_TRANSACTIONS = gql`
   query transactions {
-    transactions(first: 500, orderBy: timestamp, orderDirection: desc) {
+    stakes {
       id
-      timestamp
-      mints {
-        pool {
-          token0 {
-            id
-            symbol
-          }
-          token1 {
-            id
-            symbol
-          }
+      pool {
+        token0 {
+          symbol
         }
-        owner
-        sender
-        origin
-        amount0
-        amount1
-        amountUSD
-      }
-      swaps {
-        pool {
-          token0 {
-            id
-            symbol
-          }
-          token1 {
-            id
-            symbol
-          }
+        token1 {
+          symbol
         }
-        origin
-        amount0
-        amount1
-        amountUSD
       }
-      burns {
-        pool {
-          token0 {
-            id
-            symbol
-          }
-          token1 {
-            id
-            symbol
-          }
+      tokenId
+      totalValueLocked
+      staker
+      stakeTime
+    }
+    unstakes {
+      id
+      pool {
+        token0 {
+          symbol
         }
-        owner
-        origin
-        amount0
-        amount1
-        amountUSD
+        token1 {
+          symbol
+        }
       }
+      tokenId
+      totalValueLocked
+
+      unstakeTime
     }
   }
 `
@@ -66,7 +41,8 @@ const GLOBAL_TRANSACTIONS = gql`
 type TransactionEntry = {
   timestamp: string
   id: string
-  mints: {
+  stakes: {
+    id: string
     pool: {
       token0: {
         id: string
@@ -77,12 +53,28 @@ type TransactionEntry = {
         symbol: string
       }
     }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+    tokenId: string
+    totalValueLocked: string
+    staker: string
+    stakeTime: string
+    // pool: {
+    //   token0: {
+    //     id: string
+    //     symbol: string
+    //   }
+    //   token1: {
+    //     id: string
+    //     symbol: string
+    //   }
+    // }
+    // origin: string
+    // amount0: string
+    // amount1: string
+    // amountUSD: string
   }[]
-  swaps: {
+  unstakes: {
+    id: string
+
     pool: {
       token0: {
         id: string
@@ -93,28 +85,29 @@ type TransactionEntry = {
         symbol: string
       }
     }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+
+    tokenId: string
+    totalValueLocked: string
+    // staker: string
+    stakeTime: string
   }[]
-  burns: {
-    pool: {
-      token0: {
-        id: string
-        symbol: string
-      }
-      token1: {
-        id: string
-        symbol: string
-      }
-    }
-    owner: string
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
-  }[]
+  // burns: {
+  //   pool: {
+  //     token0: {
+  //       id: string
+  //       symbol: string
+  //     }
+  //     token1: {
+  //       id: string
+  //       symbol: string
+  //     }
+  //   }
+  //   owner: string
+  //   origin: string
+  //   amount0: string
+  //   amount1: string
+  //   amountUSD: string
+  //   }[]
 }
 
 interface TransactionResults {
@@ -133,53 +126,73 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
     }
 
     const formatted = data.transactions.reduce((accum: Transaction[], t: TransactionEntry) => {
-      const mintEntries = t.mints.map((m) => {
+      const mintEntries = t.stakes.map((m) => {
         return {
           type: TransactionType.MINT,
           hash: t.id,
-          timestamp: t.timestamp,
-          sender: m.origin,
-          token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-          token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-          token0Address: m.pool.token0.id,
-          token1Address: m.pool.token1.id,
-          amountUSD: parseFloat(m.amountUSD),
-          amountToken0: parseFloat(m.amount0),
-          amountToken1: parseFloat(m.amount1),
+          timestamp: m.stakeTime,
+
+          pool: {
+            feeTier: 'feeTier',
+            token0: {
+              id: 'id',
+
+              symbol: 'symbol',
+            },
+            token1: {
+              id: 'id',
+
+              symbol: 'symbol',
+            },
+          },
+          tokenId: m.tokenId,
+          totalValueLocked: m.totalValueLocked,
+          staker: m.staker,
+          stakeTime: m.stakeTime,
         }
       })
-      const burnEntries = t.burns.map((m) => {
+      const burnEntries = t.unstakes.map((m) => {
         return {
           type: TransactionType.BURN,
           hash: t.id,
-          timestamp: t.timestamp,
-          sender: m.origin,
-          token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-          token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-          token0Address: m.pool.token0.id,
-          token1Address: m.pool.token1.id,
-          amountUSD: parseFloat(m.amountUSD),
-          amountToken0: parseFloat(m.amount0),
-          amountToken1: parseFloat(m.amount1),
+
+          timestamp: m.stakeTime,
+
+          pool: {
+            feeTier: 'feeTier',
+            token0: {
+              id: 'id',
+
+              symbol: 'symbol',
+            },
+            token1: {
+              id: 'id',
+              symbol: 'symbol',
+            },
+          },
+          tokenId: m.tokenId,
+          totalValueLocked: m.totalValueLocked,
+          staker: '01010101010',
+          stakeTime: m.stakeTime,
         }
       })
 
-      const swapEntries = t.swaps.map((m) => {
-        return {
-          hash: t.id,
-          type: TransactionType.SWAP,
-          timestamp: t.timestamp,
-          sender: m.origin,
-          token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-          token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-          token0Address: m.pool.token0.id,
-          token1Address: m.pool.token1.id,
-          amountUSD: parseFloat(m.amountUSD),
-          amountToken0: parseFloat(m.amount0),
-          amountToken1: parseFloat(m.amount1),
-        }
-      })
-      accum = [...accum, ...mintEntries, ...burnEntries, ...swapEntries]
+      // const swapEntries = t.swaps.map((m) => {
+      //   return {
+      //     hash: t.id,
+      //     type: TransactionType.SWAP,
+      //     timestamp: t.timestamp,
+      //     sender: m.origin,
+      //     token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
+      //     token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
+      //     token0Address: m.pool.token0.id,
+      //     token1Address: m.pool.token1.id,
+      //     amountUSD: parseFloat(m.amountUSD),
+      //     amountToken0: parseFloat(m.amount0),
+      //     amountToken1: parseFloat(m.amount1),
+      //   }
+      // })
+      accum = [...accum, ...mintEntries, ...burnEntries]
       return accum
     }, [])
 

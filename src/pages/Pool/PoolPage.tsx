@@ -16,7 +16,7 @@ import { formatDollarAmount, formatAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { ButtonPrimary, ButtonGray, SavedIcon } from 'components/Button'
 import { DarkGreyCard, GreyCard, GreyBadge } from 'components/Card'
-import { usePoolDatas, usePoolChartData } from 'state/pools/hooks'
+import { usePoolDatas, usePoolChartData, usePoolTransactions } from 'state/pools/hooks'
 import LineChart from 'components/LineChart/alt'
 import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
@@ -79,7 +79,7 @@ export default function PoolPage({
   // token data
   const poolData = usePoolDatas([address])[0]
   const chartData = usePoolChartData(address)
-  // const transactions = usePoolTransactions(address)
+  const transactions = usePoolTransactions(address)
 
   const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
@@ -314,10 +314,10 @@ export default function PoolPage({
               )}
             </DarkGreyCard>
           </ContentLayout>
-          {/* <TYPE.main fontSize="24px">Transactions</TYPE.main>
+          <TYPE.main fontSize="24px">Transactions</TYPE.main>
           <DarkGreyCard>
             {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
-          </DarkGreyCard> */}
+          </DarkGreyCard>
         </AutoColumn>
       ) : (
         <Loader />

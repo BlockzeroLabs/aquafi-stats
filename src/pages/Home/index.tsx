@@ -40,7 +40,7 @@ export default function Home() {
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
-  console.log('Protocol DATA=========', protocolData)
+  // console.log('Protocol DATA=========', protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
@@ -166,9 +166,10 @@ export default function Home() {
             <RowBetween>
               <RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Aqua Premium </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.aquaPremiumUSD)}</TYPE.label>
-                  {/* <Percent value={protocolData?.aquaPremiumUSD} wrap={true} /> */}
+                  <TYPE.main mr="4px">TVL: </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
+                  <TYPE.main></TYPE.main>
+                  {/* <Percent value={protocolData?.tvlUSD} wrap={true} /> */}
                 </RowFixed>
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Active TVL : </TYPE.main>
@@ -177,10 +178,9 @@ export default function Home() {
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
-                    <TYPE.main mr="4px">TVL: </TYPE.main>
-                    <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
-                    <TYPE.main></TYPE.main>
-                    {/* <Percent value={protocolData?.tvlUSD} wrap={true} /> */}
+                    <TYPE.main mr="4px">Aqua Premium </TYPE.main>
+                    <TYPE.label mr="4px">{formatDollarAmount(protocolData?.aquaPremiumUSD)}</TYPE.label>
+                    {/* <Percent value={protocolData?.aquaPremiumUSD} wrap={true} /> */}
                   </RowFixed>
                 </HideMedium>
               </RowFixed>
@@ -197,10 +197,10 @@ export default function Home() {
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>
         </RowBetween>
         <PoolTable poolDatas={poolDatas} />
-        {/* <RowBetween> */}
-        {/* <TYPE.main>Transactions</TYPE.main>
+        <RowBetween>
+          <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} /> : null} */}
+        {transactions ? <TransactionsTable transactions={transactions} /> : null}
       </AutoColumn>
     </PageWrapper>
   )

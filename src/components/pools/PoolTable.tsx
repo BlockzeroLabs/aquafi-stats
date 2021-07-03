@@ -176,7 +176,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
           </ResponsiveGrid>
           <Break />
           {sortedPools.map((poolData, i) => {
-            console.log('SORTED POOlS======', sortedPools)
+            // console.log('SORTED POOlS======', sortedPools)
             if (poolData) {
               return (
                 <React.Fragment key={i}>

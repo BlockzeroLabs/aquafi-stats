@@ -5,11 +5,8 @@ import { formatTokenSymbol } from 'utils/tokens'
 
 const POOL_TRANSACTIONS = gql`
   query transactions($address: Bytes!) {
-    mints(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
-      timestamp
-      transaction {
-        id
-      }
+    stakes(orderBy: stakeTime, orderDirection: desc, where: { pool: $address }) {
+      id
       pool {
         token0 {
           id
@@ -20,62 +17,32 @@ const POOL_TRANSACTIONS = gql`
           symbol
         }
       }
-      owner
-      sender
-      origin
-      amount0
-      amount1
-      amountUSD
+      tokenId
+      totalValueLocked
+      staker
+      stakeTime
     }
-    swaps(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
-      timestamp
-      transaction {
-        id
-      }
+    unstakes(orderBy: unstakeTime, orderDirection: desc, where: { pool: $address }) {
+      id
       pool {
         token0 {
-          id
           symbol
         }
         token1 {
-          id
           symbol
         }
       }
-      origin
-      amount0
-      amount1
-      amountUSD
-    }
-    burns(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }) {
-      timestamp
-      transaction {
-        id
-      }
-      pool {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      owner
-      amount0
-      amount1
-      amountUSD
+      tokenId
+      totalValueLocked
+
+      unstakeTime
     }
   }
 `
 
 interface TransactionResults {
-  mints: {
-    timestamp: string
-    transaction: {
-      id: string
-    }
+  stakes: {
+    id: string
     pool: {
       token0: {
         id: string
@@ -86,16 +53,14 @@ interface TransactionResults {
         symbol: string
       }
     }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+    tokenId: string
+    totalValueLocked: string
+    staker: string
+    stakeTime: string
   }[]
-  swaps: {
-    timestamp: string
-    transaction: {
-      id: string
-    }
+  unstakes: {
+    id: string
+
     pool: {
       token0: {
         id: string
@@ -106,31 +71,32 @@ interface TransactionResults {
         symbol: string
       }
     }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+
+    tokenId: string
+    totalValueLocked: string
+    // staker: string
+    unstakeTime: string
   }[]
-  burns: {
-    timestamp: string
-    transaction: {
-      id: string
-    }
-    pool: {
-      token0: {
-        id: string
-        symbol: string
-      }
-      token1: {
-        id: string
-        symbol: string
-      }
-    }
-    owner: string
-    amount0: string
-    amount1: string
-    amountUSD: string
-  }[]
+  // burns: {
+  //   timestamp: string
+  //   transaction: {
+  //     id: string
+  //   }
+  //   pool: {
+  //     token0: {
+  //       id: string
+  //       symbol: string
+  //     }
+  //     token1: {
+  //       id: string
+  //       symbol: string
+  //     }
+  //   }
+  //   owner: string
+  //   amount0: string
+  //   amount1: string
+  //   amountUSD: string
+  // }[]
 }
 
 export async function fetchPoolTransactions(
@@ -143,6 +109,7 @@ export async function fetchPoolTransactions(
     },
     fetchPolicy: 'cache-first',
   })
+  console.log('TXN DATA========', data, error)
 
   if (error) {
     return {
@@ -159,53 +126,78 @@ export async function fetchPoolTransactions(
       loading: true,
     }
   }
-
-  const mints = data?.mints.map((m) => {
+  // console.log('MINTS DATA=============', data)
+  const mints = data?.stakes.map((m) => {
     return {
       type: TransactionType.MINT,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.origin,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
+      hash: m.id,
+      timestamp: m.stakeTime,
+
+      pool: {
+        token0: {
+          id: m.pool.token0.id,
+          symbol: m.pool.token0.symbol,
+        },
+        token1: {
+          id: m.pool.token1.id,
+          symbol: m.pool.token1.symbol,
+        },
+      },
+      tokenId: m.tokenId,
+      totalValueLocked: m.totalValueLocked,
+      staker: m.staker,
+      stakeTime: m.stakeTime,
+
+      // sender: m.origin,
+      // token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
+      // token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
+      // token0Address: m.pool.token0.id,
+      // token1Address: m.pool.token1.id,
+      // amountUSD: parseFloat(m.amountUSD),
+      // amountToken0: parseFloat(m.amount0),
+      // amountToken1: parseFloat(m.amount1),
     }
   })
-  const burns = data?.burns.map((m) => {
+  const burns = data?.unstakes.map((m) => {
     return {
       type: TransactionType.BURN,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.owner,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
+
+      hash: m.id,
+      timestamp: m.unstakeTime,
+
+      pool: {
+        token0: {
+          id: m.pool.token0.id,
+          symbol: m.pool.token0.symbol,
+        },
+        token1: {
+          id: m.pool.token1.id,
+          symbol: m.pool.token1.symbol,
+        },
+      },
+      tokenId: m.tokenId,
+      totalValueLocked: m.totalValueLocked,
+      staker: '0xb520bb16aeb6f1b38508ba24da30d6fcf76da3cb',
+      stakeTime: m.unstakeTime,
     }
   })
 
-  const swaps = data?.swaps.map((m) => {
-    return {
-      type: TransactionType.SWAP,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.origin,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
-    }
-  })
+  // const swaps = data?.swaps.map((m) => {
+  //   return {
+  //     type: TransactionType.SWAP,
+  //     hash: m.transaction.id,
+  //     timestamp: m.timestamp,
+  //     sender: m.origin,
+  //     token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
+  //     token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
+  //     token0Address: m.pool.token0.id,
+  //     token1Address: m.pool.token1.id,
+  //     amountUSD: parseFloat(m.amountUSD),
+  //     amountToken0: parseFloat(m.amount0),
+  //     amountToken1: parseFloat(m.amount1),
+  //   }
+  // })
+  console.log('MINTS DATA=============', mints, burns)
 
-  return { data: [...mints, ...burns, ...swaps], error: false, loading: false }
+  return { data: [...mints, ...burns], error: false, loading: false }
 }

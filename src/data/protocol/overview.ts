@@ -50,7 +50,7 @@ export function useFetchProtocolData(): {
 
   // fetch all data
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
-  console.log('OVERVIEW DATA', data, error)
+  // console.log('OVERVIEW DATA', data, error)
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block24?.number ?? undefined)
   )
@@ -64,7 +64,7 @@ export function useFetchProtocolData(): {
   const parsed = data?.aquaPrimaries?.[0]
   const parsed24 = data24?.aquaPrimaries?.[0]
   const parsed48 = data48?.aquaPrimaries?.[0]
-  console.log('parsed DATA', parsed, parsed24)
+  // console.log('parsed DATA', parsed, parsed24)
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {

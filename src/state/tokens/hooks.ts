@@ -14,7 +14,7 @@ import { isAddress } from 'ethers/lib/utils'
 import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenChartData } from 'data/tokens/chartData'
 import { fetchTokenPriceData } from 'data/tokens/priceData'
-import { fetchTokenTransactions } from 'data/tokens/transactions'
+// import { fetchTokenTransactions } from 'data/tokens/transactions'
 import { PriceChartEntry, Transaction } from 'types'
 import { notEmpty } from 'utils'
 import dayjs, { OpUnitType } from 'dayjs'
@@ -198,26 +198,26 @@ export function useTokenPriceData(
  * If not loaded, fetch and store
  * @param address
  */
-export function useTokenTransactions(address: string): Transaction[] | undefined {
-  const dispatch = useDispatch<AppDispatch>()
-  const token = useSelector((state: AppState) => state.tokens.byAddress[address])
-  const transactions = token.transactions
-  const [error, setError] = useState(false)
+// export function useTokenTransactions(address: string): Transaction[] | undefined {
+//   const dispatch = useDispatch<AppDispatch>()
+//   const token = useSelector((state: AppState) => state.tokens.byAddress[address])
+//   const transactions = token.transactions
+//   const [error, setError] = useState(false)
 
-  useEffect(() => {
-    async function fetch() {
-      const { error, data } = await fetchTokenTransactions(address)
-      if (error) {
-        setError(true)
-      } else if (data) {
-        dispatch(updateTransactions({ tokenAddress: address, transactions: data }))
-      }
-    }
-    if (!transactions && !error) {
-      fetch()
-    }
-  }, [address, dispatch, error, transactions])
+//   useEffect(() => {
+//     async function fetch() {
+//       const { error, data } = await fetchTokenTransactions(address)
+//       if (error) {
+//         setError(true)
+//       } else if (data) {
+//         dispatch(updateTransactions({ tokenAddress: address, transactions: data }))
+//       }
+//     }
+//     if (!transactions && !error) {
+//       fetch()
+//     }
+//   }, [address, dispatch, error, transactions])
 
-  // return data
-  return transactions
-}
+//   // return data
+//   return transactions
+// }

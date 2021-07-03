@@ -5,7 +5,7 @@ import {
   usePoolsForToken,
   useTokenChartData,
   useTokenPriceData,
-  useTokenTransactions,
+  // useTokenTransactions,
 } from 'state/tokens/hooks'
 import styled from 'styled-components'
 import { useColor } from 'hooks/useColor'
@@ -88,7 +88,7 @@ export default function TokenPage({
   const tokenData = useTokenData(address)
   const poolsForToken = usePoolsForToken(address)
   const poolDatas = usePoolDatas(poolsForToken ?? [])
-  const transactions = useTokenTransactions(address)
+  // const transactions = useTokenTransactions(address)
   const chartData = useTokenChartData(address)
 
   // format for chart component
@@ -350,14 +350,14 @@ export default function TokenPage({
             <DarkGreyCard>
               <PoolTable poolDatas={poolDatas} />
             </DarkGreyCard>
-            <TYPE.main>Transactions</TYPE.main>
+            {/* <TYPE.main>Transactions</TYPE.main>
             <DarkGreyCard>
               {transactions ? (
                 <TransactionTable transactions={transactions} color={backgroundColor} />
               ) : (
                 <LocalLoader fill={false} />
               )}
-            </DarkGreyCard>
+            </DarkGreyCard> */}
           </AutoColumn>
         )
       ) : (

@@ -89,29 +89,29 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
  * Get all transactions on pool
  * @param address
  */
-// export function usePoolTransactions(address: string): Transaction[] | undefined {
-//   const dispatch = useDispatch<AppDispatch>()
-//   const pool = useSelector((state: AppState) => state.pools.byAddress[address])
-//   const transactions = pool?.transactions
-//   const [error, setError] = useState(false)
+export function usePoolTransactions(address: string): Transaction[] | undefined {
+  const dispatch = useDispatch<AppDispatch>()
+  const pool = useSelector((state: AppState) => state.pools.byAddress[address])
+  const transactions = pool?.transactions
+  const [error, setError] = useState(false)
 
-//   useEffect(() => {
-//     async function fetch() {
-//       const { error, data } = await fetchPoolTransactions(address)
-//       if (error) {
-//         setError(true)
-//       } else if (data) {
-//         dispatch(updatePoolTransactions({ poolAddress: address, transactions: data }))
-//       }
-//     }
-//     if (!transactions && !error) {
-//       fetch()
-//     }
-//   }, [address, dispatch, error, transactions])
+  useEffect(() => {
+    async function fetch() {
+      const { error, data } = await fetchPoolTransactions(address)
+      if (error) {
+        setError(true)
+      } else if (data) {
+        dispatch(updatePoolTransactions({ poolAddress: address, transactions: data }))
+      }
+    }
+    if (!transactions && !error) {
+      fetch()
+    }
+  }, [address, dispatch, error, transactions])
 
-//   // return data
-//   return transactions
-// }
+  // return data
+  return transactions
+}
 
 export function usePoolTickData(
   address: string

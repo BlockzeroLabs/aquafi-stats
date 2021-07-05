@@ -53,7 +53,7 @@ export default function Home() {
       .map((p) => p.data)
       .filter(notEmpty)
   }, [allPoolData])
-
+  console.log('TXNNNNNNNNNNNNNNNNNNNNN=====', transactions)
   // if hover value undefined, reset to current day value
   // useEffect(() => {
   //   if (!volumeHover && protocolData) {

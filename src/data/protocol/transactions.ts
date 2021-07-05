@@ -5,35 +5,39 @@ import { formatTokenSymbol } from 'utils/tokens'
 
 const GLOBAL_TRANSACTIONS = gql`
   query transactions {
-    stakes {
-      id
-      pool {
-        token0 {
-          symbol
+    transactions {
+      stakes {
+        id
+        pool {
+          feeTier
+          token0 {
+            symbol
+          }
+          token1 {
+            symbol
+          }
         }
-        token1 {
-          symbol
-        }
+        tokenId
+        totalValueLocked
+        staker
+        stakeTime
       }
-      tokenId
-      totalValueLocked
-      staker
-      stakeTime
-    }
-    unstakes {
-      id
-      pool {
-        token0 {
-          symbol
+      unstakes {
+        id
+        pool {
+          feeTier
+          token0 {
+            symbol
+          }
+          token1 {
+            symbol
+          }
         }
-        token1 {
-          symbol
-        }
-      }
-      tokenId
-      totalValueLocked
+        tokenId
+        totalValueLocked
 
-      unstakeTime
+        unstakeTime
+      }
     }
   }
 `
@@ -44,6 +48,7 @@ type TransactionEntry = {
   stakes: {
     id: string
     pool: {
+      feeTier: string
       token0: {
         id: string
         symbol: string
@@ -76,6 +81,7 @@ type TransactionEntry = {
     id: string
 
     pool: {
+      feeTier: string
       token0: {
         id: string
         symbol: string
@@ -124,8 +130,11 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
     if (error || loading || !data) {
       return undefined
     }
+    console.log('PT TXN DATA=====', data)
 
     const formatted = data.transactions.reduce((accum: Transaction[], t: TransactionEntry) => {
+      console.log('FORMATTED DATA IN fffffffffffffffffTXN ====')
+
       const mintEntries = t.stakes.map((m) => {
         return {
           type: TransactionType.MINT,
@@ -133,16 +142,16 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
           timestamp: m.stakeTime,
 
           pool: {
-            feeTier: 'feeTier',
+            feeTier: m.pool.feeTier,
             token0: {
-              id: 'id',
+              id: m.pool.token0.id,
 
-              symbol: 'symbol',
+              symbol: m.pool.token0.symbol,
             },
             token1: {
-              id: 'id',
+              id: m.pool.token1.id,
 
-              symbol: 'symbol',
+              symbol: m.pool.token1.symbol,
             },
           },
           tokenId: m.tokenId,
@@ -159,20 +168,21 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
           timestamp: m.stakeTime,
 
           pool: {
-            feeTier: 'feeTier',
+            feeTier: m.pool.feeTier,
             token0: {
-              id: 'id',
+              id: m.pool.token0.id,
 
-              symbol: 'symbol',
+              symbol: m.pool.token0.symbol,
             },
             token1: {
-              id: 'id',
-              symbol: 'symbol',
+              id: m.pool.token1.id,
+
+              symbol: m.pool.token1.symbol,
             },
           },
           tokenId: m.tokenId,
           totalValueLocked: m.totalValueLocked,
-          staker: '01010101010',
+          staker: '0xb520bb16aeb6f1b38508ba24da30d6fcf76da3cb',
           stakeTime: m.stakeTime,
         }
       })
@@ -195,7 +205,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
       accum = [...accum, ...mintEntries, ...burnEntries]
       return accum
     }, [])
-
+    console.log('FORMATTED DATA IN TXN ====', formatted)
     return formatted
   } catch {
     return undefined

@@ -7,7 +7,9 @@ const POOL_TRANSACTIONS = gql`
   query transactions($address: Bytes!) {
     stakes(orderBy: stakeTime, orderDirection: desc, where: { pool: $address }) {
       id
+
       pool {
+        feeTier
         token0 {
           id
           symbol
@@ -25,6 +27,8 @@ const POOL_TRANSACTIONS = gql`
     unstakes(orderBy: unstakeTime, orderDirection: desc, where: { pool: $address }) {
       id
       pool {
+        feeTier
+
         token0 {
           symbol
         }
@@ -34,6 +38,7 @@ const POOL_TRANSACTIONS = gql`
       }
       tokenId
       totalValueLocked
+      staker
 
       unstakeTime
     }
@@ -43,7 +48,9 @@ const POOL_TRANSACTIONS = gql`
 interface TransactionResults {
   stakes: {
     id: string
+
     pool: {
+      feeTier: string
       token0: {
         id: string
         symbol: string
@@ -62,6 +69,8 @@ interface TransactionResults {
     id: string
 
     pool: {
+      feeTier: string
+
       token0: {
         id: string
         symbol: string
@@ -74,7 +83,7 @@ interface TransactionResults {
 
     tokenId: string
     totalValueLocked: string
-    // staker: string
+    staker: string
     unstakeTime: string
   }[]
   // burns: {
@@ -126,7 +135,7 @@ export async function fetchPoolTransactions(
       loading: true,
     }
   }
-  // console.log('MINTS DATA=============', data)
+
   const mints = data?.stakes.map((m) => {
     return {
       type: TransactionType.MINT,
@@ -134,6 +143,8 @@ export async function fetchPoolTransactions(
       timestamp: m.stakeTime,
 
       pool: {
+        feeTier: m.pool.feeTier,
+
         token0: {
           id: m.pool.token0.id,
           symbol: m.pool.token0.symbol,
@@ -166,6 +177,8 @@ export async function fetchPoolTransactions(
       timestamp: m.unstakeTime,
 
       pool: {
+        feeTier: m.pool.feeTier,
+
         token0: {
           id: m.pool.token0.id,
           symbol: m.pool.token0.symbol,
@@ -177,7 +190,8 @@ export async function fetchPoolTransactions(
       },
       tokenId: m.tokenId,
       totalValueLocked: m.totalValueLocked,
-      staker: '0xb520bb16aeb6f1b38508ba24da30d6fcf76da3cb',
+      staker: m.staker,
+
       stakeTime: m.unstakeTime,
     }
   })
@@ -197,7 +211,7 @@ export async function fetchPoolTransactions(
   //     amountToken1: parseFloat(m.amount1),
   //   }
   // })
-  console.log('MINTS DATA=============', mints, burns)
+  // console.log('MINTS DATA=============', mints, burns)
 
   return { data: [...mints, ...burns], error: false, loading: false }
 }

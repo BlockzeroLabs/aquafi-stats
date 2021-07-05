@@ -19,6 +19,8 @@ export type Transaction = {
   type: TransactionType
   hash: string
   pool: {
+    feeTier: string
+
     token0: {
       id: string
       symbol: string

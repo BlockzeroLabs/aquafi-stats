@@ -9,6 +9,10 @@ export interface ProtocolData {
   tvlUSD: number
   activeTvlUSD: number
   aquaPremiumUSD: number
+  tvlUSDChange: number
+  aquaPremiumChange: number
+  activeTvlUSDChange: number
+
   // stakeCount: string
   // activeStakeCount: string
   // unstakeCount: string

@@ -31,6 +31,9 @@ interface GlobalResponse {
     tvlUSD: number
     activeTvlUSD: number
     aquaPremiumUSD: number
+    tvlUSDChange: string
+    aquaPremiumChange: string
+    activeTvlUSDChange: string
     // stakeCount: string
     // activeStakeCount: string
     // unstakeCount: string
@@ -64,7 +67,7 @@ export function useFetchProtocolData(): {
   const parsed = data?.aquaPrimaries?.[0]
   const parsed24 = data24?.aquaPrimaries?.[0]
   const parsed48 = data48?.aquaPrimaries?.[0]
-  // console.log('parsed DATA', parsed, parsed24)
+  console.log('parsed DATA', parsed, parsed24)
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {
@@ -76,6 +79,7 @@ export function useFetchProtocolData(): {
     const aquaPremiumUSD = parsed && parsed24 ? parsed.aquaPremiumUSD - parsed24.aquaPremiumUSD : parsed.aquaPremiumUSD
 
     const activeTvlUSD = parsed && parsed24 ? parsed.activeTvlUSD - parsed24.activeTvlUSD : parsed.activeTvlUSD
+    console.log('TYE OF PARSED', typeof parsed.tvlUSD)
 
     // volume data
     // const volumeUSD =
@@ -88,8 +92,10 @@ export function useFetchProtocolData(): {
     //   volumeUSD && volumeOneWindowAgo ? ((volumeUSD - volumeOneWindowAgo) / volumeOneWindowAgo) * 100 : 0
 
     // // total value locked
-    // const tvlUSDChange = getPercentChange(parsed?.tvlUSD, parsed24?.tvlUSD)
-
+    const tvlUSDChange = getPercentChange(parsed?.tvlUSD.toString(), parsed24?.tvlUSD.toString())
+    const aquaPremiumChange = getPercentChange(parsed?.aquaPremiumUSD.toString(), parsed24?.aquaPremiumUSD.toString())
+    const activeTvlUSDChange = getPercentChange(parsed?.activeTvlUSD.toString(), parsed24?.activeTvlUSD.toString())
+    console.log('CHANGE===', tvlUSDChange, aquaPremiumChange, tvlUSD)
     // // 24H transactions
     // const txCount =
     //   parsed && parsed24
@@ -113,7 +119,7 @@ export function useFetchProtocolData(): {
     // const feeChange =
     //   feesUSD && feesOneWindowAgo ? getPercentChange(feesUSD.toString(), feesOneWindowAgo.toString()) : 0
 
-    return { aquaPremiumUSD, tvlUSD, activeTvlUSD }
+    return { aquaPremiumUSD, tvlUSD, activeTvlUSD, tvlUSDChange, aquaPremiumChange, activeTvlUSDChange }
     // volumeUSD,
     // volumeUSDChange: typeof volumeUSDChange === 'string' ? volumeUSDChange : 0,
     // tvlUSD: parseFloat(parsed.tvlUSD),

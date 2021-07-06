@@ -35,6 +35,7 @@ const GLOBAL_TRANSACTIONS = gql`
         }
         tokenId
         totalValueLocked
+        staker
 
         unstakeTime
       }
@@ -94,7 +95,7 @@ type TransactionEntry = {
 
     tokenId: string
     totalValueLocked: string
-    // staker: string
+    staker: string
     stakeTime: string
   }[]
   // burns: {
@@ -176,13 +177,15 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
             },
             token1: {
               id: m.pool.token1.id,
+              staker: m.staker,
 
               symbol: m.pool.token1.symbol,
             },
           },
           tokenId: m.tokenId,
           totalValueLocked: m.totalValueLocked,
-          staker: '0xb520bb16aeb6f1b38508ba24da30d6fcf76da3cb',
+          staker: m.staker,
+
           stakeTime: m.stakeTime,
         }
       })

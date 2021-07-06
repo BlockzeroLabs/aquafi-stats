@@ -53,7 +53,7 @@ export default function Home() {
       .map((p) => p.data)
       .filter(notEmpty)
   }, [allPoolData])
-  console.log('TXNNNNNNNNNNNNNNNNNNNNN=====', transactions)
+  // console.log('TXNNNNNNNNNNNNNNNNNNNNN=====', transactions)
   // if hover value undefined, reset to current day value
   // useEffect(() => {
   //   if (!volumeHover && protocolData) {
@@ -169,18 +169,18 @@ export default function Home() {
                   <TYPE.main mr="4px">TVL: </TYPE.main>
                   <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
                   <TYPE.main></TYPE.main>
-                  {/* <Percent value={protocolData?.tvlUSD} wrap={true} /> */}
+                  <Percent value={protocolData?.activeTvlUSD} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Active TVL : </TYPE.main>
                   <TYPE.label mr="4px">{formatDollarAmount(protocolData?.activeTvlUSD)}</TYPE.label>
-                  {/* <Percent value={protocolData?.activeTvlUSD} wrap={true} /> */}
+                  <Percent value={protocolData?.activeTvlUSDChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
                     <TYPE.main mr="4px">Aqua Premium </TYPE.main>
                     <TYPE.label mr="4px">{formatDollarAmount(protocolData?.aquaPremiumUSD)}</TYPE.label>
-                    {/* <Percent value={protocolData?.aquaPremiumUSD} wrap={true} /> */}
+                    <Percent value={protocolData?.aquaPremiumChange} wrap={true} />
                   </RowFixed>
                 </HideMedium>
               </RowFixed>

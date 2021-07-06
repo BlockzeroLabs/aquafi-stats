@@ -188,7 +188,7 @@ export function usePoolDatas(
             parseFloat(oneDay.aquaPremiumCollectedUSD)) *
           100
         : 0
-    const tvlUSD = current ? parseFloat(current.totalValueLocked) : 0
+    // const tvlUSD = current ? parseFloat(current.totalValueLocked) : 0
 
     const tvlUSDChange: number =
       current && oneDay
@@ -197,8 +197,8 @@ export function usePoolDatas(
           100
         : 0
 
-    const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
-    const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
+    // const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
+    // const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
 
     const feeTier = current ? current.feeTier : '0'
 

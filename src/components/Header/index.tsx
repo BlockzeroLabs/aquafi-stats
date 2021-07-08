@@ -9,6 +9,7 @@ import styled from 'styled-components'
 
 // import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
+import AquaLogo from '../../assets/svg/Aqua.svg'
 // import { useActiveWeb3React } from '../../hooks'
 // import { useDarkModeManager } from '../../state/user/hooks'
 // import { useETHBalances } from '../../state/wallet/hooks'
@@ -236,7 +237,7 @@ export default function Header() {
       <HeaderRow>
         <Title to="/">
           <UniIcon>
-            <img width={'24px'} src={LogoDark} alt="logo" />
+            <img width={'24px'} src={AquaLogo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>

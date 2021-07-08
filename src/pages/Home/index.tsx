@@ -102,7 +102,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={'#fc077d'} />
+      <ThemedBackgroundGlobal backgroundColor={'#71cbc7'} />
       <AutoColumn gap="16px">
         <TYPE.main>Uniswap Overview</TYPE.main>
         <ResponsiveRow>

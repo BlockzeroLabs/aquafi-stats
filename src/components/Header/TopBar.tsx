@@ -4,7 +4,12 @@ import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, ExternalLink } from 'theme'
 import { useEthPrices } from 'hooks/useEthPrices'
 import { formatDollarAmount } from 'utils/numbers'
+import { changeProtocol } from '../../state/user/actions'
+import { AppDispatch } from '../../state/index'
+import { useDispatch } from 'react-redux'
+
 import Polling from './Polling'
+import { fontSize } from 'styled-system'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -22,7 +27,10 @@ const StyledLink = styled(ExternalLink)`
 `
 
 const TopBar = () => {
+  const dispatch = useDispatch<AppDispatch>()
+
   const ethPrices = useEthPrices()
+
   return (
     <Wrapper>
       <RowBetween>
@@ -36,7 +44,9 @@ const TopBar = () => {
           </RowFixed>
         </AutoRow>
         <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
-          <StyledLink href="https://v2.info.uniswap.org/#/">V2 Analytics</StyledLink>
+          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v277'))}>
+            V2 Analytics
+          </span>
           <StyledLink href="https://docs.uniswap.org/">Docs</StyledLink>
           <StyledLink href="https://app.uniswap.org/#/swap">App</StyledLink>
         </AutoRow>

@@ -96,7 +96,7 @@ type TransactionEntry = {
     tokenId: string
     totalValueLocked: string
     staker: string
-    stakeTime: string
+    unstakeTime: string
   }[]
   // burns: {
   //   pool: {
@@ -166,7 +166,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
           type: TransactionType.BURN,
           hash: t.id,
 
-          timestamp: m.stakeTime,
+          timestamp: m.unstakeTime,
 
           pool: {
             feeTier: m.pool.feeTier,
@@ -186,7 +186,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
           totalValueLocked: m.totalValueLocked,
           staker: m.staker,
 
-          stakeTime: m.stakeTime,
+          stakeTime: m.unstakeTime,
         }
       })
 

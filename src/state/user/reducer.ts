@@ -10,6 +10,7 @@ import {
   updateMatchesDarkMode,
   updateUserDarkMode,
   toggleURLWarning,
+  changeProtocol,
   addSavedToken,
   addSavedPool,
 } from './actions'
@@ -36,9 +37,9 @@ export interface UserState {
     }
   }
 
+  protocol: string
   savedTokens: string[]
   savedPools: string[]
-
   timestamp: number
   URLWarningVisible: boolean
 }
@@ -52,6 +53,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   tokens: {},
   pairs: {},
+  protocol: 'v3',
   savedTokens: [],
   savedPools: [],
   timestamp: currentTimestamp(),
@@ -93,6 +95,14 @@ export default createReducer(initialState, (builder) =>
         state.savedTokens = newTokens
       }
     })
+    .addCase(changeProtocol, (state, { payload }) => {
+      console.log('PAYLOAD', payload)
+      state.protocol = payload
+    })
+    // .addCase(changeProtocol, (state, { payload: { address } }) => {
+
+    //   state.protocol = address
+    // })
     .addCase(addSavedPool, (state, { payload: { address } }) => {
       if (!state.savedPools || !state.savedPools.includes(address)) {
         const newPools = state.savedPools ?? []

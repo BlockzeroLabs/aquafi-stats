@@ -18,6 +18,7 @@ export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
 export const addSavedToken = createAction<{ address: string }>('user/addSavedToken')
+export const changeProtocol = createAction<string>('user/changeProtocol')
 export const addSavedPool = createAction<{ address: string }>('user/addSavedPool')
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
 export const removeSerializedPair = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(

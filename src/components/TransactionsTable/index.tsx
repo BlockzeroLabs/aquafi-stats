@@ -123,22 +123,16 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
           }
         </Label>
       </ExternalLink>
+
       <Label end={1} fontWeight={400}>
-        {formatDollarAmount(parseFloat(transaction.tokenId))}
+        {parseFloat(transaction.tokenId)}
       </Label>
       <Label end={1} fontWeight={400}>
-        weth/eth
-        {/* {parseInt(transaction.pool.token0.symbol / transaction.pool.token1.symbol)} */}
+        {transaction.pool.token0.symbol} / {transaction.pool.token1.symbol}
       </Label>
       <Label end={1} fontWeight={400}>
         {formatDollarAmount(parseFloat(transaction.totalValueLocked))}
       </Label>
-      {/* <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`  ${transaction.}`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={` ${transaction.token1Symbol}`} maxCharacters={16} />
-      </Label> */}
       <Label end={1} fontWeight={400}>
         <ExternalLink href={getEtherscanLink(1, transaction.staker, 'address')} style={{ color: color ?? theme.blue1 }}>
           {shortenAddress(transaction.staker)}
@@ -279,7 +273,7 @@ export default function TransactionTable({
           </ClickableText>
         </ResponsiveGrid>
         <Break />
-
+        {console.log('SORT txn ======', sortedTransactions)}
         {sortedTransactions.map((t, i) => {
           if (t) {
             return (

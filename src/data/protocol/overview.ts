@@ -2,6 +2,9 @@ import { getPercentChange } from '../../utils/data'
 import { ProtocolData } from '../../state/protocol/reducer'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
+import { v2client, client } from './../../apollo/client'
+import { useChangeProtocol } from 'state/user/hooks'
+
 import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { useMemo } from 'react'
@@ -51,14 +54,23 @@ export function useFetchProtocolData(): {
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48])
   const [block24, block48] = blocks ?? []
 
+  const [protocol] = useChangeProtocol()
+  console.log('PROTOCOL ', protocol)
+
   // fetch all data
-  const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA())
-  // console.log('OVERVIEW DATA', data, error)
+  const { loading, error, data } = useQuery<GlobalResponse>(
+    GLOBAL_DATA(),
+
+    protocol == 'v2' ? { client: v2client } : { client: client }
+  )
+  console.log('OVERVIEW DATA', data, error)
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block24?.number ?? undefined)
+    GLOBAL_DATA(block24?.number ?? undefined),
+    protocol == 'v2' ? { client: v2client } : { client: client }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(block48?.number ?? undefined)
+    GLOBAL_DATA(block48?.number ?? undefined),
+    protocol == 'v2' ? { client: v2client } : { client: client }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError)
@@ -67,7 +79,7 @@ export function useFetchProtocolData(): {
   const parsed = data?.aquaPrimaries?.[0]
   const parsed24 = data24?.aquaPrimaries?.[0]
   const parsed48 = data48?.aquaPrimaries?.[0]
-  console.log('parsed DATA', parsed, parsed24)
+  // console.log('parsed DATA', parsed, parsed24)
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {
@@ -79,7 +91,7 @@ export function useFetchProtocolData(): {
     const aquaPremiumUSD = parsed && parsed24 ? parsed.aquaPremiumUSD - parsed24.aquaPremiumUSD : parsed.aquaPremiumUSD
 
     const activeTvlUSD = parsed && parsed24 ? parsed.activeTvlUSD - parsed24.activeTvlUSD : parsed.activeTvlUSD
-    console.log('TYE OF PARSED', typeof parsed.tvlUSD)
+    // console.log('TYE OF PARSED', typeof parsed.tvlUSD)
 
     // volume data
     // const volumeUSD =

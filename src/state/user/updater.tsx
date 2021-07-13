@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../index'
-import { updateMatchesDarkMode, changeProtocol } from './actions'
+import { useChangeProtocol } from './hooks'
+import { updateMatchesDarkMode } from './actions'
 
 export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
+  const [protocol] = useChangeProtocol()
 
   // keep dark mode in sync with the system
   useEffect(() => {
-    dispatch(changeProtocol('v2'))
+    // dispatch(changeProtocol('v2'))
 
     const darkHandler = (match: MediaQueryListEvent) => {
       dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))

@@ -3,6 +3,10 @@ import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
 import { client } from 'apollo/client'
+import { useChangeProtocol } from 'state/user/hooks'
+
+import { v2client, client as v3Client } from './../../apollo/client'
+
 import { TokenChartEntry } from 'state/tokens/reducer'
 import { PoolChartEntry } from 'state/pools/reducer'
 
@@ -48,14 +52,17 @@ export async function fetchPoolChartData(address: string) {
     while (!allFound) {
       const { data: chartResData, error, loading } = await client.query<ChartResults>({
         query: POOL_CHART,
+
         variables: {
           address: address,
           startTime: startTimestamp,
           skip,
         },
+        // protocol == 'v2' ? { client: v2client } : { client: v3Client }
+
         fetchPolicy: 'cache-first',
       })
-
+      console.log('POOL CHART DATA========', chartResData)
       if (!loading) {
         skip += 1000
         if (chartResData.whitelistedPoolDayDatas.length < 1000 || error) {

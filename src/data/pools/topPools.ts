@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { useChangeProtocol } from 'state/user/hooks'
+import { v2client, client } from './../../apollo/client'
 
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -25,11 +27,15 @@ export function useTopPoolAddresses(): {
   error: boolean
   addresses: string[] | undefined
 } {
-  const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
-    // client: aquaV3Client,
-    fetchPolicy: 'network-only',
-  })
-  // console.log('data=========', data)
+  const [protocol] = useChangeProtocol()
+
+  const { loading, error, data } = useQuery<TopPoolsResponse>(
+    TOP_POOLS,
+    protocol == 'v2' ? { client: v2client } : { client: client }
+
+    // fetchPolicy: 'network-only',
+  )
+  console.log('pool data=========', data, error)
   const formattedData = useMemo(() => {
     if (data) {
       return data.whitelistedPools.map((p) => p.id)

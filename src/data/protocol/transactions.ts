@@ -134,7 +134,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
     console.log('PT TXN DATA=====', data)
 
     const formatted = data.transactions.reduce((accum: Transaction[], t: TransactionEntry) => {
-      console.log('FORMATTED DATA IN fffffffffffffffffTXN ====')
+      // console.log('FORMATTED DATA IN fffffffffffffffffTXN ====')
 
       const mintEntries = t.stakes.map((m) => {
         return {
@@ -208,7 +208,7 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
       accum = [...accum, ...mintEntries, ...burnEntries]
       return accum
     }, [])
-    console.log('FORMATTED DATA IN TXN ====', formatted)
+    // console.log('FORMATTED DATA IN TXN ====', formatted)
     return formatted
   } catch {
     return undefined

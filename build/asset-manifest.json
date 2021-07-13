@@ -4,8 +4,8 @@
     "static/js/0.7767406a.chunk.js.map": "./static/js/0.7767406a.chunk.js.map",
     "static/js/1.4ac336ea.chunk.js": "./static/js/1.4ac336ea.chunk.js",
     "static/js/1.4ac336ea.chunk.js.map": "./static/js/1.4ac336ea.chunk.js.map",
-    "main.js": "./static/js/main.26a58d15.chunk.js",
-    "main.js.map": "./static/js/main.26a58d15.chunk.js.map",
+    "main.js": "./static/js/main.95e5bbdc.chunk.js",
+    "main.js.map": "./static/js/main.95e5bbdc.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.b7ca5daa.js",
     "runtime-main.js.map": "./static/js/runtime-main.b7ca5daa.js.map",
     "static/css/4.99cf8a2f.chunk.css": "./static/css/4.99cf8a2f.chunk.css",
@@ -27,8 +27,8 @@
     "static/js/4.3fe926b3.chunk.js.LICENSE.txt": "./static/js/4.3fe926b3.chunk.js.LICENSE.txt",
     "static/js/5.12a0d4ba.chunk.js.LICENSE.txt": "./static/js/5.12a0d4ba.chunk.js.LICENSE.txt",
     "static/js/7.69e7d5af.chunk.js.LICENSE.txt": "./static/js/7.69e7d5af.chunk.js.LICENSE.txt",
+    "static/media/Aqua.80d47235.svg": "./static/media/Aqua.80d47235.svg",
     "static/media/inter.css": "./static/media/Inter.var.a738a131.woff2",
-    "static/media/logo_white.57af584b.svg": "./static/media/logo_white.57af584b.svg",
     "static/media/menu.f7a8c0ea.svg": "./static/media/menu.f7a8c0ea.svg",
     "static/media/whitev3.280959f9.svg": "./static/media/whitev3.280959f9.svg"
   },
@@ -36,6 +36,6 @@
     "static/js/runtime-main.b7ca5daa.js",
     "static/css/4.99cf8a2f.chunk.css",
     "static/js/4.3fe926b3.chunk.js",
-    "static/js/main.26a58d15.chunk.js"
+    "static/js/main.95e5bbdc.chunk.js"
   ]
 }

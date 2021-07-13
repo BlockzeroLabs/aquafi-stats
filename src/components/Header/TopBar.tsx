@@ -44,11 +44,14 @@ const TopBar = () => {
           </RowFixed>
         </AutoRow>
         <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
-          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v277'))}>
+          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v2'))}>
             V2 Analytics
           </span>
-          <StyledLink href="https://docs.uniswap.org/">Docs</StyledLink>
-          <StyledLink href="https://app.uniswap.org/#/swap">App</StyledLink>
+          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v3'))}>
+            V3 Analytics
+          </span>
+          {/* <StyledLink href="https://docs.uniswap.org/">Docs</StyledLink> */}
+          <StyledLink href="https://dev.aquafi.io/">App</StyledLink>
         </AutoRow>
       </RowBetween>
     </Wrapper>

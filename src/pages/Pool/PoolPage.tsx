@@ -113,7 +113,7 @@ export default function PoolPage({
 
   //watchlist
   const [savedPools, addSavedPool] = useSavedPools()
-
+  console.log('POOl page data ===', poolData)
   return (
     <PageWrapper>
       <ThemedBackground backgroundColor={backgroundColor} />

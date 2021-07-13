@@ -4,6 +4,9 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
+import { v2client, client as clientv3 } from './../../apollo/client'
+import { useChangeProtocol } from 'state/user/hooks'
+
 import { client } from 'apollo/client'
 
 // format dayjs with the libraries that we need
@@ -13,13 +16,7 @@ const ONE_DAY_UNIX = 24 * 60 * 60
 
 const GLOBAL_CHART = gql`
   query uniswapDayDatas($startTime: Int!, $skip: Int!) {
-    aquaUniswapV3DayDatas(
-      first: 1000
-      skip: $skip
-      where: { date_gt: $startTime }
-      orderBy: date
-      orderDirection: asc
-    ) {
+    aquaUniswapDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
       id
       date
       aquaPremiumUSD
@@ -29,14 +26,14 @@ const GLOBAL_CHART = gql`
 `
 
 interface ChartResults {
-  aquaUniswapV3DayDatas: {
+  aquaUniswapDayDatas: {
     date: number
     aquaPremiumUSD: number
     tvlUSD: number
   }[]
 }
 
-async function fetchChartData() {
+async function fetchChartData(protocol: any) {
   let data: {
     date: number
     aquaPremiumUSD: number
@@ -51,21 +48,25 @@ async function fetchChartData() {
 
   try {
     while (!allFound) {
-      const { data: chartResData, error, loading } = await client.query<ChartResults>({
+      const clientl = protocol == 'v2' ? v2client : clientv3
+      const { data: chartResData, error, loading } = await clientl.query<ChartResults>({
         query: GLOBAL_CHART,
         variables: {
           startTime: startTimestamp,
           skip,
         },
+        // client: clientv3,
         fetchPolicy: 'cache-first',
       })
       if (!loading) {
+        console.log('chartResData=====', chartResData, error)
+
         skip += 1000
-        if (chartResData.aquaUniswapV3DayDatas.length < 1000 || error) {
+        if (chartResData.aquaUniswapDayDatas.length < 1000 || error) {
           allFound = true
         }
         if (chartResData) {
-          data = data.concat(chartResData.aquaUniswapV3DayDatas)
+          data = data.concat(chartResData.aquaUniswapDayDatas)
         }
       }
     }
@@ -129,10 +130,11 @@ export function useFetchGlobalChartData(): {
 } {
   const [data, setData] = useState<ChartDayData[] | undefined>()
   const [error, setError] = useState(false)
+  const [protocol] = useChangeProtocol()
 
   useEffect(() => {
     async function fetch() {
-      const { data, error } = await fetchChartData()
+      const { data, error } = await fetchChartData(protocol)
       if (data && !error) {
         setData(data)
       } else if (error) {
@@ -142,7 +144,7 @@ export function useFetchGlobalChartData(): {
     if (!data && !error) {
       fetch()
     }
-  }, [data, error])
+  }, [data, error, protocol])
 
   return {
     error,

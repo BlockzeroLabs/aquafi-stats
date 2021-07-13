@@ -96,7 +96,7 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(changeProtocol, (state, { payload }) => {
-      console.log('PAYLOAD', payload)
+      console.log('PAYLOAD====', payload)
       state.protocol = payload
     })
     // .addCase(changeProtocol, (state, { payload: { address } }) => {

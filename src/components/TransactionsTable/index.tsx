@@ -273,7 +273,7 @@ export default function TransactionTable({
           </ClickableText>
         </ResponsiveGrid>
         <Break />
-        {console.log('SORT txn ======', sortedTransactions)}
+        {/* {console.log('SORT txn ======', sortedTransactions)} */}
         {sortedTransactions.map((t, i) => {
           if (t) {
             return (

@@ -21,6 +21,12 @@ export const client = new ApolloClient({
   queryDeduplication: true,
   defaultOptions: { watchQuery: { fetchPolicy: 'no-cache' }, query: { fetchPolicy: 'no-cache', errorPolicy: 'all' } },
 })
+export const v2client = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/mshahzaibhabib/aqua-uniswap-v2-stats',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: { watchQuery: { fetchPolicy: 'no-cache' }, query: { fetchPolicy: 'no-cache', errorPolicy: 'all' } },
+})
 
 export const healthClient = new ApolloClient({
   uri: 'https://api.thegraph.com/index-node/graphql',

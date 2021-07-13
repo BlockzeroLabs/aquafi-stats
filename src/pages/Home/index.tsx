@@ -48,6 +48,7 @@ export default function Home() {
 
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
+  // console.log('HOME PAGE DATA', allPoolData)
   const poolDatas = useMemo(() => {
     return Object.values(allPoolData)
       .map((p) => p.data)

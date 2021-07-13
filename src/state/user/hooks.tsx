@@ -15,6 +15,7 @@ import {
   toggleURLWarning,
   addSavedToken,
   addSavedPool,
+  changeProtocol,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -83,6 +84,17 @@ export function useSavedTokens(): [string[], (address: string) => void] {
     [dispatch]
   )
   return [savedTokens ?? [], updatedSavedTokens]
+}
+export function useChangeProtocol(): [string, (address: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const protocol = useSelector((state: AppState) => state.user.protocol)
+  const updatedProtocol = useCallback(
+    (address: string) => {
+      dispatch(addSavedToken({ address }))
+    },
+    [dispatch]
+  )
+  return [protocol ?? '', updatedProtocol]
 }
 
 export function useSavedPools(): [string[], (address: string) => void] {

@@ -24,6 +24,12 @@ export interface Pool {
 //   aquaPremium: number
 //   aquaPremiumCollectedUSD: number
 // }
+
+export declare enum FeeAmount {
+  LOW = 500,
+  MEDIUM = 3000,
+  HIGH = 10000,
+}
 export interface PoolData {
   id: string
   createdAtTimestamp: string
@@ -40,7 +46,40 @@ export interface PoolData {
     name: string
     decimals: string
   }
-  feeTier: string
+  // feeTier: string
+  feeTier: FeeAmount
+  token0Price: string
+  token1Price: string
+  aquaPremium: string
+
+  totalValueLockedToken0: string
+  totalValueLockedToken1: string
+  totalValueLocked: string
+  aquaPremiumCollected: string
+  aquaPremiumCollectedUSD: string
+  stakeCount: string
+  unstakeCount: string
+  // tvlUSD: number
+  aquaPremiumCollectedUSDChange: number
+  tvlUSDChange: number
+}
+export interface V2PoolData {
+  id: string
+  createdAtTimestamp: string
+
+  token0: {
+    id: string
+    symbol: string
+    name: string
+    decimals: string
+  }
+  token1: {
+    id: string
+    symbol: string
+    name: string
+    decimals: string
+  }
+
   token0Price: string
   token1Price: string
   aquaPremium: string

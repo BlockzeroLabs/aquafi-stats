@@ -12,6 +12,8 @@ import { PoolData } from 'state/pools/reducer'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import CustomToolTip from './CustomToolTip'
 import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { useChangeProtocol } from 'state/user/hooks'
+
 import JSBI from 'jsbi'
 
 const Wrapper = styled.div`
@@ -84,6 +86,7 @@ const initialState = {
 
 export default function DensityChart({ address }: DensityChartProps) {
   const theme = useTheme()
+  const [protocol] = useChangeProtocol()
 
   // poolData
   const poolData: PoolData = usePoolDatas([address])[0]
@@ -131,10 +134,16 @@ export default function DensityChart({ address }: DensityChartProps) {
           poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
             const active = t.tickIdx === poolTickData.activeTickIdx
             const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(t.tickIdx)
-            const feeAmount: FeeAmount = parseInt(poolData.feeTier)
+
+            // if (protocol == 'v2') {
+            // feeAmount = 500
+            // } else {
+            const feeAmount = poolData.feeTier
+            // }
+
             const mockTicks = [
               {
-                index: t.tickIdx - TICK_SPACINGS[feeAmount],
+                index: t.tickIdx - TICK_SPACINGS[feeAmount ?? 500],
                 liquidityGross: t.liquidityGross,
                 liquidityNet: JSBI.multiply(t.liquidityNet, JSBI.BigInt('-1')),
               },
@@ -146,7 +155,7 @@ export default function DensityChart({ address }: DensityChartProps) {
             ]
             const pool =
               token0 && token1 && feeTier
-                ? new Pool(token0, token1, parseInt(feeTier), sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
+                ? new Pool(token0, token1, feeTier, sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
                 : undefined
             const nextSqrtX96 = poolTickData.ticksProcessed[i - 1]
               ? TickMath.getSqrtRatioAtTick(poolTickData.ticksProcessed[i - 1].tickIdx)

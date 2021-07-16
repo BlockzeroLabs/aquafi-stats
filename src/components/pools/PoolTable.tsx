@@ -14,6 +14,7 @@ import { Label, ClickableText } from 'components/Text'
 import { PageButtons, Arrow, Break } from 'components/shared'
 import { POOL_HIDE } from '../../constants/index'
 import useTheme from 'hooks/useTheme'
+import { useChangeProtocol } from 'state/user/hooks'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -64,6 +65,10 @@ const SORT_FIELD = {
 }
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
+  console.log('pool ==============', poolData)
+
+  const [protocol] = useChangeProtocol()
+
   return (
     <LinkWrapper to={'/pools/' + poolData.id}>
       <ResponsiveGrid>
@@ -74,9 +79,13 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
             <TYPE.label ml="8px">
               {poolData.token0.symbol}/{poolData.token1.symbol}
             </TYPE.label>
-            <GreyBadge ml="10px" fontSize="14px">
-              {feeTierPercent(parseFloat(poolData.feeTier))}
-            </GreyBadge>
+            {protocol == 'v2' ? null : (
+              <GreyBadge ml="10px" fontSize="14px">
+                0.3%
+                {/* {feeTierPercent(parseFloat(poolData.feeTier))} */}
+                {/* {feeTierPercent(parseFloat(poolData.feeTier))} */}
+              </GreyBadge>
+            )}
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>

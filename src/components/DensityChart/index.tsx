@@ -134,16 +134,19 @@ export default function DensityChart({ address }: DensityChartProps) {
           poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
             const active = t.tickIdx === poolTickData.activeTickIdx
             const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(t.tickIdx)
+            const feeAmount: FeeAmount = parseInt(poolData.feeTier)
 
             // if (protocol == 'v2') {
             // feeAmount = 500
+
             // } else {
-            const feeAmount = poolData.feeTier
+            // const feeAmount = poolData.feeTier
             // }
 
             const mockTicks = [
               {
-                index: t.tickIdx - TICK_SPACINGS[feeAmount ?? 500],
+                // index: t.tickIdx - TICK_SPACINGS[feeAmount ?? 500],
+                index: t.tickIdx - TICK_SPACINGS[feeAmount],
                 liquidityGross: t.liquidityGross,
                 liquidityNet: JSBI.multiply(t.liquidityNet, JSBI.BigInt('-1')),
               },
@@ -155,7 +158,7 @@ export default function DensityChart({ address }: DensityChartProps) {
             ]
             const pool =
               token0 && token1 && feeTier
-                ? new Pool(token0, token1, feeTier, sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
+                ? new Pool(token0, token1, parseInt(feeTier), sqrtPriceX96, t.liquidityActive, t.tickIdx, mockTicks)
                 : undefined
             const nextSqrtX96 = poolTickData.ticksProcessed[i - 1]
               ? TickMath.getSqrtRatioAtTick(poolTickData.ticksProcessed[i - 1].tickIdx)

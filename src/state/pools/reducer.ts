@@ -46,8 +46,8 @@ export interface PoolData {
     name: string
     decimals: string
   }
-  // feeTier: string
-  feeTier: FeeAmount
+  feeTier: string
+  // feeTier: FeeAmount
   token0Price: string
   token1Price: string
   aquaPremium: string

@@ -1,11 +1,12 @@
-import { useUpdatePoolData, useAllPoolData, useAddPoolKeys } from './hooks'
+import { useUpdatePoolData, useUpdateV2PoolData, useAllPoolData, useAddPoolKeys } from './hooks'
 import { useEffect, useMemo } from 'react'
 import { useTopPoolAddresses } from 'data/pools/topPools'
-import { usePoolDatas } from 'data/pools/poolData'
+import { usePoolDatas, useV2PoolDatas } from 'data/pools/poolData'
 
 export default function Updater(): null {
   // updaters
   const updatePoolData = useUpdatePoolData()
+  const updateV2PoolData = useUpdateV2PoolData()
   const addPoolKeys = useAddPoolKeys()
 
   // data
@@ -38,5 +39,12 @@ export default function Updater(): null {
     }
   }, [poolDataError, poolDataLoading, poolDatas, updatePoolData])
 
+  // for v2
+  const { error: poolDataError2, loading: poolDataLoading2, data: poolDatas2 } = useV2PoolDatas(unfetchedPoolAddresses)
+  useEffect(() => {
+    if (poolDatas2 && !poolDataError2 && !poolDataLoading2) {
+      updateV2PoolData(Object.values(poolDatas2))
+    }
+  }, [poolDataError, poolDataLoading, poolDatas2, updatePoolData])
   return null
 }

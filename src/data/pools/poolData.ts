@@ -386,7 +386,7 @@ export function useV2PoolDatas(
     { client: v2client }
   )
   useEffect(() => {
-    console.log('data=======', data, error)
+    console.log('data v22222=======', data, error)
   }, [data, error])
 
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponseV2>(

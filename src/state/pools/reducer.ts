@@ -1,29 +1,22 @@
 import { currentTimestamp } from './../../utils/index'
-import { updatePoolData, addPoolKeys, updatePoolChartData, updatePoolTransactions, updateTickData } from './actions'
+import {
+  updatePoolData,
+  updateV2PoolData,
+  addPoolKeys,
+  updatePoolChartData,
+  updatePoolTransactions,
+  updateTickData,
+} from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 import { SerializedToken } from 'state/user/actions'
-import { Transaction } from 'types'
-import { PoolTickData } from 'data/pools/tickData'
+import { Transaction, V2Transaction } from 'types'
+import { PoolTickData, V2PoolTickData } from 'data/pools/tickData'
 
 export interface Pool {
   address: string
   token0: SerializedToken
   token1: SerializedToken
 }
-
-// export interface PoolData2 {
-//   // basic token info
-//   feeTier: number
-//   token0: {
-//     symbol: string
-//   }
-//   token1: {
-//     symbol: string
-//   }
-//   totalValueLocked: number
-//   aquaPremium: number
-//   aquaPremiumCollectedUSD: number
-// }
 
 export declare enum FeeAmount {
   LOW = 500,
@@ -114,12 +107,68 @@ export interface PoolsState {
     }
   }
 }
+export type V2PoolChartEntry = {
+  date: number
+  aquaPremiumUSD: number
+  totalValueLockedUSD: number
+}
+
+export interface V2PoolsState {
+  // analytics data from
+  byAddress: {
+    [address: string]: {
+      data: V2PoolData | undefined
+      chartData: V2PoolChartEntry[] | undefined
+      transactions: V2Transaction[] | undefined
+      lastUpdated: number | undefined
+      tickData: V2PoolTickData | undefined
+    }
+  }
+}
 
 export const initialState: PoolsState = { byAddress: {} }
+export const V2initialState: V2PoolsState = { byAddress: {} }
 
-export default createReducer(initialState, (builder) =>
+export const pools = createReducer(initialState, (builder) =>
   builder
     .addCase(updatePoolData, (state, { payload: { pools } }) => {
+      pools.map(
+        (poolData) =>
+          (state.byAddress[poolData.id] = {
+            ...state.byAddress[poolData.id],
+            data: poolData,
+            lastUpdated: currentTimestamp(),
+          })
+      )
+    })
+    // add address to byAddress keys if not included yet
+    .addCase(addPoolKeys, (state, { payload: { poolAddresses } }) => {
+      poolAddresses.map((address) => {
+        if (!state.byAddress[address]) {
+          state.byAddress[address] = {
+            data: undefined,
+            chartData: undefined,
+            transactions: undefined,
+            lastUpdated: undefined,
+            tickData: undefined,
+          }
+        }
+      })
+    })
+    .addCase(updatePoolChartData, (state, { payload: { poolAddress, chartData } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], chartData: chartData }
+    })
+    .addCase(updatePoolTransactions, (state, { payload: { poolAddress, transactions } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], transactions }
+    })
+    .addCase(updateTickData, (state, { payload: { poolAddress, tickData } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], tickData }
+    })
+)
+
+export const v2pools = createReducer(V2initialState, (builder) =>
+  builder
+    .addCase(updateV2PoolData, (state, { payload: { pools } }) => {
       pools.map(
         (poolData) =>
           (state.byAddress[poolData.id] = {

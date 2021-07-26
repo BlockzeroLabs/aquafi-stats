@@ -8,7 +8,7 @@ import lists from './lists/reducer'
 import multicall from './multicall/reducer'
 import protocol from './protocol/reducer'
 import tokens from './tokens/reducer'
-import pools from './pools/reducer'
+import { pools, v2pools } from './pools/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'lists']
 
@@ -21,6 +21,7 @@ const store = configureStore({
     protocol,
     tokens,
     pools,
+    v2pools,
   },
   middleware: [...getDefaultMiddleware({ thunk: false, immutableCheck: false }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS }),

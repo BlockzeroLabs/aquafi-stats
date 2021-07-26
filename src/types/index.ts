@@ -35,7 +35,24 @@ export type Transaction = {
   staker: string
   stakeTime: string
 }
-
+export type V2Transaction = {
+  type: TransactionType
+  hash: string
+  pool: {
+    token0: {
+      id: string
+      symbol: string
+    }
+    token1: {
+      id: string
+      symbol: string
+    }
+  }
+  tokenId: string
+  totalValueLocked: string
+  staker: string
+  stakeTime: string
+}
 /**
  * Formatted type for Candlestick charts
  */

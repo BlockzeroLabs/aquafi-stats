@@ -129,6 +129,12 @@ export interface PoolTickData {
   tickSpacing: number
   activeTickIdx: number
 }
+export interface V2PoolTickData {
+  ticksProcessed: TickProcessed[]
+  // feeTier: string
+  tickSpacing: number
+  activeTickIdx: number
+}
 
 const poolQuery = gql`
   query pool($poolAddress: String!) {

@@ -7,7 +7,7 @@ import Loader, { LoadingRows } from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
 import { formatDollarAmount } from 'utils/numbers'
-import { PoolData } from 'state/pools/reducer'
+import { PoolData, V2PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
 import { Label, ClickableText } from 'components/Text'
@@ -63,6 +63,12 @@ const SORT_FIELD = {
   tvlUSD: 'tvlUSD',
   volumeUSDWeek: 'volumeUSDWeek',
 }
+const V2_SORT_FIELD = {
+  // feeTier: 'feeTier',
+  volumeUSD: 'volumeUSD',
+  tvlUSD: 'tvlUSD',
+  volumeUSDWeek: 'volumeUSDWeek',
+}
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
   console.log('pool ==============', poolData)
@@ -79,13 +85,40 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
             <TYPE.label ml="8px">
               {poolData.token0.symbol}/{poolData.token1.symbol}
             </TYPE.label>
-            {protocol == 'v2' ? null : (
-              <GreyBadge ml="10px" fontSize="14px">
-                0.3%
-                {/* {feeTierPercent(parseFloat(poolData.feeTier))} */}
-                {/* {feeTierPercent(parseFloat(poolData.feeTier))} */}
-              </GreyBadge>
-            )}
+
+            <GreyBadge ml="10px" fontSize="14px">
+              {/* 0.3% */}
+              {feeTierPercent(parseFloat(poolData.feeTier))}
+              {/* {feeTierPercent(parseFloat(poolData.feeTier))} */}
+            </GreyBadge>
+          </RowFixed>
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(parseFloat(poolData.totalValueLocked))}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(parseFloat(poolData.aquaPremiumCollectedUSD))}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {parseFloat(poolData.aquaPremium) / 100}%
+        </Label>
+      </ResponsiveGrid>
+    </LinkWrapper>
+  )
+}
+const DataRowV2 = ({ poolData, index }: { poolData: V2PoolData; index: number }) => {
+  console.log('pool v2222==============', poolData)
+
+  return (
+    <LinkWrapper to={'/pools/' + poolData.id}>
+      <ResponsiveGrid>
+        <Label fontWeight={400}>{index + 1}</Label>
+        <Label fontWeight={400}>
+          <RowFixed>
+            <DoubleCurrencyLogo address0={poolData.token0.id} address1={poolData.token1.id} />
+            <TYPE.label ml="8px">
+              {poolData.token0.symbol}/{poolData.token1.symbol}
+            </TYPE.label>
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
@@ -104,12 +137,15 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
 
 const MAX_ITEMS = 10
 
-export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
+export function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
   // theming
   const theme = useTheme()
 
   // for sorting
+  const [protocol] = useChangeProtocol()
+
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
+  const [v2sortField, setV2SortField] = useState(V2_SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
   // pagination
@@ -143,6 +179,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   const handleSort = useCallback(
     (newField: string) => {
       setSortField(newField)
+
       setSortDirection(sortField !== newField ? true : !sortDirection)
     },
     [sortDirection, sortField]
@@ -190,6 +227,141 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
               return (
                 <React.Fragment key={i}>
                   <DataRow index={(page - 1) * MAX_ITEMS + i} poolData={poolData} />
+                  <Break />
+                </React.Fragment>
+              )
+            }
+            return null
+          })}
+          <PageButtons>
+            <div
+              onClick={() => {
+                setPage(page === 1 ? page : page - 1)
+              }}
+            >
+              <Arrow faded={page === 1 ? true : false}>←</Arrow>
+            </div>
+            <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
+            <div
+              onClick={() => {
+                setPage(page === maxPage ? page : page + 1)
+              }}
+            >
+              <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+            </div>
+          </PageButtons>
+        </AutoColumn>
+      ) : (
+        <LoadingRows>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </LoadingRows>
+      )}
+    </Wrapper>
+  )
+}
+export function V2PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: V2PoolData[]; maxItems?: number }) {
+  // theming
+  const theme = useTheme()
+
+  // for sorting
+  const [protocol] = useChangeProtocol()
+
+  const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
+  const [v2sortField, setV2SortField] = useState(V2_SORT_FIELD.tvlUSD)
+  const [sortDirection, setSortDirection] = useState<boolean>(true)
+
+  // pagination
+  const [page, setPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(1)
+  useEffect(() => {
+    let extraPages = 1
+    if (poolDatas.length % maxItems === 0) {
+      extraPages = 0
+    }
+    setMaxPage(Math.floor(poolDatas.length / maxItems) + extraPages)
+  }, [maxItems, poolDatas])
+
+  const sortedPools = useMemo(() => {
+    return poolDatas
+      ? poolDatas
+          .filter((x) => !!x && !POOL_HIDE.includes(x.id))
+          .sort((a, b) => {
+            if (a && b) {
+              return a[v2sortField as keyof V2PoolData] > b[v2sortField as keyof V2PoolData]
+                ? (sortDirection ? -1 : 1) * 1
+                : (sortDirection ? -1 : 1) * -1
+            } else {
+              return -1
+            }
+          })
+          .slice(maxItems * (page - 1), page * maxItems)
+      : []
+  }, [maxItems, page, poolDatas, sortDirection, v2sortField])
+
+  const handleSort = useCallback(
+    (newField: string) => {
+      setSortField(newField)
+      setV2SortField(newField)
+
+      setSortDirection(v2sortField !== newField ? true : !sortDirection)
+    },
+    [sortDirection, v2sortField]
+  )
+
+  const arrow = useCallback(
+    (field: string) => {
+      return v2sortField === field ? (!sortDirection ? '↑' : '↓') : ''
+    },
+    [sortDirection, v2sortField]
+  )
+
+  if (!poolDatas) {
+    return <Loader />
+  }
+
+  return (
+    <Wrapper>
+      {sortedPools.length > 0 ? (
+        <AutoColumn gap="16px">
+          <ResponsiveGrid>
+            {' '}
+            <Label color={theme.text2}>#</Label>{' '}
+            <ClickableText color={theme.text2}>
+              {' '}
+              Pool
+              {/* {arrow(V2_SORT_FIELD.feeTier)}{' '} */}
+            </ClickableText>{' '}
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.tvlUSD)}>
+              {' '}
+              TVL {arrow(V2_SORT_FIELD.tvlUSD)}{' '}
+            </ClickableText>{' '}
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.volumeUSD)}>
+              {' '}
+              Aqua Premium {arrow(V2_SORT_FIELD.volumeUSD)}{' '}
+            </ClickableText>{' '}
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.volumeUSDWeek)}>
+              {' '}
+              Premium % {arrow(V2_SORT_FIELD.volumeUSDWeek)}{' '}
+            </ClickableText>{' '}
+          </ResponsiveGrid>
+          <Break />
+          {sortedPools.map((poolData, i) => {
+            // console.log('SORTED POOlS======', sortedPools)
+            if (poolData) {
+              return (
+                <React.Fragment key={i}>
+                  <DataRowV2 index={(page - 1) * MAX_ITEMS + i} poolData={poolData} />
                   <Break />
                 </React.Fragment>
               )

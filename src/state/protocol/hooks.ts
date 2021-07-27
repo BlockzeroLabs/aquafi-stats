@@ -1,9 +1,9 @@
-import { updateProtocolData, updateChartData, updateTransactions } from './actions'
+import { updateProtocolData, updateChartData, updateTransactions, updateV2Transactions } from './actions'
 import { AppState, AppDispatch } from './../index'
 import { ProtocolData } from './reducer'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ChartDayData, Transaction } from 'types'
+import { ChartDayData, Transaction, V2Transaction } from 'types'
 
 export function useProtocolData(): [ProtocolData | undefined, (protocolData: ProtocolData) => void] {
   const protocolData: ProtocolData | undefined = useSelector((state: AppState) => state.protocol.data)
@@ -35,4 +35,13 @@ export function useProtocolTransactions(): [Transaction[] | undefined, (transact
     [dispatch]
   )
   return [transactions, setTransactions]
+}
+export function useV2ProtocolTransactions(): [V2Transaction[] | undefined, (transactions: V2Transaction[]) => void] {
+  const v2transactions: V2Transaction[] | undefined = useSelector((state: AppState) => state.v2protocol.v2transactions)
+  const dispatch = useDispatch<AppDispatch>()
+  const setV2Transactions: (v2transactions: V2Transaction[]) => void = useCallback(
+    (v2transactions: V2Transaction[]) => dispatch(updateV2Transactions({ v2transactions })),
+    [dispatch]
+  )
+  return [v2transactions, setV2Transactions]
 }

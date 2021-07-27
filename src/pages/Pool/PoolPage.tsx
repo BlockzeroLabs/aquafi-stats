@@ -31,7 +31,7 @@ import { unixToDate } from 'utils/date'
 import { ToggleWrapper, ToggleElementFree } from 'components/Toggle/index'
 import BarChart from 'components/BarChart/alt'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import TransactionTable from 'components/TransactionsTable'
+import { TransactionTableV3, TransactionTableV2 } from 'components/TransactionsTable'
 import { useSavedPools } from 'state/user/hooks'
 import DensityChart from 'components/DensityChart'
 import { MonoSpace } from 'components/shared'
@@ -343,7 +343,13 @@ export default function PoolPage({
         </ContentLayout>
         <TYPE.main fontSize="24px">Transactions</TYPE.main>
         <DarkGreyCard>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
+          {protocol == 'v3' && transactions ? (
+            <TransactionTableV3 transactions={transactions} />
+          ) : protocol == 'v3' && V2transactions ? (
+            <TransactionTableV2 transactions={V2transactions} />
+          ) : (
+            <LocalLoader fill={false} />
+          )}
         </DarkGreyCard>
       </AutoColumn>
     )

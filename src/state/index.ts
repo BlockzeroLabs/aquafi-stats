@@ -6,7 +6,7 @@ import { updateVersion } from './global/actions'
 import user from './user/reducer'
 import lists from './lists/reducer'
 import multicall from './multicall/reducer'
-import protocol from './protocol/reducer'
+import { protocol, v2protocol } from './protocol/reducer'
 import tokens from './tokens/reducer'
 import { pools, v2pools } from './pools/reducer'
 
@@ -19,6 +19,7 @@ const store = configureStore({
     multicall,
     lists,
     protocol,
+    v2protocol,
     tokens,
     pools,
     v2pools,

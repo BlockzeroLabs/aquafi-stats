@@ -5,21 +5,28 @@ import { TYPE } from 'theme'
 import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import LineChart from 'components/LineChart/alt'
 import useTheme from 'hooks/useTheme'
-import { useProtocolData, useProtocolChartData, useProtocolTransactions } from 'state/protocol/hooks'
+import {
+  useProtocolData,
+  useProtocolChartData,
+  useProtocolTransactions,
+  useV2ProtocolTransactions,
+} from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
 import TokenTable from 'components/tokens/TokenTable'
-import PoolTable from 'components/pools/PoolTable'
+import { PoolTable, V2PoolTable } from 'components/pools/PoolTable'
 import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
 import { unixToDate } from 'utils/date'
 import BarChart from 'components/BarChart/alt'
-import { useAllPoolData } from 'state/pools/hooks'
+import { useAllPoolData, useV2AllPoolData } from 'state/pools/hooks'
 import { notEmpty } from 'utils'
-import TransactionsTable from '../../components/TransactionsTable'
+import { TransactionTableV3, TransactionTableV2 } from '../../components/TransactionsTable'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
+import { useChangeProtocol } from 'state/user/hooks'
+
 import dayjs from 'dayjs'
 
 const ChartWrapper = styled.div`
@@ -36,10 +43,14 @@ export default function Home() {
   }, [])
 
   const theme = useTheme()
+  const [protocol] = useChangeProtocol()
 
   const [protocolData] = useProtocolData()
   const [chartData] = useProtocolChartData()
   const [transactions] = useProtocolTransactions()
+  const [v2transactions] = useV2ProtocolTransactions()
+  // const V2transactions = useV2PoolTransactions(address)
+
   // console.log('Protocol DATA=========', protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
@@ -48,12 +59,19 @@ export default function Home() {
 
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
-  console.log('HOME PAGE All pool data ', allPoolData)
+  const allV2PoolData = useV2AllPoolData()
+  console.log('HOME PAGE All pool data ===========', allPoolData, allV2PoolData)
+
   const poolDatas = useMemo(() => {
     return Object.values(allPoolData)
       .map((p) => p.data)
       .filter(notEmpty)
   }, [allPoolData])
+  const v2poolDatas = useMemo(() => {
+    return Object.values(allV2PoolData)
+      .map((p) => p.data)
+      .filter(notEmpty)
+  }, [allV2PoolData])
   // console.log('TXNNNNNNNNNNNNNNNNNNNNN=====', transactions)
   // if hover value undefined, reset to current day value
   // useEffect(() => {
@@ -197,11 +215,19 @@ export default function Home() {
           <TYPE.main>Top Pools</TYPE.main>
           <StyledInternalLink to="/pools">Explore</StyledInternalLink>
         </RowBetween>
-        <PoolTable poolDatas={poolDatas} />
+        {protocol == 'v3' ? (
+          <PoolTable poolDatas={poolDatas} />
+        ) : protocol == 'v2' ? (
+          <V2PoolTable poolDatas={v2poolDatas} />
+        ) : null}
         <RowBetween>
           <TYPE.main>Transactions</TYPE.main>
         </RowBetween>
-        {transactions ? <TransactionsTable transactions={transactions} /> : null}
+        {protocol == 'v3' && transactions ? (
+          <TransactionTableV3 transactions={transactions} />
+        ) : protocol == 'v2' && v2transactions ? (
+          <TransactionTableV2 transactions={v2transactions} />
+        ) : null}
       </AutoColumn>
     </PageWrapper>
   )

@@ -41,9 +41,9 @@ export interface V2ProtocolState {
   readonly lastUpdated: number | undefined
 
   // overview data
-  readonly data: ProtocolData | undefined
+  readonly v2data: ProtocolData | undefined
 
-  readonly chartData: ChartDayData[] | undefined
+  readonly v2chartData: ChartDayData[] | undefined
 
   readonly v2transactions: V2Transaction[] | undefined
 }
@@ -55,8 +55,8 @@ export const initialState: ProtocolState = {
   lastUpdated: undefined,
 }
 export const V2initialState: V2ProtocolState = {
-  data: undefined,
-  chartData: undefined,
+  v2data: undefined,
+  v2chartData: undefined,
   v2transactions: undefined,
   lastUpdated: undefined,
 }
@@ -77,13 +77,13 @@ export const protocol = createReducer(initialState, (builder) =>
 )
 export const v2protocol = createReducer(V2initialState, (builder) =>
   builder
-    .addCase(updateV2ProtocolData, (state, { payload: { protocolData } }) => {
-      state.data = protocolData
+    .addCase(updateV2ProtocolData, (state, { payload: { v2protocolData } }) => {
+      state.v2data = v2protocolData
       // mark when last updated
       state.lastUpdated = currentTimestamp()
     })
-    .addCase(updateV2ChartData, (state, { payload: { chartData } }) => {
-      state.chartData = chartData
+    .addCase(updateV2ChartData, (state, { payload: { v2chartData } }) => {
+      state.v2chartData = v2chartData
     })
     .addCase(updateV2Transactions, (state, { payload: { v2transactions } }) => {
       state.v2transactions = v2transactions

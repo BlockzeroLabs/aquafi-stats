@@ -1,4 +1,11 @@
-import { updateProtocolData, updateChartData, updateTransactions, updateV2Transactions } from './actions'
+import {
+  updateProtocolData,
+  updateV2ProtocolData,
+  updateV2ChartData,
+  updateChartData,
+  updateTransactions,
+  updateV2Transactions,
+} from './actions'
 import { AppState, AppDispatch } from './../index'
 import { ProtocolData } from './reducer'
 import { useCallback } from 'react'
@@ -16,6 +23,17 @@ export function useProtocolData(): [ProtocolData | undefined, (protocolData: Pro
 
   return [protocolData, setProtocolData]
 }
+export function useV2ProtocolData(): [ProtocolData | undefined, (protocolData: ProtocolData) => void] {
+  const v2protocolData: ProtocolData | undefined = useSelector((state: AppState) => state.v2protocol.v2data)
+
+  const dispatch = useDispatch<AppDispatch>()
+  const setV2ProtocolData: (v2protocolData: ProtocolData) => void = useCallback(
+    (v2protocolData: ProtocolData) => dispatch(updateV2ProtocolData({ v2protocolData })),
+    [dispatch]
+  )
+
+  return [v2protocolData, setV2ProtocolData]
+}
 
 export function useProtocolChartData(): [ChartDayData[] | undefined, (chartData: ChartDayData[]) => void] {
   const chartData: ChartDayData[] | undefined = useSelector((state: AppState) => state.protocol.chartData)
@@ -25,6 +43,15 @@ export function useProtocolChartData(): [ChartDayData[] | undefined, (chartData:
     [dispatch]
   )
   return [chartData, setChartData]
+}
+export function useV2ProtocolChartData(): [ChartDayData[] | undefined, (chartData: ChartDayData[]) => void] {
+  const v2chartData: ChartDayData[] | undefined = useSelector((state: AppState) => state.v2protocol.v2chartData)
+  const dispatch = useDispatch<AppDispatch>()
+  const setV2ChartData: (v2chartData: ChartDayData[]) => void = useCallback(
+    (v2chartData: ChartDayData[]) => dispatch(updateV2ChartData({ v2chartData })),
+    [dispatch]
+  )
+  return [v2chartData, setV2ChartData]
 }
 
 export function useProtocolTransactions(): [Transaction[] | undefined, (transactions: Transaction[]) => void] {

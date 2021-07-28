@@ -196,28 +196,26 @@ export function usePoolDatas(
   // )
   // it is coming from pool data log....
   // console.log('pool address=======', poolAddresses)
-  const { loading, error, data } = useQuery<PoolDataResponse>(
-    // POOLS_BULK(undefined, poolAddresses),
-    protocol == 'v2' ? POOLS_BULK_V2(undefined, poolAddresses) : POOLS_BULK(undefined, poolAddresses),
-    protocol == 'v2' ? { client: v2client } : { client: client }
-  )
+  console.log('poolAddresses', poolAddresses)
+
+  const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses))
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponse>(
-    protocol == 'v2' ? POOLS_BULK_V2(block24?.number, poolAddresses) : POOLS_BULK(block24?.number, poolAddresses),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    POOLS_BULK(block24?.number, poolAddresses),
+    { client: client }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
     POOLS_BULK(block48?.number, poolAddresses),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    { client: client }
   )
   useEffect(() => {
-    console.log('data=======', data, error)
+    console.log('data v3333=======', data, error)
   }, [data, error])
 
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponse>(
     POOLS_BULK(blockWeek?.number, poolAddresses),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    { client: client }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
@@ -382,7 +380,7 @@ export function useV2PoolDatas(
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponseV2>(
-    POOLS_BULK(block48?.number, poolAddresses),
+    POOLS_BULK_V2(block48?.number, poolAddresses),
     { client: v2client }
   )
   useEffect(() => {
@@ -390,7 +388,7 @@ export function useV2PoolDatas(
   }, [data, error])
 
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponseV2>(
-    POOLS_BULK(blockWeek?.number, poolAddresses),
+    POOLS_BULK_V2(blockWeek?.number, poolAddresses),
     protocol == 'v2' ? { client: v2client } : { client: client }
   )
 

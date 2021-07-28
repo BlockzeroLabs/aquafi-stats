@@ -10,6 +10,8 @@ import {
   useProtocolChartData,
   useProtocolTransactions,
   useV2ProtocolTransactions,
+  useV2ProtocolData,
+  useV2ProtocolChartData,
 } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { formatDollarAmount } from 'utils/numbers'
@@ -46,7 +48,9 @@ export default function Home() {
   const [protocol] = useChangeProtocol()
 
   const [protocolData] = useProtocolData()
+  const [v2protocolData] = useV2ProtocolData()
   const [chartData] = useProtocolChartData()
+  const [v2chartData] = useV2ProtocolChartData()
   const [transactions] = useProtocolTransactions()
   const [v2transactions] = useV2ProtocolTransactions()
   // const V2transactions = useV2PoolTransactions(address)
@@ -67,12 +71,14 @@ export default function Home() {
       .map((p) => p.data)
       .filter(notEmpty)
   }, [allPoolData])
+
   const v2poolDatas = useMemo(() => {
     return Object.values(allV2PoolData)
       .map((p) => p.data)
       .filter(notEmpty)
   }, [allV2PoolData])
-  // console.log('TXNNNNNNNNNNNNNNNNNNNNN=====', transactions)
+
+  console.log('poolDatas v2poolDatas =====', poolDatas, v2poolDatas)
   // if hover value undefined, reset to current day value
   // useEffect(() => {
   //   if (!volumeHover && protocolData) {
@@ -86,8 +92,16 @@ export default function Home() {
   // }, [liquidityHover, protocolData])
 
   const formattedTvlData = useMemo(() => {
-    if (chartData) {
+    if (protocol == 'v3' && chartData) {
       return chartData.map((day) => {
+        return {
+          time: unixToDate(day.date),
+          value: day.tvlUSD,
+        }
+      })
+    }
+    if (protocol == 'v2' && v2chartData) {
+      return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),
           value: day.tvlUSD,
@@ -96,11 +110,19 @@ export default function Home() {
     } else {
       return []
     }
-  }, [chartData])
+  }, [chartData, v2chartData])
 
   const formattedVolumeData = useMemo(() => {
-    if (chartData) {
+    if (protocol == 'v3' && chartData) {
       return chartData.map((day) => {
+        return {
+          time: unixToDate(day.date),
+          value: day.aquaPremiumUSD,
+        }
+      })
+    }
+    if (protocol == 'v2' && v2chartData) {
+      return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),
           value: day.aquaPremiumUSD,
@@ -109,15 +131,15 @@ export default function Home() {
     } else {
       return []
     }
-  }, [chartData])
+  }, [chartData, v2chartData])
 
-  const allTokens = useAllTokenData()
+  // const allTokens = useAllTokenData()
 
-  const formattedTokens = useMemo(() => {
-    return Object.values(allTokens)
-      .map((t) => t.data)
-      .filter(notEmpty)
-  }, [allTokens])
+  // const formattedTokens = useMemo(() => {
+  //   return Object.values(allTokens)
+  //     .map((t) => t.data)
+  //     .filter(notEmpty)
+  // }, [allTokens])
 
   return (
     <PageWrapper>
@@ -186,20 +208,31 @@ export default function Home() {
               <RowFixed>
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">TVL: </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
+                  <TYPE.label mr="4px">
+                    {formatDollarAmount(protocol == 'v3' ? protocolData?.tvlUSD : v2protocolData?.tvlUSD)}
+                  </TYPE.label>
                   <TYPE.main></TYPE.main>
                   <Percent value={protocolData?.activeTvlUSD} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Active TVL : </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.activeTvlUSD)}</TYPE.label>
+                  <TYPE.label mr="4px">
+                    {formatDollarAmount(protocol == 'v3' ? protocolData?.activeTvlUSD : v2protocolData?.activeTvlUSD)}
+                  </TYPE.label>
                   <Percent value={protocolData?.activeTvlUSDChange} wrap={true} />
                 </RowFixed>
                 <HideMedium>
                   <RowFixed mr="20px">
                     <TYPE.main mr="4px">Aqua Premium </TYPE.main>
-                    <TYPE.label mr="4px">{formatDollarAmount(protocolData?.aquaPremiumUSD)}</TYPE.label>
-                    <Percent value={protocolData?.aquaPremiumChange} wrap={true} />
+                    <TYPE.label mr="4px">
+                      {formatDollarAmount(
+                        protocol == 'v3' ? protocolData?.aquaPremiumUSD : v2protocolData?.aquaPremiumUSD
+                      )}
+                    </TYPE.label>
+                    <Percent
+                      value={protocol == 'v3' ? protocolData?.aquaPremiumChange : v2protocolData?.aquaPremiumChange}
+                      wrap={true}
+                    />
                   </RowFixed>
                 </HideMedium>
               </RowFixed>

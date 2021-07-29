@@ -2,10 +2,13 @@ import { currentTimestamp } from './../../utils/index'
 import {
   updatePoolData,
   updateV2PoolData,
+  updateV2PoolChartData,
   addPoolKeys,
   updatePoolChartData,
   updatePoolTransactions,
+  updateV2PoolTransactions,
   updateTickData,
+  updateV2TickData,
 } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 import { SerializedToken } from 'state/user/actions'
@@ -117,11 +120,11 @@ export interface V2PoolsState {
   // analytics data from
   byAddress: {
     [address: string]: {
-      data: V2PoolData | undefined
-      chartData: V2PoolChartEntry[] | undefined
-      transactions: V2Transaction[] | undefined
+      v2data: V2PoolData | undefined
+      v2chartData: V2PoolChartEntry[] | undefined
+      v2transactions: V2Transaction[] | undefined
       lastUpdated: number | undefined
-      tickData: V2PoolTickData | undefined
+      v2tickData: V2PoolTickData | undefined
     }
   }
 }
@@ -173,7 +176,7 @@ export const v2pools = createReducer(V2initialState, (builder) =>
         (poolData) =>
           (state.byAddress[poolData.id] = {
             ...state.byAddress[poolData.id],
-            data: poolData,
+            v2data: poolData,
             lastUpdated: currentTimestamp(),
           })
       )
@@ -183,22 +186,22 @@ export const v2pools = createReducer(V2initialState, (builder) =>
       poolAddresses.map((address) => {
         if (!state.byAddress[address]) {
           state.byAddress[address] = {
-            data: undefined,
-            chartData: undefined,
-            transactions: undefined,
+            v2data: undefined,
+            v2chartData: undefined,
+            v2transactions: undefined,
             lastUpdated: undefined,
-            tickData: undefined,
+            v2tickData: undefined,
           }
         }
       })
     })
-    .addCase(updatePoolChartData, (state, { payload: { poolAddress, chartData } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], chartData: chartData }
+    .addCase(updateV2PoolChartData, (state, { payload: { poolAddress, v2chartData } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], v2chartData: v2chartData }
     })
-    .addCase(updatePoolTransactions, (state, { payload: { poolAddress, transactions } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], transactions }
+    .addCase(updateV2PoolTransactions, (state, { payload: { poolAddress, v2transactions } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], v2transactions: v2transactions }
     })
-    .addCase(updateTickData, (state, { payload: { poolAddress, tickData } }) => {
-      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], tickData }
+    .addCase(updateV2TickData, (state, { payload: { poolAddress, tickData } }) => {
+      state.byAddress[poolAddress] = { ...state.byAddress[poolAddress], v2tickData: tickData }
     })
 )

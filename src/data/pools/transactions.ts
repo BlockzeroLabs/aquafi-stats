@@ -215,7 +215,7 @@ export async function fetchPoolTransactions(
     },
     fetchPolicy: 'cache-first',
   })
-  console.log('TXN DATA========', data, error)
+  console.log('TXN DATA V3========', data, error)
 
   if (error) {
     return {
@@ -322,7 +322,7 @@ export async function fetchV2PoolTransactions(
     },
     fetchPolicy: 'cache-first',
   })
-  console.log('TXN DATA========', data, error)
+  console.log('TXN DATA v2========', data, error)
 
   if (error) {
     return {

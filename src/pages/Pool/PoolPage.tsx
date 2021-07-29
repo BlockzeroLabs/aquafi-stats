@@ -95,8 +95,8 @@ export default function PoolPage({
   const v2chartData = useV2PoolChartData(address)
 
   const transactions = usePoolTransactions(address)
-  const V2transactions = useV2PoolTransactions(address)
-
+  const v2transactions = useV2PoolTransactions(address)
+  console.log('Transaction V2transactions', transactions, v2transactions)
   const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
@@ -343,10 +343,10 @@ export default function PoolPage({
         </ContentLayout>
         <TYPE.main fontSize="24px">Transactions</TYPE.main>
         <DarkGreyCard>
-          {protocol == 'v3' && transactions ? (
+          {protocol == 'v3' ? (
             <TransactionTableV3 transactions={transactions} />
-          ) : protocol == 'v3' && V2transactions ? (
-            <TransactionTableV2 transactions={V2transactions} />
+          ) : protocol == 'v2' ? (
+            <TransactionTableV2 transactions={transactions} />
           ) : (
             <LocalLoader fill={false} />
           )}
@@ -361,7 +361,7 @@ export default function PoolPage({
       {protocol == 'v3' && poolData ? (
         run(poolData, transactions)
       ) : protocol == 'v2' && v2poolData ? (
-        run(v2poolData, V2transactions)
+        run(v2poolData, v2transactions)
       ) : (
         <Loader />
       )}

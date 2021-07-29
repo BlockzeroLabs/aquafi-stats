@@ -48,8 +48,8 @@ export type V2Transaction = {
       symbol: string
     }
   }
-  tokenId: string
-  totalValueLocked: string
+  // tokenId: string
+  // totalValueLocked: string
   staker: string
   stakeTime: string
 }

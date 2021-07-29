@@ -28,7 +28,6 @@ import { TransactionTableV3, TransactionTableV2 } from '../../components/Transac
 import { useAllTokenData } from 'state/tokens/hooks'
 import { MonoSpace } from 'components/shared'
 import { useChangeProtocol } from 'state/user/hooks'
-
 import dayjs from 'dayjs'
 
 const ChartWrapper = styled.div`
@@ -55,7 +54,7 @@ export default function Home() {
   const [v2transactions] = useV2ProtocolTransactions()
   // const V2transactions = useV2PoolTransactions(address)
 
-  // console.log('Protocol DATA=========', protocolData)
+  console.log('v2chartData  v2transactions v2protocolData=========', v2chartData, v2transactions, v2protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
@@ -110,7 +109,9 @@ export default function Home() {
     } else {
       return []
     }
-  }, [chartData, v2chartData])
+  }, [chartData, v2chartData, protocol])
+
+  console.log('formattedTvlData =====', formattedTvlData)
 
   const formattedVolumeData = useMemo(() => {
     if (protocol == 'v3' && chartData) {
@@ -131,7 +132,7 @@ export default function Home() {
     } else {
       return []
     }
-  }, [chartData, v2chartData])
+  }, [chartData, v2chartData, protocol])
 
   // const allTokens = useAllTokenData()
 

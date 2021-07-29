@@ -73,7 +73,7 @@ export default function Home() {
 
   const v2poolDatas = useMemo(() => {
     return Object.values(allV2PoolData)
-      .map((p) => p.data)
+      .map((p) => p.v2data)
       .filter(notEmpty)
   }, [allV2PoolData])
 

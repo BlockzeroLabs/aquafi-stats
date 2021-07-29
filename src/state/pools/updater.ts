@@ -34,7 +34,7 @@ export default function Updater(): null {
   const unfetchedV2PoolAddresses = useMemo(() => {
     return Object.keys(allV2PoolData).reduce((accum: string[], key) => {
       const poolData = allV2PoolData[key]
-      if (!poolData.v2data || !poolData.lastUpdated) {
+      if (!poolData.data || !poolData.lastUpdated) {
         accum.push(key)
       }
       return accum

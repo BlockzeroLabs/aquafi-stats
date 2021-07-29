@@ -54,7 +54,7 @@ export default function Home() {
   const [v2transactions] = useV2ProtocolTransactions()
   // const V2transactions = useV2PoolTransactions(address)
 
-  // console.log('v2chartData  v2transactions v2protocolData=========', v2chartData, v2transactions, v2protocolData)
+  console.log('v2chartData  v2transactions v2protocolData=========', v2chartData, v2transactions, v2protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()
@@ -63,7 +63,7 @@ export default function Home() {
   // get all the pool datas that exist
   const allPoolData = useAllPoolData()
   const allV2PoolData = useV2AllPoolData()
-  // console.log('HOME PAGE All pool data ===========', allPoolData, allV2PoolData)
+  console.log('HOME PAGE All pool data ===========', allPoolData, allV2PoolData)
 
   const poolDatas = useMemo(() => {
     return Object.values(allPoolData)
@@ -73,7 +73,7 @@ export default function Home() {
 
   const v2poolDatas = useMemo(() => {
     return Object.values(allV2PoolData)
-      .map((p) => p.v2data)
+      .map((p) => p.data)
       .filter(notEmpty)
   }, [allV2PoolData])
 

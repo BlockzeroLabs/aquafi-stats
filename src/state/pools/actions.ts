@@ -1,6 +1,6 @@
 import { TickProcessed } from './../../data/pools/tickData'
 import { createAction } from '@reduxjs/toolkit'
-import { PoolData, V2PoolData, PoolChartEntry, V2PoolChartEntry } from './reducer'
+import { PoolData, V2PoolData, PoolChartEntry } from './reducer'
 import { Transaction, V2Transaction } from 'types'
 
 // protocol wide infos
@@ -13,14 +13,11 @@ export const addPoolKeys = createAction<{ poolAddresses: string[] }>('pool/addPo
 export const updatePoolChartData = createAction<{ poolAddress: string; chartData: PoolChartEntry[] }>(
   'pool/updatePoolChartData'
 )
-export const updateV2PoolChartData = createAction<{ poolAddress: string; v2chartData: V2PoolChartEntry[] }>(
-  'pool/updateV2PoolChartData'
-)
 
 export const updatePoolTransactions = createAction<{ poolAddress: string; transactions: Transaction[] }>(
   'pool/updatePoolTransactions'
 )
-export const updateV2PoolTransactions = createAction<{ poolAddress: string; v2transactions: V2Transaction[] }>(
+export const updateV2PoolTransactions = createAction<{ poolAddress: string; transactions: V2Transaction[] }>(
   'pool/updateV2PoolTransactions'
 )
 
@@ -45,4 +42,4 @@ export const updateV2TickData = createAction<{
         activeTickIdx: number
       }
     | undefined
-}>('pool/updateV2TickData')
+}>('pool/updateTickData')

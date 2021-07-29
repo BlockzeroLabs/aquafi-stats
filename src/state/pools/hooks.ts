@@ -1,7 +1,6 @@
 import {
   addPoolKeys,
   updatePoolChartData,
-  updateV2PoolChartData,
   updatePoolTransactions,
   updateV2PoolTransactions,
   updateTickData,
@@ -24,7 +23,7 @@ export function useAllPoolData(): {
   return useSelector((state: AppState) => state.pools.byAddress)
 }
 export function useV2AllPoolData(): {
-  [address: string]: { v2data: V2PoolData | undefined; lastUpdated: number | undefined }
+  [address: string]: { data: V2PoolData | undefined; lastUpdated: number | undefined }
 } {
   return useSelector((state: AppState) => state.v2pools.byAddress)
 }
@@ -92,7 +91,7 @@ export function useV2PoolDatas(poolAddresses: string[]): V2PoolData[] {
   // filter for pools with data
   const poolsWithData = poolAddresses
     .map((address) => {
-      const poolData = allPoolData[address]?.v2data
+      const poolData = allPoolData[address]?.data
       return poolData ?? undefined
     })
     .filter(notEmpty)
@@ -133,14 +132,14 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
 export function useV2PoolChartData(address: string): PoolChartEntry[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.v2pools.byAddress[address])
-  const chartData = pool?.v2chartData
+  const chartData = pool?.chartData
   const [error, setError] = useState(false)
 
   useEffect(() => {
     async function fetch() {
       const { error, data } = await fetchPoolChartData(address)
       if (!error && data) {
-        dispatch(updateV2PoolChartData({ poolAddress: address, v2chartData: data }))
+        dispatch(updatePoolChartData({ poolAddress: address, chartData: data }))
       }
       if (error) {
         setError(error)
@@ -185,25 +184,25 @@ export function usePoolTransactions(address: string): Transaction[] | undefined 
 export function useV2PoolTransactions(address: string): V2Transaction[] | undefined {
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.v2pools.byAddress[address])
-  const v2transactions = pool?.v2transactions
+  const transactions = pool?.transactions
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    async function fetchV2() {
+    async function fetch() {
       const { error, data } = await fetchV2PoolTransactions(address)
       if (error) {
         setError(true)
       } else if (data) {
-        dispatch(updateV2PoolTransactions({ poolAddress: address, v2transactions: data }))
+        dispatch(updateV2PoolTransactions({ poolAddress: address, transactions: data }))
       }
     }
-    if (!v2transactions && !error) {
-      fetchV2()
+    if (!transactions && !error) {
+      fetch()
     }
-  }, [address, dispatch, error, v2transactions])
+  }, [address, dispatch, error, transactions])
 
   // return data
-  return v2transactions
+  return transactions
 }
 
 export function usePoolTickData(
@@ -225,7 +224,7 @@ export function useV2PoolTickData(
 ): [V2PoolTickData | undefined, (poolAddress: string, tickData: V2PoolTickData) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.v2pools.byAddress[address])
-  const tickData = pool.v2tickData
+  const tickData = pool.tickData
 
   const setPoolTickData = useCallback(
     (address: string, tickData: V2PoolTickData) => dispatch(updateV2TickData({ poolAddress: address, tickData })),

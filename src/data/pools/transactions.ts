@@ -1,4 +1,4 @@
-import { client } from 'apollo/client'
+import { client, v2client } from 'apollo/client'
 import gql from 'graphql-tag'
 import { Transaction, V2Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
@@ -59,8 +59,7 @@ const V2POOL_TRANSACTIONS = gql`
           symbol
         }
       }
-      tokenId
-      totalValueLocked
+
       staker
       stakeTime
     }
@@ -74,10 +73,8 @@ const V2POOL_TRANSACTIONS = gql`
           symbol
         }
       }
-      tokenId
-      totalValueLocked
-      staker
 
+      staker
       unstakeTime
     }
   }
@@ -315,14 +312,14 @@ export async function fetchPoolTransactions(
 export async function fetchV2PoolTransactions(
   address: string
 ): Promise<{ data: V2Transaction[] | undefined; error: boolean; loading: boolean }> {
-  const { data, error, loading } = await client.query<V2TransactionResults>({
+  const { data, error, loading } = await v2client.query<V2TransactionResults>({
     query: V2POOL_TRANSACTIONS,
     variables: {
       address: address,
     },
     fetchPolicy: 'cache-first',
   })
-  console.log('TXN DATA========', data, error)
+  console.log('TXN DATA v2========', data, error, loading)
 
   if (error) {
     return {
@@ -340,7 +337,7 @@ export async function fetchV2PoolTransactions(
     }
   }
 
-  const mints = data?.stakes.map((m) => {
+  const mints = data?.stakes?.map((m) => {
     return {
       type: TransactionType.MINT,
       hash: m.id,
@@ -360,18 +357,9 @@ export async function fetchV2PoolTransactions(
       totalValueLocked: m.totalValueLocked,
       staker: m.staker,
       stakeTime: m.stakeTime,
-
-      // sender: m.origin,
-      // token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      // token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      // token0Address: m.pool.token0.id,
-      // token1Address: m.pool.token1.id,
-      // amountUSD: parseFloat(m.amountUSD),
-      // amountToken0: parseFloat(m.amount0),
-      // amountToken1: parseFloat(m.amount1),
     }
   })
-  const burns = data?.unstakes.map((m) => {
+  const burns = data?.unstakes?.map((m) => {
     return {
       type: TransactionType.BURN,
 

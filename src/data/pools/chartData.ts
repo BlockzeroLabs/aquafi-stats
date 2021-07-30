@@ -2,10 +2,10 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { client } from 'apollo/client'
+import { client, v2client } from 'apollo/client'
 import { useChangeProtocol } from 'state/user/hooks'
 
-import { v2client, client as v3Client } from './../../apollo/client'
+// import { v2client, client as v3Client } from './../../apollo/client'
 
 import { TokenChartEntry } from 'state/tokens/reducer'
 import { PoolChartEntry } from 'state/pools/reducer'
@@ -35,7 +35,7 @@ interface ChartResults {
   }[]
 }
 
-export async function fetchPoolChartData(address: string) {
+export async function fetchPoolChartData(address: string, protocol: string) {
   let data: {
     date: number
     aquaPremiumUSD: string
@@ -49,8 +49,12 @@ export async function fetchPoolChartData(address: string) {
   let allFound = false
 
   try {
+    console.log('chal1')
+
     while (!allFound) {
-      const { data: chartResData, error, loading } = await client.query<ChartResults>({
+      console.log('chal2')
+      const clientl = protocol == 'v2' ? v2client : client
+      const { data: chartResData, error, loading } = await clientl.query<ChartResults>({
         query: POOL_CHART,
 
         variables: {
@@ -71,7 +75,7 @@ export async function fetchPoolChartData(address: string) {
         if (chartResData) {
           data = data.concat(chartResData.whitelistedPoolDayDatas)
         }
-        // console.log('DATA===', data)
+        console.log('POOL CHART DATA==== data', data)
       }
     }
   } catch {
@@ -86,6 +90,7 @@ export async function fetchPoolChartData(address: string) {
         aquaPremiumUSD: parseFloat(dayData.aquaPremiumUSD),
         totalValueLockedUSD: parseFloat(dayData.tvlUSD),
       }
+      console.log('accum============', accum)
       return accum
     }, {})
 

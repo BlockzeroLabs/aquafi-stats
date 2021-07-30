@@ -14,6 +14,8 @@ import { PoolData, V2PoolData, PoolChartEntry } from './reducer'
 import { updatePoolData, updateV2PoolData } from './actions'
 import { notEmpty } from 'utils'
 import { fetchPoolChartData } from 'data/pools/chartData'
+import { useChangeProtocol } from 'state/user/hooks'
+
 import { Transaction, V2Transaction } from 'types'
 import { fetchPoolTransactions, fetchV2PoolTransactions } from 'data/pools/transactions'
 import { PoolTickData, V2PoolTickData } from 'data/pools/tickData'
@@ -107,6 +109,8 @@ export function useV2PoolDatas(poolAddresses: string[]): V2PoolData[] {
  */
 
 export function usePoolChartData(address: string): PoolChartEntry[] | undefined {
+  const [protocol] = useChangeProtocol()
+
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.pools.byAddress[address])
   const chartData = pool?.chartData
@@ -114,7 +118,7 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchPoolChartData(address)
+      const { error, data } = await fetchPoolChartData(address, protocol)
       if (!error && data) {
         dispatch(updatePoolChartData({ poolAddress: address, chartData: data }))
       }
@@ -131,6 +135,8 @@ export function usePoolChartData(address: string): PoolChartEntry[] | undefined 
   return chartData
 }
 export function useV2PoolChartData(address: string): PoolChartEntry[] | undefined {
+  const [protocol] = useChangeProtocol()
+
   const dispatch = useDispatch<AppDispatch>()
   const pool = useSelector((state: AppState) => state.v2pools.byAddress[address])
   const chartData = pool?.v2chartData
@@ -138,7 +144,7 @@ export function useV2PoolChartData(address: string): PoolChartEntry[] | undefine
 
   useEffect(() => {
     async function fetch() {
-      const { error, data } = await fetchPoolChartData(address)
+      const { error, data } = await fetchPoolChartData(address, protocol)
       if (!error && data) {
         dispatch(updateV2PoolChartData({ poolAddress: address, v2chartData: data }))
       }

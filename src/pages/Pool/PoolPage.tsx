@@ -298,7 +298,7 @@ export default function PoolPage({
                 <ToggleElementFree
                   isActive={view === ChartView.TVL}
                   fontSize="12px"
-                  onClick={() => (view === ChartView.TVL ? setView(ChartView.DENSITY) : setView(ChartView.TVL))}
+                  onClick={() => (view === ChartView.TVL ? setView(ChartView.VOL) : setView(ChartView.TVL))}
                 >
                   TVL
                 </ToggleElementFree>
@@ -318,29 +318,30 @@ export default function PoolPage({
                   </ToggleElementFree> */}
               </ToggleWrapper>
             </RowBetween>
-            {view === ChartView.TVL ? (
-              <LineChart
-                data={formattedTvlData}
-                setLabel={setValueLabel}
-                color={backgroundColor}
-                minHeight={340}
-                setValue={setLatestValue}
-                value={latestValue}
-                label={valueLabel}
-              />
-            ) : view === ChartView.VOL ? (
-              <BarChart
-                data={formattedVolumeData}
-                color={backgroundColor}
-                minHeight={340}
-                setValue={setLatestValue}
-                setLabel={setValueLabel}
-                value={latestValue}
-                label={valueLabel}
-              />
-            ) : (
-              <DensityChart address={address} />
-            )}
+            {
+              view === ChartView.TVL ? (
+                <LineChart
+                  data={formattedTvlData}
+                  setLabel={setValueLabel}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                  value={latestValue}
+                  label={valueLabel}
+                />
+              ) : view === ChartView.VOL ? (
+                <BarChart
+                  data={formattedVolumeData}
+                  color={backgroundColor}
+                  minHeight={340}
+                  setValue={setLatestValue}
+                  setLabel={setValueLabel}
+                  value={latestValue}
+                  label={valueLabel}
+                />
+              ) : null
+              // <DensityChart address={address} />
+            }
           </DarkGreyCard>
         </ContentLayout>
         <TYPE.main fontSize="24px">Transactions</TYPE.main>

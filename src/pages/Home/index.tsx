@@ -54,7 +54,7 @@ export default function Home() {
   const [v2transactions] = useV2ProtocolTransactions()
   // const V2transactions = useV2PoolTransactions(address)
 
-  console.log('v2chartData  v2transactions v2protocolData=========', v2chartData, v2transactions, v2protocolData)
+  // console.log('home v2chartData  v2transactions v2protocolData=========', v2chartData, v2transactions, v2protocolData)
   const [volumeHover, setVolumeHover] = useState<number | undefined>()
   const [liquidityHover, setLiquidityHover] = useState<number | undefined>()
   const [leftLabel, setLeftLabel] = useState<string | undefined>()

@@ -198,19 +198,19 @@ const DataRowV2 = ({ transaction, color }: { transaction: V2Transaction; color?:
       {/* <Label end={1} fontWeight={400}>
         {formatDollarAmount(parseFloat(transaction.totalValueLocked))}
       </Label> */}
-      <Label end={1} fontWeight={400}>
+      {/* <Label end={1} fontWeight={400}>
         <ExternalLink
           href={getEtherscanLink(1, '0xCd343942C6D1Dc6734a35d1304f23938d2c41a07', 'address')}
           style={{ color: color ?? theme.blue1 }}
         >
           {shortenAddress('0xCd343942C6D1Dc6734a35d1304f23938d2c41a07')}
         </ExternalLink>
-      </Label>
-      {/* <Label end={1} fontWeight={400}>
+      </Label> */}
+      <Label end={1} fontWeight={400}>
         <ExternalLink href={getEtherscanLink(1, transaction.staker, 'address')} style={{ color: color ?? theme.blue1 }}>
           {shortenAddress(transaction.staker)}
         </ExternalLink>
-      </Label> */}
+      </Label>
       <Label end={1} fontWeight={400}>
         {formatTime(transaction.stakeTime)}
       </Label>
@@ -509,7 +509,7 @@ export function TransactionTableV2({
           </ClickableText>
         </ResponsiveGrid>
         <Break />
-        {/* {console.log('SORT txn ======', sortedTransactions)} */}
+        {console.log('SORT txn v2222 ======', sortedTransactions)}
         {sortedTransactions.map((t, i) => {
           if (t) {
             return (

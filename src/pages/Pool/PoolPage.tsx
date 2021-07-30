@@ -91,12 +91,14 @@ export default function PoolPage({
   const poolData = usePoolDatas([address])[0]
   const v2poolData = useV2PoolDatas([address])[0]
 
+  // console.log('POOl page data ===', poolData, v2poolData)
   const chartData = usePoolChartData(address)
   const v2chartData = useV2PoolChartData(address)
+  console.log('POOl chartData v2chartData ===', chartData, v2chartData)
 
   const transactions = usePoolTransactions(address)
   const v2transactions = useV2PoolTransactions(address)
-  console.log('Transaction V2transactions', transactions, v2transactions)
+  console.log('POOl Transaction V2transactions', transactions, v2transactions)
 
   const [view, setView] = useState(ChartView.VOL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
@@ -146,7 +148,6 @@ export default function PoolPage({
 
   //watchlist
   const [savedPools, addSavedPool] = useSavedPools()
-  console.log('POOl page data ===', poolData, v2poolData)
 
   const run = (poolData: any, transactions: any) => {
     return (

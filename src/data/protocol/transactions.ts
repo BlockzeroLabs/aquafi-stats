@@ -36,7 +36,6 @@ const GLOBAL_TRANSACTIONS = gql`
         tokenId
         totalValueLocked
         staker
-
         unstakeTime
       }
     }
@@ -49,9 +48,11 @@ const V2_GLOBAL_TRANSACTIONS = gql`
         id
         pool {
           token0 {
+            id
             symbol
           }
           token1 {
+            id
             symbol
           }
         }
@@ -63,13 +64,15 @@ const V2_GLOBAL_TRANSACTIONS = gql`
         id
         pool {
           token0 {
+            id
             symbol
           }
           token1 {
+            id
             symbol
           }
         }
-
+        staker
         unstakeTime
       }
     }
@@ -296,7 +299,7 @@ export async function fetchV2TopTransactions(): Promise<V2Transaction[] | undefi
       const mintEntries = t.stakes.map((m) => {
         return {
           type: TransactionType.MINT,
-          hash: t.id,
+          hash: m.id,
           timestamp: m.stakeTime,
 
           pool: {
@@ -320,7 +323,7 @@ export async function fetchV2TopTransactions(): Promise<V2Transaction[] | undefi
       const burnEntries = t.unstakes.map((m) => {
         return {
           type: TransactionType.BURN,
-          hash: t.id,
+          hash: m.id,
 
           timestamp: m.unstakeTime,
 

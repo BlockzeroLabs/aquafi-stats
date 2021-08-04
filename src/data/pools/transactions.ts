@@ -1,7 +1,8 @@
-import { client, v2client } from 'apollo/client'
+import { client, v2client, sushiClient } from 'apollo/client'
 import gql from 'graphql-tag'
 import { Transaction, V2Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
+import { useChangeProtocol } from 'state/user/hooks'
 
 const POOL_TRANSACTIONS = gql`
   query transactions($address: Bytes!) {
@@ -310,9 +311,12 @@ export async function fetchPoolTransactions(
   return { data: [...mints, ...burns], error: false, loading: false }
 }
 export async function fetchV2PoolTransactions(
-  address: string
+  address: string,
+  protocol: string
 ): Promise<{ data: V2Transaction[] | undefined; error: boolean; loading: boolean }> {
-  const { data, error, loading } = await v2client.query<V2TransactionResults>({
+  const clientl = protocol == 'v2' ? v2client : sushiClient
+
+  const { data, error, loading } = await clientl.query<V2TransactionResults>({
     query: V2POOL_TRANSACTIONS,
     variables: {
       address: address,

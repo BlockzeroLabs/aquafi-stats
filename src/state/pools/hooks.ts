@@ -19,6 +19,7 @@ import { useChangeProtocol } from 'state/user/hooks'
 import { Transaction, V2Transaction } from 'types'
 import { fetchPoolTransactions, fetchV2PoolTransactions } from 'data/pools/transactions'
 import { PoolTickData, V2PoolTickData } from 'data/pools/tickData'
+import { protocol } from 'state/protocol/reducer'
 
 export function useAllPoolData(): {
   [address: string]: { data: PoolData | undefined; lastUpdated: number | undefined }
@@ -193,10 +194,11 @@ export function useV2PoolTransactions(address: string): V2Transaction[] | undefi
   const pool = useSelector((state: AppState) => state.v2pools.byAddress[address])
   const v2transactions = pool?.v2transactions
   const [error, setError] = useState(false)
+  const [protocol] = useChangeProtocol()
 
   useEffect(() => {
     async function fetchV2() {
-      const { error, data } = await fetchV2PoolTransactions(address)
+      const { error, data } = await fetchV2PoolTransactions(address, protocol)
       if (error) {
         setError(true)
       } else if (data) {

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import styled from 'styled-components'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, ExternalLink } from 'theme'
@@ -10,6 +11,7 @@ import { useDispatch } from 'react-redux'
 
 import Polling from './Polling'
 import { fontSize } from 'styled-system'
+import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -44,13 +46,30 @@ const TopBar = () => {
           </RowFixed>
         </AutoRow>
         <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
-          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v2'))}>
+          <Link
+            to="/"
+            style={{ cursor: 'pointer', fontSize: '12px', textDecoration: 'none', color: 'white' }}
+            onClick={() => dispatch(changeProtocol('sushi'))}
+          >
+            Sushi Analytics
+          </Link>
+
+          <Link
+            to="/"
+            style={{ cursor: 'pointer', fontSize: '12px', textDecoration: 'none', color: 'white' }}
+            onClick={() => dispatch(changeProtocol('v2'))}
+          >
             V2 Analytics
-          </span>
-          <span style={{ cursor: 'pointer', fontSize: '12px' }} onClick={() => dispatch(changeProtocol('v3'))}>
+          </Link>
+
+          <Link
+            to="/"
+            style={{ cursor: 'pointer', fontSize: '12px', textDecoration: 'none', color: 'white' }}
+            onClick={() => dispatch(changeProtocol('v3'))}
+          >
             V3 Analytics
-          </span>
-          {/* <StyledLink href="https://docs.uniswap.org/">Docs</StyledLink> */}
+          </Link>
+
           <StyledLink href="https://dev.aquafi.io/">App</StyledLink>
         </AutoRow>
       </RowBetween>

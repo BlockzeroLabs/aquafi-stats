@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { client, v2client } from 'apollo/client'
+import { client, v2client, sushiClient } from 'apollo/client'
 import { useChangeProtocol } from 'state/user/hooks'
 
 // import { v2client, client as v3Client } from './../../apollo/client'
@@ -49,11 +49,8 @@ export async function fetchPoolChartData(address: string, protocol: string) {
   let allFound = false
 
   try {
-    console.log('chal1')
-
     while (!allFound) {
-      console.log('chal2')
-      const clientl = protocol == 'v2' ? v2client : client
+      const clientl = protocol == 'v2' ? v2client : protocol == 'sushi' ? sushiClient : client
       const { data: chartResData, error, loading } = await clientl.query<ChartResults>({
         query: POOL_CHART,
 
@@ -62,7 +59,7 @@ export async function fetchPoolChartData(address: string, protocol: string) {
           startTime: startTimestamp,
           skip,
         },
-        // protocol == 'v2' ? { client: v2client } : { client: v3Client }
+        // protocol !== 'v3' ? { client: v2client } : { client: v3Client }
 
         fetchPolicy: 'cache-first',
       })

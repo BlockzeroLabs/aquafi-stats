@@ -4,10 +4,8 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
-import { v2client, client as clientv3 } from './../../apollo/client'
+import { v2client, client, sushiClient } from './../../apollo/client'
 import { useChangeProtocol } from 'state/user/hooks'
-
-import { client } from 'apollo/client'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -48,7 +46,7 @@ async function fetchChartData(protocol: any) {
 
   try {
     while (!allFound) {
-      const clientl = protocol == 'v2' ? v2client : clientv3
+      const clientl = protocol == 'v2' ? v2client : protocol == 'sushi' ? sushiClient : client
       const { data: chartResData, error, loading } = await clientl.query<ChartResults>({
         query: GLOBAL_CHART,
         variables: {

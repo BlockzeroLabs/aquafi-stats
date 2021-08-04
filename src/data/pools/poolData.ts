@@ -4,7 +4,7 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
 import { PoolData, V2PoolData } from 'state/pools/reducer'
 import { get2DayChange } from 'utils/data'
-import { v2client, client } from './../../apollo/client'
+import { v2client, sushiClient, client } from './../../apollo/client'
 import { useChangeProtocol } from 'state/user/hooks'
 
 import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
@@ -191,8 +191,8 @@ export function usePoolDatas(
   const [block24, block48, blockWeek] = blocks ?? []
 
   // const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
-  //   protocol == 'v2' ? POOLS_BULK_V2(block48?.number, poolAddresses) : POOLS_BULK(block48?.number, poolAddresses),
-  //   protocol == 'v2' ? { client: v2client } : { client: client }
+  //   protocol !== 'v3' ? POOLS_BULK_V2(block48?.number, poolAddresses) : POOLS_BULK(block48?.number, poolAddresses),
+  //   protocol !== 'v3' ? { client: v2client } : { client: client }
   // )
   // it is coming from pool data log....
   // console.log('pool address=======', poolAddresses)
@@ -363,25 +363,25 @@ export function useV2PoolDatas(
   const [block24, block48, blockWeek] = blocks ?? []
 
   // const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
-  //   protocol == 'v2' ? POOLS_BULK_V2(block48?.number, poolAddresses) : POOLS_BULK(block48?.number, poolAddresses),
-  //   protocol == 'v2' ? { client: v2client } : { client: client }
+  //   protocol !== 'v3' ? POOLS_BULK_V2(block48?.number, poolAddresses) : POOLS_BULK(block48?.number, poolAddresses),
+  //   protocol !== 'v3' ? { client: v2client } : { client: client }
   // )
   // it is coming from pool data log....
   // console.log('pool address=======', poolAddresses)
   const { loading, error, data } = useQuery<PoolDataResponseV2>(
     // POOLS_BULK(undefined, poolAddresses),
     POOLS_BULK_V2(undefined, poolAddresses),
-    { client: v2client }
+    protocol == 'v2' ? { client: v2client } : { client: sushiClient }
   )
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponseV2>(
     POOLS_BULK_V2(block24?.number, poolAddresses),
-    { client: v2client }
+    protocol == 'v2' ? { client: v2client } : { client: sushiClient }
   )
 
   const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponseV2>(
     POOLS_BULK_V2(block48?.number, poolAddresses),
-    { client: v2client }
+    protocol == 'v2' ? { client: v2client } : { client: sushiClient }
   )
   useEffect(() => {
     console.log('data v22222=======', data, error)
@@ -389,7 +389,7 @@ export function useV2PoolDatas(
 
   const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<PoolDataResponseV2>(
     POOLS_BULK_V2(blockWeek?.number, poolAddresses),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    protocol == 'v2' ? { client: v2client } : { client: sushiClient }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)

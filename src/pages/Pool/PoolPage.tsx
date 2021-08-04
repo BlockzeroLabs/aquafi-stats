@@ -113,7 +113,7 @@ export default function PoolPage({
         }
       })
     }
-    if (v2chartData && protocol == 'v2') {
+    if (v2chartData && protocol !== 'v3') {
       return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),
@@ -348,7 +348,7 @@ export default function PoolPage({
         <DarkGreyCard>
           {protocol == 'v3' && transactions ? (
             <TransactionTableV3 transactions={transactions} />
-          ) : protocol == 'v2' && transactions ? (
+          ) : protocol !== 'v3' && transactions ? (
             <TransactionTableV2 transactions={transactions} />
           ) : (
             // <LocalLoader fill={false} />
@@ -364,7 +364,7 @@ export default function PoolPage({
       <ThemedBackground backgroundColor={backgroundColor} />
       {protocol == 'v3' && poolData ? (
         run(poolData, transactions)
-      ) : protocol == 'v2' && v2poolData ? (
+      ) : protocol !== 'v3' && v2poolData ? (
         run(v2poolData, v2transactions)
       ) : (
         <Loader />

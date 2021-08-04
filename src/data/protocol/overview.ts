@@ -2,7 +2,7 @@ import { getPercentChange } from '../../utils/data'
 import { ProtocolData } from '../../state/protocol/reducer'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
-import { v2client, client } from './../../apollo/client'
+import { v2client, client, sushiClient } from './../../apollo/client'
 import { useChangeProtocol } from 'state/user/hooks'
 
 import { useDeltaTimestamps } from 'utils/queries'
@@ -61,16 +61,16 @@ export function useFetchProtocolData(): {
   const { loading, error, data } = useQuery<GlobalResponse>(
     GLOBAL_DATA(),
 
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    protocol == 'v2' ? { client: v2client } : protocol == 'sushi' ? { client: sushiClient } : { client: client }
   )
   console.log('OVERVIEW DATA', data, error)
   const { loading: loading24, error: error24, data: data24 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block24?.number ?? undefined),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    protocol == 'v2' ? { client: v2client } : protocol == 'sushi' ? { client: sushiClient } : { client: client }
   )
   const { loading: loading48, error: error48, data: data48 } = useQuery<GlobalResponse>(
     GLOBAL_DATA(block48?.number ?? undefined),
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    protocol == 'v2' ? { client: v2client } : protocol == 'sushi' ? { client: sushiClient } : { client: client }
   )
 
   const anyError = Boolean(error || error24 || error48 || blockError)

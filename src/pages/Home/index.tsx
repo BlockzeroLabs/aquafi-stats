@@ -99,7 +99,7 @@ export default function Home() {
         }
       })
     }
-    if (protocol == 'v2' && v2chartData) {
+    if (protocol !== 'v3' && v2chartData) {
       return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),
@@ -122,7 +122,7 @@ export default function Home() {
         }
       })
     }
-    if (protocol == 'v2' && v2chartData) {
+    if (protocol !== 'v3' && v2chartData) {
       return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),
@@ -251,7 +251,7 @@ export default function Home() {
         </RowBetween>
         {protocol == 'v3' ? (
           <PoolTable poolDatas={poolDatas} />
-        ) : protocol == 'v2' ? (
+        ) : protocol !== 'v3' ? (
           <V2PoolTable poolDatas={v2poolDatas} />
         ) : null}
         <RowBetween>
@@ -259,7 +259,7 @@ export default function Home() {
         </RowBetween>
         {protocol == 'v3' && transactions ? (
           <TransactionTableV3 transactions={transactions} />
-        ) : protocol == 'v2' && v2transactions ? (
+        ) : protocol !== 'v3' && v2transactions ? (
           <TransactionTableV2 transactions={v2transactions} />
         ) : null}
       </AutoColumn>

@@ -136,7 +136,7 @@ export default function DensityChart({ address }: DensityChartProps) {
             const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(t.tickIdx)
             const feeAmount: FeeAmount = parseInt(poolData.feeTier)
 
-            // if (protocol == 'v2') {
+            // if (protocol !== 'v3') {
             // feeAmount = 500
 
             // } else {

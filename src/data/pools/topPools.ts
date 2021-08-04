@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useChangeProtocol } from 'state/user/hooks'
-import { v2client, client } from './../../apollo/client'
+import { v2client, sushiClient, client } from './../../apollo/client'
 
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
@@ -31,7 +31,7 @@ export function useTopPoolAddresses(): {
 
   const { loading, error, data } = useQuery<TopPoolsResponse>(
     TOP_POOLS,
-    protocol == 'v2' ? { client: v2client } : { client: client }
+    protocol == 'v2' ? { client: v2client } : protocol == 'sushi' ? { client: sushiClient } : { client: client }
 
     // fetchPolicy: 'network-only',
   )

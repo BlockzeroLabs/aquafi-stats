@@ -10,10 +10,12 @@ import { useEffect } from 'react'
 import { useFetchProtocolData } from 'data/protocol/overview'
 import { useFetchGlobalChartData } from 'data/protocol/chart'
 import { fetchTopTransactions, fetchV2TopTransactions } from 'data/protocol/transactions'
+import { useChangeProtocol } from 'state/user/hooks'
 
 export default function Updater(): null {
   const [protocolData, updateProtocolData] = useProtocolData()
   const [v2protocolData, updateV2ProtocolData] = useV2ProtocolData()
+  const [protocol] = useChangeProtocol()
 
   const { data: fetchedProtocolData, error, loading } = useFetchProtocolData()
 
@@ -64,7 +66,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     async function fetchV2() {
-      const data = await fetchV2TopTransactions()
+      const data = await fetchV2TopTransactions(protocol)
       if (data) {
         updateV2Transactions(data)
       }

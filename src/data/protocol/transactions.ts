@@ -1,7 +1,8 @@
-import { client, v2client } from 'apollo/client'
+import { client, v2client, sushiClient } from 'apollo/client'
 import gql from 'graphql-tag'
 import { Transaction, V2Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
+import { useChangeProtocol } from 'state/user/hooks'
 
 const GLOBAL_TRANSACTIONS = gql`
   query transactions {
@@ -281,9 +282,10 @@ export async function fetchTopTransactions(): Promise<Transaction[] | undefined>
   }
 }
 
-export async function fetchV2TopTransactions(): Promise<V2Transaction[] | undefined> {
+export async function fetchV2TopTransactions(protocol: string): Promise<V2Transaction[] | undefined> {
   try {
-    const { data, error, loading } = await v2client.query<V2TransactionResults>({
+    const clientl = protocol == 'v2' ? v2client : sushiClient
+    const { data, error, loading } = await clientl.query<V2TransactionResults>({
       query: V2_GLOBAL_TRANSACTIONS,
       fetchPolicy: 'network-only',
     })

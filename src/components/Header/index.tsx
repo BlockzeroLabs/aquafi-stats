@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import { ChainId } from '@uniswap/sdk'
-import React from 'react'
+import React, { useState, useRef } from 'react'
 // import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
@@ -10,6 +10,8 @@ import styled from 'styled-components'
 // import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import AquaLogo from '../../assets/svg/Aqua.svg'
+import dropdown from '../../assets/images/arrow.png'
+
 // import { useActiveWeb3React } from '../../hooks'
 // import { useDarkModeManager } from '../../state/user/hooks'
 // import { useETHBalances } from '../../state/wallet/hooks'
@@ -217,7 +219,85 @@ export const StyledMenuButton = styled.button`
     stroke: ${({ theme }) => theme.text1};
   }
 `
+const Container = styled.div`
+  position: relative;
+  z-index: 40;
+  margin-left: auto;
+`
 
+const Wrapper = styled.div`
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg1};
+  padding: 8px 8px;
+  width: 150px;
+
+  :hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+`
+
+const LogaContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`
+
+const LogoWrapper = styled.img`
+  width: 20px;
+  height: 20px;
+`
+
+const FlyOut = styled.div`
+  background-color: ${({ theme }) => theme.bg1};
+  position: absolute;
+  top: 40px;
+  left: 0;
+  border-radius: 12px;
+  padding: 16px;
+  width: 180px;
+`
+
+// const NetworkRow = styled`
+// padding: 6px 8px;
+// background-color: ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+// border-radius: 8px;
+// opacity: ${({ disabled }) => (disabled ? '0.5' : 1)}
+//   :hover {
+//     cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
+//     opacity: ${({ disabled }) => (disabled ? 0.5 : 0.7)}
+//   }
+// `
+
+const Badge = styled.div<{ bgColor?: string }>`
+  background-color: ${({ theme, bgColor }) => bgColor ?? theme.bg4};
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
+`
+export const AutoColumn = styled.div<{
+  gap?: 'sm' | 'md' | 'lg' | string
+  justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
+}>`
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: ${({ gap }) => (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap};
+  justify-items: ${({ justify }) => justify && justify};
+`
+const GreenDot = styled.div`
+  height: 12px;
+  width: 12px;
+  margin-right: 12px;
+  background-color: ${({ theme }) => theme.green1};
+  border-radius: 50%;
+  position: absolute;
+  border: 2px solid black;
+  right: -16px;
+  bottom: -4px;
+`
 // const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 //   [ChainId.RINKEBY]: 'Rinkeby',
 //   [ChainId.ROPSTEN]: 'Ropsten',
@@ -231,6 +311,11 @@ export default function Header() {
   // const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
   // const [darkMode, toggleDarkMode] = useDarkModeManager()
+
+  const [showMenu, setShowMenu] = useState(false)
+  const [activeNetwork, setActiveNetwork] = useState('V3 Analytics')
+  const node = useRef<HTMLDivElement>(null)
+  // useOnClickOutside(node, () => setShowMenu(false))
 
   return (
     <HeaderFrame>
@@ -257,7 +342,40 @@ export default function Header() {
             Wallet
           </StyledNavLink> */}
         </HeaderLinks>
+
+        <Container ref={node}>
+          <Wrapper onClick={() => setShowMenu(!showMenu)}>
+            <RowFixed>
+              <div style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center', width: '130px' }}>
+                {activeNetwork}
+                <img width="13px" src={dropdown} />
+              </div>
+            </RowFixed>
+          </Wrapper>
+          {showMenu && (
+            <FlyOut>
+              <AutoColumn gap="16px">
+                <span style={{ color: 'grey' }}>Select network</span>
+
+                {/* <StyledInternalLink
+                    key={n.id}
+                    to={`${n === EthereumNetworkInfo ? '' : '/' + n.name.toLocaleLowerCase()}/`}
+                  > */}
+                {/* <NetworkRow
+                onClick={() => {
+                  setShowMenu(false)
+                }}
+                // active={activeNetwork.id === n.id}
+              > */}
+                <RowFixed style={{ fontSize: '18px' }}>V3 Analytics</RowFixed>
+                <RowFixed style={{ fontSize: '18px' }}>2 Analytics</RowFixed>
+                <RowFixed style={{ fontSize: '18px' }}>Sushi Analytics</RowFixed>
+              </AutoColumn>
+            </FlyOut>
+          )}
+        </Container>
       </HeaderRow>
+
       <HeaderControls>
         <SearchSmall />
         {/* <HeaderElement>

@@ -129,20 +129,24 @@ export function useFetchGlobalChartData(): {
   const [data, setData] = useState<ChartDayData[] | undefined>()
   const [error, setError] = useState(false)
   const [protocol] = useChangeProtocol()
-
   useEffect(() => {
     async function fetch() {
       const { data, error } = await fetchChartData(protocol)
       if (data && !error) {
+        console.log('chartres22222', data)
+
         setData(data)
       } else if (error) {
         setError(true)
       }
     }
-    if (!data && !error) {
-      fetch()
-    }
-  }, [data, error, protocol])
+
+    // if (!data && !error) {
+    console.log('chartres333', protocol)
+
+    fetch()
+    // }
+  }, [protocol])
 
   return {
     error,

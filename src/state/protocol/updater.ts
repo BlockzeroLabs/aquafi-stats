@@ -41,13 +41,14 @@ export default function Updater(): null {
 
   // update global chart data if available and not set
   useEffect(() => {
-    if (chartData === undefined && fetchedChartData && !chartError) {
+    console.log('chartres fetched', { fetchedChartData })
+    if (fetchedChartData && !chartError) {
       updateChartData(fetchedChartData)
     }
   }, [chartData, chartError, fetchedChartData, updateChartData])
 
   useEffect(() => {
-    if (v2chartData === undefined && fetchedChartData && !chartError) {
+    if (fetchedChartData && !chartError) {
       updateV2ChartData(fetchedChartData)
     }
   }, [v2chartData, chartError, fetchedChartData, updateV2ChartData])

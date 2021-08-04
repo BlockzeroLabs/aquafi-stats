@@ -114,6 +114,7 @@ export default function Home() {
   console.log('formattedTvlData =====', formattedTvlData)
 
   const formattedVolumeData = useMemo(() => {
+    console.log('mark2', { chartData, v2chartData })
     if (protocol == 'v3' && chartData) {
       return chartData.map((day) => {
         return {
@@ -123,6 +124,7 @@ export default function Home() {
       })
     }
     if (protocol !== 'v3' && v2chartData) {
+      console.log('mark1', protocol)
       return v2chartData.map((day) => {
         return {
           time: unixToDate(day.date),

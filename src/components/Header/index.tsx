@@ -4,13 +4,17 @@ import React, { useState, useRef } from 'react'
 // import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-
+import { changeProtocol } from '../../state/user/actions'
+import { AppDispatch } from '../../state/index'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 // import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import AquaLogo from '../../assets/svg/Aqua.svg'
 import dropdown from '../../assets/images/arrow.png'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 // import { useActiveWeb3React } from '../../hooks'
 // import { useDarkModeManager } from '../../state/user/hooks'
@@ -229,7 +233,7 @@ const Wrapper = styled.div`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg1};
   padding: 8px 8px;
-  width: 150px;
+  width: 170px;
 
   :hover {
     cursor: pointer;
@@ -311,11 +315,12 @@ export default function Header() {
   // const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
   // const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const dispatch = useDispatch<AppDispatch>()
 
   const [showMenu, setShowMenu] = useState(false)
-  const [activeNetwork, setActiveNetwork] = useState('V3 Analytics')
+  const [activeNetwork, setActiveNetwork] = useState('Change Network')
   const node = useRef<HTMLDivElement>(null)
-  // useOnClickOutside(node, () => setShowMenu(false))
+  useOnClickOutside(node, () => setShowMenu(false))
 
   return (
     <HeaderFrame>
@@ -346,7 +351,15 @@ export default function Header() {
         <Container ref={node}>
           <Wrapper onClick={() => setShowMenu(!showMenu)}>
             <RowFixed>
-              <div style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center', width: '130px' }}>
+              <div
+                style={{
+                  justifyContent: 'space-between',
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '150px',
+                  color: '#71ACAE',
+                }}
+              >
                 {activeNetwork}
                 <img width="13px" src={dropdown} />
               </div>
@@ -357,19 +370,43 @@ export default function Header() {
               <AutoColumn gap="16px">
                 <span style={{ color: 'grey' }}>Select network</span>
 
-                {/* <StyledInternalLink
-                    key={n.id}
-                    to={`${n === EthereumNetworkInfo ? '' : '/' + n.name.toLocaleLowerCase()}/`}
-                  > */}
-                {/* <NetworkRow
-                onClick={() => {
-                  setShowMenu(false)
-                }}
-                // active={activeNetwork.id === n.id}
-              > */}
-                <RowFixed style={{ fontSize: '18px' }}>V3 Analytics</RowFixed>
-                <RowFixed style={{ fontSize: '18px' }}>2 Analytics</RowFixed>
-                <RowFixed style={{ fontSize: '18px' }}>Sushi Analytics</RowFixed>
+                <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                  <RowFixed
+                    style={{ fontSize: '18px', cursor: 'pointer' }}
+                    onClick={() => {
+                      setActiveNetwork('V3 Analytics')
+                      setShowMenu(false)
+                      dispatch(changeProtocol('v3'))
+                    }}
+                  >
+                    V3 Analytics
+                  </RowFixed>
+                </Link>
+
+                <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                  <RowFixed
+                    style={{ fontSize: '18px', cursor: 'pointer' }}
+                    onClick={() => {
+                      setActiveNetwork('V2 Analytics')
+                      setShowMenu(false)
+                      dispatch(changeProtocol('v2'))
+                    }}
+                  >
+                    V2 Analytics
+                  </RowFixed>
+                </Link>
+                <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                  <RowFixed
+                    style={{ fontSize: '18px', cursor: 'pointer' }}
+                    onClick={() => {
+                      setActiveNetwork('Sushi Analytics')
+                      setShowMenu(false)
+                      dispatch(changeProtocol('sushi'))
+                    }}
+                  >
+                    Sushi Analytics
+                  </RowFixed>
+                </Link>
               </AutoColumn>
             </FlyOut>
           )}

@@ -374,12 +374,12 @@ export default function Header() {
                   <RowFixed
                     style={{ fontSize: '18px', cursor: 'pointer' }}
                     onClick={() => {
-                      setActiveNetwork('V3 Analytics')
+                      setActiveNetwork('Uniswap V3')
                       setShowMenu(false)
                       dispatch(changeProtocol('v3'))
                     }}
                   >
-                    V3 Analytics
+                    Uniswap V3
                   </RowFixed>
                 </Link>
 
@@ -387,24 +387,24 @@ export default function Header() {
                   <RowFixed
                     style={{ fontSize: '18px', cursor: 'pointer' }}
                     onClick={() => {
-                      setActiveNetwork('V2 Analytics')
+                      setActiveNetwork('Uniswap V2')
                       setShowMenu(false)
                       dispatch(changeProtocol('v2'))
                     }}
                   >
-                    V2 Analytics
+                    Uniswap V2
                   </RowFixed>
                 </Link>
                 <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
                   <RowFixed
                     style={{ fontSize: '18px', cursor: 'pointer' }}
                     onClick={() => {
-                      setActiveNetwork('Sushi Analytics')
+                      setActiveNetwork('SushiSwap')
                       setShowMenu(false)
                       dispatch(changeProtocol('sushi'))
                     }}
                   >
-                    Sushi Analytics
+                    SushiSwap
                   </RowFixed>
                 </Link>
               </AutoColumn>

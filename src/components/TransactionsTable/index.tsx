@@ -24,10 +24,50 @@ const ResponsiveGrid = styled.div`
   align-items: center;
 
   grid-template-columns: 1.5fr repeat(5, 1fr);
-
   @media screen and (max-width: 940px) {
     grid-template-columns: 1.5fr repeat(4, 1fr);
     & > *:nth-child(5) {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1.5fr repeat(2, 1fr);
+    & > *:nth-child(5) {
+      display: none;
+    }
+    & > *:nth-child(3) {
+      display: none;
+    }
+    & > *:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    grid-template-columns: 1.5fr repeat(1, 1fr);
+    & > *:nth-child(5) {
+      display: none;
+    }
+    & > *:nth-child(3) {
+      display: none;
+    }
+    & > *:nth-child(4) {
+      display: none;
+    }
+    & > *:nth-child(2) {
+      display: none;
+    }
+  }
+`
+const ResponsiveGridV2 = styled.div`
+  display: grid;
+  grid-gap: 1em;
+  align-items: center;
+
+  grid-template-columns: 20px 3.5fr repeat(3, 1fr);
+  @media screen and (max-width: 900px) {
+    grid-template-columns: 20px 1.5fr repeat(2, 1fr);
+    & :nth-child(3) {
       display: none;
     }
   }
@@ -176,7 +216,8 @@ const DataRowV2 = ({ transaction, color }: { transaction: V2Transaction; color?:
   const theme = useTheme()
 
   return (
-    <ResponsiveGrid>
+    <ResponsiveGridV2>
+      <Label fontWeight={400}></Label>
       <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction')}>
         <Label color={color ?? theme.blue1} fontWeight={400}>
           {
@@ -189,23 +230,9 @@ const DataRowV2 = ({ transaction, color }: { transaction: V2Transaction; color?:
         </Label>
       </ExternalLink>
 
-      {/* <Label end={1} fontWeight={400}>
-        {parseFloat(transaction.tokenId)}
-      </Label> */}
       <Label end={1} fontWeight={400}>
         {transaction.pool.token0.symbol} / {transaction.pool.token1.symbol}
       </Label>
-      {/* <Label end={1} fontWeight={400}>
-        {formatDollarAmount(parseFloat(transaction.totalValueLocked))}
-      </Label> */}
-      {/* <Label end={1} fontWeight={400}>
-        <ExternalLink
-          href={getEtherscanLink(1, '0xCd343942C6D1Dc6734a35d1304f23938d2c41a07', 'address')}
-          style={{ color: color ?? theme.blue1 }}
-        >
-          {shortenAddress('0xCd343942C6D1Dc6734a35d1304f23938d2c41a07')}
-        </ExternalLink>
-      </Label> */}
       <Label end={1} fontWeight={400}>
         <ExternalLink href={getEtherscanLink(1, transaction.staker, 'address')} style={{ color: color ?? theme.blue1 }}>
           {shortenAddress(transaction.staker)}
@@ -214,7 +241,7 @@ const DataRowV2 = ({ transaction, color }: { transaction: V2Transaction; color?:
       <Label end={1} fontWeight={400}>
         {formatTime(transaction.stakeTime)}
       </Label>
-    </ResponsiveGrid>
+    </ResponsiveGridV2>
   )
 }
 
@@ -301,14 +328,7 @@ export function TransactionTableV3({
             >
               All
             </SortText>
-            {/* <SortText
-              onClick={() => {
-                setTxFilter(TransactionType.SWAP)
-              }}
-              active={txFilter === TransactionType.SWAP}
-            >
-              Swaps
-            </SortText> */}
+
             <SortText
               onClick={() => {
                 setTxFilter(TransactionType.MINT)
@@ -335,9 +355,7 @@ export function TransactionTableV3({
           <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalValueLocked)}>
             TVL {arrow(SORT_FIELD.totalValueLocked)}
           </ClickableText>
-          {/* <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.amountToken1)}>
-            Token Amount {arrow(SORT_FIELD.amountToken1)}
-          </ClickableText> */}
+
           <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.staker)}>
             Staker {arrow(SORT_FIELD.staker)}
           </ClickableText>
@@ -454,7 +472,7 @@ export function TransactionTableV2({
   return (
     <Wrapper>
       <AutoColumn gap="16px">
-        <ResponsiveGrid>
+        <ResponsiveGridV2>
           <RowFixed>
             <SortText
               onClick={() => {
@@ -464,14 +482,7 @@ export function TransactionTableV2({
             >
               All
             </SortText>
-            {/* <SortText
-              onClick={() => {
-                setTxFilter(TransactionType.SWAP)
-              }}
-              active={txFilter === TransactionType.SWAP}
-            >
-              Swaps
-            </SortText> */}
+
             <SortText
               onClick={() => {
                 setTxFilter(TransactionType.MINT)
@@ -492,22 +503,18 @@ export function TransactionTableV2({
           {/* <ClickableText color={theme.text2} onClick={() => handleSort(V2_SORT_FIELD.tokenId)} end={1}>
             Token Id {arrow(V2_SORT_FIELD.tokenId)}
           </ClickableText> */}
+          <ClickableText color={theme.text2} end={1}></ClickableText>
           <ClickableText color={theme.text2} end={1}>
             Pool
           </ClickableText>
-          {/* <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.totalValueLocked)}>
-            TVL {arrow(V2_SORT_FIELD.totalValueLocked)}
-          </ClickableText> */}
-          {/* <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.amountToken1)}>
-            Token Amount {arrow(V2_SORT_FIELD.amountToken1)}
-          </ClickableText> */}
+
           <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.staker)}>
             Staker {arrow(V2_SORT_FIELD.staker)}
           </ClickableText>
           <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.stakeTime)}>
             Time {arrow(V2_SORT_FIELD.stakeTime)}
           </ClickableText>
-        </ResponsiveGrid>
+        </ResponsiveGridV2>
         <Break />
         {console.log('SORT txn v2222 ======', sortedTransactions)}
         {sortedTransactions.map((t, i) => {

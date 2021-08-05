@@ -145,7 +145,7 @@ export function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: Pool
   const [protocol] = useChangeProtocol()
 
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
-  const [v2sortField, setV2SortField] = useState(V2_SORT_FIELD.tvlUSD)
+  // const [v2sortField, setV2SortField] = useState(V2_SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
   // pagination
@@ -277,7 +277,7 @@ export function V2PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: V2
   // for sorting
   const [protocol] = useChangeProtocol()
 
-  const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
+  // const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [v2sortField, setV2SortField] = useState(V2_SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
 
@@ -311,7 +311,7 @@ export function V2PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: V2
 
   const handleSort = useCallback(
     (newField: string) => {
-      setSortField(newField)
+      // setSortField(newField)
       setV2SortField(newField)
 
       setSortDirection(v2sortField !== newField ? true : !sortDirection)
@@ -336,12 +336,7 @@ export function V2PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: V2
         <AutoColumn gap="16px">
           <ResponsiveGrid>
             {' '}
-            <Label color={theme.text2}>#</Label>{' '}
-            <ClickableText color={theme.text2}>
-              {' '}
-              Pool
-              {/* {arrow(V2_SORT_FIELD.feeTier)}{' '} */}
-            </ClickableText>{' '}
+            <Label color={theme.text2}>#</Label> <ClickableText color={theme.text2}> Pool</ClickableText>{' '}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(V2_SORT_FIELD.tvlUSD)}>
               {' '}
               TVL {arrow(V2_SORT_FIELD.tvlUSD)}{' '}

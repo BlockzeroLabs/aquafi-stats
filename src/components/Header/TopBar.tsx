@@ -46,7 +46,7 @@ const TopBar = () => {
           </RowFixed>
         </AutoRow>
         <AutoRow gap="6px" style={{ justifyContent: 'flex-end' }}>
-          <Link
+          {/* <Link
             to="/"
             style={{ cursor: 'pointer', fontSize: '12px', textDecoration: 'none', color: 'white' }}
             onClick={() => dispatch(changeProtocol('sushi'))}
@@ -68,7 +68,7 @@ const TopBar = () => {
             onClick={() => dispatch(changeProtocol('v3'))}
           >
             V3 Analytics
-          </Link>
+          </Link> */}
 
           <StyledLink href="https://dev.aquafi.io/">App</StyledLink>
         </AutoRow>

@@ -149,7 +149,7 @@ export default function Home() {
             />
           </ChartWrapper>
           <ChartWrapper>
-            <BarChart
+            <LineChart
               height={220}
               minHeight={332}
               data={formattedVolumeData}

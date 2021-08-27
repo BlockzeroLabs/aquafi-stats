@@ -5,9 +5,108 @@ export const healthClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-export const blockClient = new ApolloClient({
+export const rinkebyBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const mainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const uniswapV2Client = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-uniswap-v2-stats-subgraph',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const suhiswapClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-sushiswap-stats-subgraph',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const uniswapV3Client = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-uniswap-v3-stats-subgraph',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
   queryDeduplication: true,
   defaultOptions: {
     watchQuery: {

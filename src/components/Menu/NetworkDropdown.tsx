@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   padding: 6px 8px;
   margin-right: 12px;
+  width: 170px
 
   :hover {
     cursor: pointer;
@@ -47,7 +48,7 @@ const FlyOut = styled.div`
   left: 0;
   border-radius: 12px;
   padding: 16px;
-  width: 270px;
+  width: 220px;
 `
 
 const NetworkRow = styled(RowBetween)<{ active?: boolean; disabled?: boolean }>`
@@ -95,14 +96,14 @@ export default function NetworkDropdown() {
       <Wrapper onClick={() => setShowMenu(!showMenu)}>
         <RowFixed>
           <LogoWrapper src={activeNetwork.imageURL} />
-          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px">
+          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="20px">
             {activeNetwork.name}
           </TYPE.main>
-          {activeNetwork === EthereumNetworkInfo ? null : (
+          {/* {activeNetwork === EthereumNetworkInfo ? null : (
             <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
               L2
             </Badge>
-          )}
+          )} */}
           <ChevronDown size="20px" />
         </RowFixed>
       </Wrapper>
@@ -133,7 +134,7 @@ export default function NetworkDropdown() {
                         {n.name}
                       </TYPE.main>
                     </RowFixed>
-                    {n.blurb && <Badge>{n.blurb}</Badge>}
+                    {/* {n.blurb && <Badge>{n.blurb}</Badge>} */}
                   </NetworkRow>
                 </StyledInternalLink>
               )

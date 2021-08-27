@@ -6,7 +6,7 @@ import { DarkGreyCard, GreyBadge } from 'components/Card'
 import Loader, { LoadingRows } from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
-import { formatDollarAmount } from 'utils/numbers'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
@@ -16,6 +16,7 @@ import { POOL_HIDE } from '../../constants/index'
 import useTheme from 'hooks/useTheme'
 import { networkPrefix } from 'utils/networkPrefix'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import { SupportedNetwork } from 'constants/networks'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -26,7 +27,7 @@ const ResponsiveGrid = styled.div`
   grid-gap: 1em;
   align-items: center;
 
-  grid-template-columns: 20px 3.5fr repeat(3, 1fr);
+  grid-template-columns: 20px 3.5fr repeat(5, 2fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -59,6 +60,12 @@ const LinkWrapper = styled(Link)`
 `
 
 const SORT_FIELD = {
+  aquaPremium: 'aquaPremium',
+  aquaPremiumAmountDrivedUSD: 'aquaPremiumAmountDrivedUSD',
+  aquaAmountDrivedUSD: 'aquaAmountDrivedUSD',
+  totalValueLockedDrivedUSD: 'totalValueLockedDrivedUSD',
+  activeStakeCount: 'activeStakeCount',
+
   feeTier: 'feeTier',
   volumeUSD: 'volumeUSD',
   tvlUSD: 'tvlUSD',
@@ -78,19 +85,27 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
             <TYPE.label ml="8px">
               {poolData.token0.symbol}/{poolData.token1.symbol}
             </TYPE.label>
-            <GreyBadge ml="10px" fontSize="14px">
-              {feeTierPercent(poolData.feeTier)}
-            </GreyBadge>
+            {activeNetwork.id === SupportedNetwork.UNISWAP_V3 && (
+              <GreyBadge ml="10px" fontSize="14px">
+                {feeTierPercent(poolData.feeTier)}
+              </GreyBadge>
+            )}
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.tvlUSD)}
+          {`${poolData.aquaPremium}%`}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSD)}
+          {`${formatAmount(poolData.aquaPremiumAmount)} AQUA`}
         </Label>
         <Label end={1} fontWeight={400}>
-          {formatDollarAmount(poolData.volumeUSDWeek)}
+          {`${formatAmount(poolData.aquaAmount)} AQUA`}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {poolData.activeStakeCount}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.totalValueLockedDrivedUSD)}
         </Label>
       </ResponsiveGrid>
     </LinkWrapper>
@@ -160,17 +175,31 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
         <AutoColumn gap="16px">
           <ResponsiveGrid>
             <Label color={theme.text2}>#</Label>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
-              Pool {arrow(SORT_FIELD.feeTier)}
+            <ClickableText
+              color={theme.text2}
+              // onClick={() => handleSort(SORT_FIELD.feeTier)}
+            >
+              Pool
+              {/* {arrow(SORT_FIELD.feeTier)} */}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-              TVL {arrow(SORT_FIELD.tvlUSD)}
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaPremium)}>
+              Premium % {arrow(SORT_FIELD.aquaPremium)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
-              Volume 24H {arrow(SORT_FIELD.volumeUSD)}
+            <ClickableText
+              color={theme.text2}
+              end={1}
+              onClick={() => handleSort(SORT_FIELD.aquaPremiumAmountDrivedUSD)}
+            >
+              Premium Paid {arrow(SORT_FIELD.aquaPremiumAmountDrivedUSD)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
-              Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaAmountDrivedUSD)}>
+              Total Reward {arrow(SORT_FIELD.aquaAmountDrivedUSD)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.activeStakeCount)}>
+              Active Stakes {arrow(SORT_FIELD.activeStakeCount)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalValueLockedDrivedUSD)}>
+              TVL {arrow(SORT_FIELD.totalValueLockedDrivedUSD)}
             </ClickableText>
           </ResponsiveGrid>
           <Break />

@@ -8,9 +8,9 @@ import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
 import PoolsOverview from './Pool/PoolsOverview'
-import TokensOverview from './Token/TokensOverview'
+// import TokensOverview from './Token/TokensOverview'
 import TopBar from 'components/Header/TopBar'
-import { RedirectInvalidToken } from './Token/redirects'
+// import { RedirectInvalidToken } from './Token/redirects'
 import { LocalLoader } from 'components/Loader'
 import PoolPage from './Pool/PoolPage'
 import { ExternalLink, TYPE } from 'theme'
@@ -39,7 +39,7 @@ const BodyWrapper = styled.div<{ warningActive?: boolean }>`
   flex-direction: column;
   width: 100%;
   padding-top: 40px;
-  margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')};
+  margin-top: ${({ warningActive }) => (warningActive ? '140px' : '50px')};
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -133,12 +133,12 @@ export default function App() {
                 </WarningBanner>
               </WarningWrapper>
             )}
-            <Hide1080>
+            {/* <Hide1080>
               <TopBar />
-            </Hide1080>
+            </Hide1080> */}
             <Header />
           </HeaderWrapper>
-          {subgraphStatus.available === false || activeNetwork === OptimismNetworkInfo ? (
+          {subgraphStatus.available === false ? (
             <AppWrapper>
               <BodyWrapper>
                 <DarkGreyCard style={{ maxWidth: '340px' }}>
@@ -157,8 +157,8 @@ export default function App() {
               <Switch>
                 <Route exact strict path="/:networkID?/pools/:address" component={PoolPage} />
                 <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
-                <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
-                <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
+                {/* <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
+                <Route exact strict path="/:networkID?/tokens" component={TokensOverview} /> */}
                 <Route exact path="/:networkID?" component={Home} />
               </Switch>
               <Marginer />

@@ -62,9 +62,9 @@ export function useFetchProtocolData(
   const activeBlockClient = blockClientOverride ?? blockClient
 
   // get blocks from historic timestamps
-  const [t24, t48] = useDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48], activeBlockClient)
-  const [block24] = blocks ?? []
+  const [t24, t48, tWeek] = useDeltaTimestamps()
+  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek], activeBlockClient)
+  const [block24, block48, blockWeek] = blocks ?? []
 
   // fetch all data
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: activeDataClient })
@@ -74,11 +74,17 @@ export function useFetchProtocolData(
     { client: activeDataClient }
   )
 
-  const anyError = Boolean(error || error24 || blockError)
-  const anyLoading = Boolean(loading || loading24)
+  const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<GlobalResponse>(
+    GLOBAL_DATA(blockWeek?.number ?? undefined),
+    { client: activeDataClient }
+  )
+
+  const anyError = Boolean(error || error24 || errorWeek || blockError)
+  const anyLoading = Boolean(loading || loading24 || loadingWeek)
 
   const parsed = data?.aquaFis?.[0]
   const parsed24 = data24?.aquaFis?.[0]
+  const parsedWeek = dataWeek?.aquaFis?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {
@@ -102,23 +108,23 @@ export function useFetchProtocolData(
     // total value locked
     const totalValueLockedDrivedUSDChange = getPercentChange(
       parsed?.totalValueLockedDrivedUSD,
-      parsed24?.totalValueLockedDrivedUSD
+      parsedWeek?.totalValueLockedDrivedUSD
     )
 
     // total value locked
     const activeTotalValueLockedDrivedUSDChange = getPercentChange(
       parsed?.activeTotalValueLockedDrivedUSD,
-      parsed24?.activeTotalValueLockedDrivedUSD
+      parsedWeek?.activeTotalValueLockedDrivedUSD
     )
 
     // aqua premium amount
     const aquaPremiumAmountDrivedUSDChange = getPercentChange(
       parsed?.aquaPremiumAmountDrivedUSD,
-      parsed24?.aquaPremiumAmountDrivedUSD
+      parsedWeek?.aquaPremiumAmountDrivedUSD
     )
 
     // aqua amount
-    const aquaAmountDrivedUSDChange = getPercentChange(parsed?.aquaAmountDrivedUSD, parsed24?.aquaAmountDrivedUSD)
+    const aquaAmountDrivedUSDChange = getPercentChange(parsed?.aquaAmountDrivedUSD, parsedWeek?.aquaAmountDrivedUSD)
 
     // // stake transactions
     // const stakeCountChange = getPercentChange(parsed?.stakeCount, parsed24?.stakeCount)
@@ -127,7 +133,7 @@ export function useFetchProtocolData(
     // const unstakeCountChange = getPercentChange(parsed?.unstakeCount, parsed24?.unstakeCount)
 
     // active stakes transactions
-    const stakeCountChange = getPercentChange(parsed?.activeStakeCount, parsed24?.activeStakeCount)
+    const stakeCountChange = getPercentChange(parsed?.activeStakeCount, parsedWeek?.activeStakeCount)
 
     // 24H transactions
     // const txCount =
@@ -179,7 +185,7 @@ export function useFetchProtocolData(
       activeStakeCount: parseFloat(parsed?.activeStakeCount),
       activeStakeCountChange: stakeCountChange,
     }
-  }, [anyError, anyLoading, blocks, parsed, parsed24])
+  }, [anyError, anyLoading, blocks, parsed, parsed24, parsedWeek])
 
   return {
     loading: anyLoading,

@@ -4,132 +4,137 @@ import { Transaction, TransactionType } from 'types'
 import { formatTokenSymbol } from 'utils/tokens'
 
 const POOL_TRANSACTIONS = gql`
-  query transactions($address: Bytes!) {
-    mints(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }, subgraphError: allow) {
-      timestamp
-      transaction {
+  query transactions($address: String!) {
+    stakes(first: 100, orderBy: stakeTime, orderDirection: desc, where: { pool: $address }, subgraphError: allow) {
+      id
+      transactionHash
+
+      token
+      tokenAmount
+
+      aquaPremium
+
+      pool
+      token0 {
         id
+        symbol
       }
-      pool {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
+      token1 {
+        id
+        symbol
       }
-      owner
-      sender
-      origin
-      amount0
-      amount1
-      amountUSD
+
+      reserve0
+      reserve1
+
+      totalReservesDrivedUSD
+
+      staker
+
+      stakeTime
+      handler
     }
-    swaps(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }, subgraphError: allow) {
-      timestamp
-      transaction {
+
+    unstakes(first: 100, orderBy: unstakeTime, orderDirection: desc, where: { pool: $address }, subgraphError: allow) {
+      id
+      transactionHash
+
+      token
+      tokenAmount
+
+      pool
+      token0 {
         id
+        symbol
       }
-      pool {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      origin
-      amount0
-      amount1
-      amountUSD
-    }
-    burns(first: 100, orderBy: timestamp, orderDirection: desc, where: { pool: $address }, subgraphError: allow) {
-      timestamp
-      transaction {
+      token1 {
         id
+        symbol
       }
-      pool {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      owner
-      amount0
-      amount1
-      amountUSD
+
+      reserve0
+      reserve1
+
+      totalReservesDrivedUSD
+
+      aquaPremium
+
+      aquaPremiumAmount
+      aquaPremiumAmountDrivedUSD
+
+      aquaAmount
+      aquaAmountDrivedUSD
+
+      staker
+
+      unstakeTime
     }
   }
 `
 
 interface TransactionResults {
-  mints: {
-    timestamp: string
-    transaction: {
+  stakes: {
+    id: string
+    transactionHash: string
+
+    token: string
+    tokenAmount: string
+
+    pool: string
+    token0: {
       id: string
+      symbol: string
     }
-    pool: {
-      token0: {
-        id: string
-        symbol: string
-      }
-      token1: {
-        id: string
-        symbol: string
-      }
+    token1: {
+      id: string
+      symbol: string
     }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+
+    reserve0: string
+    reserve1: string
+
+    totalReservesDrivedUSD: string
+
+    aquaPremium: string
+
+    staker: string
+
+    stakeTime: string
+    handler: string
   }[]
-  swaps: {
-    timestamp: string
-    transaction: {
+  unstakes: {
+    id: string
+    transactionHash: string
+
+    token: string
+    tokenAmount: string
+
+    pool: string
+    token0: {
       id: string
+      symbol: string
     }
-    pool: {
-      token0: {
-        id: string
-        symbol: string
-      }
-      token1: {
-        id: string
-        symbol: string
-      }
-    }
-    origin: string
-    amount0: string
-    amount1: string
-    amountUSD: string
-  }[]
-  burns: {
-    timestamp: string
-    transaction: {
+    token1: {
       id: string
+      symbol: string
     }
-    pool: {
-      token0: {
-        id: string
-        symbol: string
-      }
-      token1: {
-        id: string
-        symbol: string
-      }
-    }
-    owner: string
-    amount0: string
-    amount1: string
-    amountUSD: string
+
+    reserve0: string
+    reserve1: string
+
+    totalReservesDrivedUSD: string
+
+    aquaPremium: string
+
+    aquaPremiumAmount: string
+    aquaPremiumAmountDrivedUSD: string
+
+    aquaAmount: string
+    aquaAmountDrivedUSD: string
+
+    staker: string
+
+    unstakeTime: string
   }[]
 }
 
@@ -161,52 +166,80 @@ export async function fetchPoolTransactions(
     }
   }
 
-  const mints = data.mints.map((m) => {
+  console.log('POOL_TRANS_INTERNAL', data, error, loading)
+
+  const mints = data.stakes.map((m) => {
     return {
-      type: TransactionType.MINT,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.origin,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
+      type: TransactionType.STAKE,
+      id: m.id,
+      transactionHash: m.transactionHash,
+      account: m.staker,
+
+      token: m.token,
+      tokenAmount: parseFloat(m.tokenAmount),
+
+      pool: m.pool,
+      token0: {
+        id: m.token0.id,
+        symbol: m.token0.symbol,
+      },
+      token1: {
+        id: m.token1.id,
+        symbol: m.token1.symbol,
+      },
+
+      reserve0: parseFloat(m.reserve0),
+      reserve1: parseFloat(m.reserve1),
+
+      totalReservesDrivedUSD: parseFloat(m.totalReservesDrivedUSD),
+
+      aquaPremium: parseFloat(m.aquaPremium) / 100,
+
+      aquaPremiumAmount: 0,
+      aquaPremiumAmountDrivedUSD: 0,
+
+      aquaAmount: 0,
+      aquaAmountDrivedUSD: 0,
+
+      timestamp: m.stakeTime,
     }
   })
-  const burns = data.burns.map((m) => {
+  const burns = data.unstakes.map((m) => {
     return {
-      type: TransactionType.BURN,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.owner,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
+      type: TransactionType.UNSTAKE,
+      id: m.id,
+      transactionHash: m.transactionHash,
+      account: m.staker,
+
+      token: m.token,
+      tokenAmount: parseFloat(m.tokenAmount),
+
+      pool: m.pool,
+      token0: {
+        id: m.token0.id,
+        symbol: m.token0.symbol,
+      },
+      token1: {
+        id: m.token1.id,
+        symbol: m.token1.symbol,
+      },
+
+      reserve0: parseFloat(m.reserve0),
+      reserve1: parseFloat(m.reserve1),
+
+      totalReservesDrivedUSD: parseFloat(m.totalReservesDrivedUSD),
+
+      aquaPremium: parseFloat(m.aquaPremium) / 100,
+
+      aquaPremiumAmount: parseFloat(m.aquaPremiumAmount),
+      aquaPremiumAmountDrivedUSD: parseFloat(m.aquaPremiumAmountDrivedUSD),
+
+      aquaAmount: parseFloat(m.aquaAmount),
+      aquaAmountDrivedUSD: parseFloat(m.aquaPremiumAmountDrivedUSD),
+
+      timestamp: m.unstakeTime,
     }
   })
 
-  const swaps = data.swaps.map((m) => {
-    return {
-      type: TransactionType.SWAP,
-      hash: m.transaction.id,
-      timestamp: m.timestamp,
-      sender: m.origin,
-      token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-      token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-      token0Address: m.pool.token0.id,
-      token1Address: m.pool.token1.id,
-      amountUSD: parseFloat(m.amountUSD),
-      amountToken0: parseFloat(m.amount0),
-      amountToken1: parseFloat(m.amount1),
-    }
-  })
-
-  return { data: [...mints, ...burns, ...swaps], error: false, loading: false }
+  return { data: [...mints, ...burns], error: false, loading: false }
 }

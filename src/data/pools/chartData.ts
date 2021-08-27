@@ -21,8 +21,11 @@ const POOL_CHART = gql`
       subgraphError: allow
     ) {
       date
-      volumeUSD
-      tvlUSD
+      totalValueLockedDrivedUSD
+      aquaPremiumAmountDrivedUSD
+      aquaAmountDrivedUSD
+      stakeCount
+      unstakeCount
     }
   }
 `
@@ -30,17 +33,32 @@ const POOL_CHART = gql`
 interface ChartResults {
   poolDayDatas: {
     date: number
-    volumeUSD: string
-    tvlUSD: string
+    totalValueLockedDrivedUSD: string
+    aquaPremiumAmountDrivedUSD: string
+    aquaAmountDrivedUSD: string
+    stakeCount: string
+    unstakeCount: string
   }[]
 }
 
 export async function fetchPoolChartData(address: string, client: ApolloClient<NormalizedCacheObject>) {
+  // let data: {
+  //   date: number
+  //   volumeUSD: string
+  //   tvlUSD: string
+  // }[] = []
+
+  // let data: PoolChartEntry[] = []
+
   let data: {
     date: number
-    volumeUSD: string
-    tvlUSD: string
+    totalValueLockedDrivedUSD: string
+    aquaPremiumAmountDrivedUSD: string
+    aquaAmountDrivedUSD: string
+    stakeCount: string
+    unstakeCount: string
   }[] = []
+
   const startTimestamp = 1619170975
   const endTimestamp = dayjs.utc().unix()
 
@@ -78,8 +96,13 @@ export async function fetchPoolChartData(address: string, client: ApolloClient<N
       const roundedDate = parseInt((dayData.date / ONE_DAY_UNIX).toFixed(0))
       accum[roundedDate] = {
         date: dayData.date,
-        volumeUSD: parseFloat(dayData.volumeUSD),
-        totalValueLockedUSD: parseFloat(dayData.tvlUSD),
+        totalValueLockedDrivedUSD: parseFloat(dayData.totalValueLockedDrivedUSD),
+        aquaPremiumAmountDrivedUSD: parseFloat(dayData.aquaPremiumAmountDrivedUSD),
+        aquaAmountDrivedUSD: parseFloat(dayData.aquaAmountDrivedUSD),
+        stakeCount: parseFloat(dayData.stakeCount),
+        unstakeCount: parseFloat(dayData.unstakeCount),
+        // volumeUSD: parseFloat(dayData.volumeUSD),
+        // totalValueLockedUSD: parseFloat(dayData.tvlUSD),
       }
       return accum
     }, {})
@@ -88,18 +111,26 @@ export async function fetchPoolChartData(address: string, client: ApolloClient<N
 
     // fill in empty days ( there will be no day datas if no trades made that day )
     let timestamp = firstEntry?.date ?? startTimestamp
-    let latestTvl = firstEntry?.totalValueLockedUSD ?? 0
+    let latestTvl = firstEntry?.totalValueLockedDrivedUSD ?? 0
+    const latestAquaAmountUSD = firstEntry?.aquaAmountDrivedUSD ?? 0
     while (timestamp < endTimestamp - ONE_DAY_UNIX) {
       const nextDay = timestamp + ONE_DAY_UNIX
       const currentDayIndex = parseInt((nextDay / ONE_DAY_UNIX).toFixed(0))
       if (!Object.keys(formattedExisting).includes(currentDayIndex.toString())) {
         formattedExisting[currentDayIndex] = {
           date: nextDay,
-          volumeUSD: 0,
-          totalValueLockedUSD: latestTvl,
+          totalValueLockedDrivedUSD: latestTvl,
+          aquaPremiumAmountDrivedUSD: 0,
+          aquaAmountDrivedUSD: latestAquaAmountUSD,
+          stakeCount: 0,
+          unstakeCount: 0,
+
+          // date: nextDay,
+          // volumeUSD: 0,
+          // totalValueLockedDrivedUSD: latestTvl,
         }
       } else {
-        latestTvl = formattedExisting[currentDayIndex].totalValueLockedUSD
+        latestTvl = formattedExisting[currentDayIndex].totalValueLockedDrivedUSD
       }
       timestamp = nextDay
     }

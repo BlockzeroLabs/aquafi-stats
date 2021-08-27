@@ -12,10 +12,10 @@ import {
   useAggregateOverviewData,
 } from 'state/protocol/hooks'
 import { DarkGreyCard } from 'components/Card'
-import { formatDollarAmount } from 'utils/numbers'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import Percent from 'components/Percent'
 import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
-import TokenTable from 'components/tokens/TokenTable'
+// import TokenTable from 'components/tokens/TokenTable'
 import PoolTable from 'components/pools/PoolTable'
 import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
 import { unixToDate } from 'utils/date'
@@ -72,12 +72,12 @@ export default function Home() {
   // if hover value undefined, reset to current day value
   useEffect(() => {
     if (!volumeHover && protocolData) {
-      setVolumeHover(protocolData.volumeUSD)
+      setVolumeHover(protocolData.aquaAmount)
     }
   }, [protocolData, volumeHover])
   useEffect(() => {
     if (!liquidityHover && protocolData) {
-      setLiquidityHover(protocolData.tvlUSD)
+      setLiquidityHover(protocolData.activeTotalValueLockedDrivedUSD)
     }
   }, [liquidityHover, protocolData])
 
@@ -86,7 +86,7 @@ export default function Home() {
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.tvlUSD,
+          value: day.activeTotalValueLockedDrivedUSD,
         }
       })
     } else {
@@ -99,7 +99,7 @@ export default function Home() {
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.volumeUSD,
+          value: day.aquaAmount,
         }
       })
     } else {
@@ -117,16 +117,20 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
+      <ThemedBackgroundGlobal
+        backgroundColor="#75cdc9"
+        //  backgroundColor={activeNetwork.bgColor}
+      />
       <AutoColumn gap="16px">
-        <TYPE.main>Uniswap Overview</TYPE.main>
+        <TYPE.main>{activeNetwork.name} Overview</TYPE.main>
         <ResponsiveRow>
           <ChartWrapper>
             <LineChart
               data={formattedTvlData}
               height={220}
               minHeight={332}
-              color={activeNetwork.primaryColor}
+              // color={activeNetwork.primaryColor}
+              color="#75cdc9"
               value={liquidityHover}
               label={leftLabel}
               setValue={setLiquidityHover}
@@ -149,16 +153,16 @@ export default function Home() {
               height={220}
               minHeight={332}
               data={formattedVolumeData}
-              color={theme.blue1}
+              color="#75cdc9"
               setValue={setVolumeHover}
               setLabel={setRightLabel}
               value={volumeHover}
               label={rightLabel}
               topLeft={
                 <AutoColumn gap="4px">
-                  <TYPE.mediumHeader fontSize="16px">Volume 24H</TYPE.mediumHeader>
+                  <TYPE.mediumHeader fontSize="16px">Total Reward</TYPE.mediumHeader>
                   <TYPE.largeHeader fontSize="32px">
-                    <MonoSpace> {formatDollarAmount(volumeHover, 2)}</MonoSpace>
+                    <MonoSpace> {`${formatAmount(volumeHover, 2)} AQUA`}</MonoSpace>
                   </TYPE.largeHeader>
                   <TYPE.main fontSize="12px" height="14px">
                     {rightLabel ? <MonoSpace>{rightLabel} (UTC)</MonoSpace> : null}
@@ -173,34 +177,40 @@ export default function Home() {
             <RowBetween>
               <RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Volume 24H: </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.volumeUSD)}</TYPE.label>
-                  <Percent value={protocolData?.volumeUSDChange} wrap={true} />
+                  <TYPE.main mr="4px">TVL: </TYPE.main>
+                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.activeTotalValueLockedDrivedUSD)}</TYPE.label>
+                  <Percent value={protocolData?.activeTotalValueLockedDrivedUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
-                  <TYPE.main mr="4px">Fees 24H: </TYPE.main>
-                  <TYPE.label mr="4px">{formatDollarAmount(protocolData?.feesUSD)}</TYPE.label>
-                  <Percent value={protocolData?.feeChange} wrap={true} />
+                  <TYPE.main mr="4px">Total Reward: </TYPE.main>
+                  <TYPE.label mr="4px">{`${formatAmount(protocolData?.aquaAmount)} AQUA`}</TYPE.label>
+                  <Percent value={protocolData?.aquaAmountDrivedUSDChange} wrap={true} />
                 </RowFixed>
-                <HideMedium>
-                  <RowFixed mr="20px">
-                    <TYPE.main mr="4px">TVL: </TYPE.main>
-                    <TYPE.label mr="4px">{formatDollarAmount(protocolData?.tvlUSD)}</TYPE.label>
-                    <TYPE.main></TYPE.main>
-                    <Percent value={protocolData?.tvlUSDChange} wrap={true} />
-                  </RowFixed>
-                </HideMedium>
+                {/* <HideMedium> */}
+                <RowFixed mr="20px">
+                  <TYPE.main mr="4px">Premium Paid: </TYPE.main>
+                  <TYPE.label mr="4px">{`${formatAmount(protocolData?.aquaPremiumAmount)} AQUA`}</TYPE.label>
+                  <TYPE.main></TYPE.main>
+                  <Percent value={protocolData?.aquaPremiumAmountDrivedUSDChange} wrap={true} />
+                </RowFixed>
+                <RowFixed mr="20px">
+                  <TYPE.main mr="4px">Active Stakes: </TYPE.main>
+                  <TYPE.label mr="4px">{protocolData?.activeStakeCount}</TYPE.label>
+                  <TYPE.main></TYPE.main>
+                  <Percent value={protocolData?.activeStakeCountChange} wrap={true} />
+                </RowFixed>
+                {/* </HideMedium> */}
               </RowFixed>
             </RowBetween>
           </DarkGreyCard>
         </HideSmall>
-        <RowBetween>
+        {/* <RowBetween>
           <TYPE.main>Top Tokens</TYPE.main>
           <StyledInternalLink to="tokens">Explore</StyledInternalLink>
         </RowBetween>
-        <TokenTable tokenDatas={formattedTokens} />
+        <TokenTable tokenDatas={formattedTokens} /> */}
         <RowBetween>
-          <TYPE.main>Top Pools</TYPE.main>
+          <TYPE.main>Pools</TYPE.main>
           <StyledInternalLink to="pools">Explore</StyledInternalLink>
         </RowBetween>
         <PoolTable poolDatas={poolDatas} />

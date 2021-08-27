@@ -5,21 +5,29 @@ import { ChartDayData, Transaction } from 'types'
 import { SupportedNetwork } from 'constants/networks'
 
 export interface ProtocolData {
-  // volume
-  volumeUSD: number
-  volumeUSDChange: number
+  // total value locked
+  totalValueLockedDrivedUSD: number
+  totalValueLockedDrivedUSDChange: number
+  activeTotalValueLockedDrivedUSD: number
+  activeTotalValueLockedDrivedUSDChange: number
 
-  // in range liquidity
-  tvlUSD: number
-  tvlUSDChange: number
+  // aqua premium
+  aquaPremiumAmount: number
+  aquaPremiumAmountDrivedUSD: number
+  aquaPremiumAmountDrivedUSDChange: number
 
-  // fees
-  feesUSD: number
-  feeChange: number
+  // aqua amount
+  aquaAmount: number
+  aquaAmountDrivedUSD: number
+  aquaAmountDrivedUSDChange: number
 
-  // transactions
-  txCount: number
-  txCountChange: number
+  // stakes
+  stakeCount: number
+  // stakeCountChange: number
+  unstakeCount: number
+  // unstakeCountChange: number
+  activeStakeCount: number
+  activeStakeCountChange: number
 }
 
 export interface ProtocolState {
@@ -34,19 +42,19 @@ export interface ProtocolState {
 }
 
 export const initialState: ProtocolState = {
-  [SupportedNetwork.ETHEREUM]: {
+  [SupportedNetwork.UNISWAP_V2]: {
     data: undefined,
     chartData: undefined,
     transactions: undefined,
     lastUpdated: undefined,
   },
-  [SupportedNetwork.ARBITRUM]: {
+  [SupportedNetwork.UNISWAP_V3]: {
     data: undefined,
     chartData: undefined,
     transactions: undefined,
     lastUpdated: undefined,
   },
-  [SupportedNetwork.OPTIMISM]: {
+  [SupportedNetwork.SUSHISWAP]: {
     data: undefined,
     chartData: undefined,
     transactions: undefined,

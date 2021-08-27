@@ -10,7 +10,7 @@ import App from './pages/App'
 import store from './state'
 import UserUpdater from './state/user/updater'
 import ProtocolUpdater from './state/protocol/updater'
-import TokenUpdater from './state/tokens/updater'
+// import TokenUpdater from './state/tokens/updater'
 import PoolUpdater from './state/pools/updater'
 import ApplicationUpdater from './state/application/updater'
 import ListUpdater from './state/lists/updater'
@@ -45,7 +45,7 @@ function Updaters() {
       <ListUpdater />
       <UserUpdater />
       <ProtocolUpdater />
-      <TokenUpdater />
+      {/* <TokenUpdater /> */}
       <PoolUpdater />
       <ApplicationUpdater />
     </>

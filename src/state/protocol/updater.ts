@@ -11,6 +11,9 @@ export default function Updater(): null {
 
   const [protocolData, updateProtocolData] = useProtocolData()
   const { data: fetchedProtocolData, error, loading } = useFetchProtocolData()
+  useEffect(() => {
+    console.log('PROTOCOL_DATA', fetchedProtocolData)
+  }, [fetchedProtocolData, loading, error])
 
   const [chartData, updateChartData] = useProtocolChartData()
   const { data: fetchedChartData, error: chartError } = useFetchGlobalChartData()

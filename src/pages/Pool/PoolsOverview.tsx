@@ -45,7 +45,7 @@ export default function PoolPage() {
           </DarkGreyCard>
         </HideSmall> */}
         <TYPE.main>All Pools</TYPE.main>
-        <PoolTable poolDatas={poolDatas} />
+        <PoolTable maxItems={50} poolDatas={poolDatas} />
       </AutoColumn>
     </PageWrapper>
   )

@@ -166,8 +166,6 @@ export async function fetchPoolTransactions(
     }
   }
 
-  console.log('POOL_TRANS_INTERNAL', data, error, loading)
-
   const mints = data.stakes.map((m) => {
     return {
       type: TransactionType.STAKE,

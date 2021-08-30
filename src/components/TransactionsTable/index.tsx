@@ -9,7 +9,7 @@ import { Label, ClickableText } from 'components/Text'
 import { Transaction, TransactionType } from 'types'
 import { formatTime } from 'utils/date'
 import { RowFixed } from 'components/Row'
-import { ExternalLink, TYPE } from 'theme'
+import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import { PageButtons, Arrow, Break } from 'components/shared'
 import useTheme from 'hooks/useTheme'
 import HoverInlineText from 'components/HoverInlineText'
@@ -48,7 +48,7 @@ const ResponsiveGrid = styled.div`
   }
 
   @media screen and (max-width: 500px) {
-    grid-template-columns: 1.5fr repeat(1, 1fr);
+    grid-template-columns: 1.5fr repeat(2, 4fr);
     & > *:nth-child(5) {
       display: none;
     }
@@ -92,7 +92,7 @@ const ResponsiveGrid2 = styled.div`
   }
 
   @media screen and (max-width: 500px) {
-    grid-template-columns: 1.5fr repeat(1, 1fr);
+    grid-template-columns: 1.5fr repeat(2, 4fr);
     & > *:nth-child(5) {
       display: none;
     }
@@ -163,18 +163,26 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
           ? transaction.tokenAmount
           : formatAmount(transaction.tokenAmount)}
       </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs0)}  ${transaction.token0.symbol}`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1.symbol}`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatDollarAmount(abs2)}`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${abs5}%`} maxCharacters={16} />
-      </Label>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatAmount(abs0)}  ${transaction.token0.symbol}`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatAmount(abs1)}  ${transaction.token1.symbol}`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatDollarAmount(abs2)}`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${abs5}%`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
       <Label end={1} fontWeight={400}>
         <ExternalLink
           href={getEtherscanLink(
@@ -213,21 +221,31 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
           ? transaction.tokenAmount
           : formatAmount(transaction.tokenAmount)}
       </Label>
-      <Label end={1} fontWeight={400}>
-        {`${transaction.token0.symbol}/${transaction.token1.symbol}`}
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatDollarAmount(abs2)}`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs3)} AQUA`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${formatAmount(abs4)} AQUA`} maxCharacters={16} />
-      </Label>
-      <Label end={1} fontWeight={400}>
-        <HoverInlineText text={`${abs5}%`} maxCharacters={16} />
-      </Label>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          {`${transaction.token0.symbol}/${transaction.token1.symbol}`}
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatDollarAmount(abs2)}`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatAmount(abs3)} AQUA`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${formatAmount(abs4)} AQUA`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
+      <HideExtraSmall>
+        <Label end={1} fontWeight={400}>
+          <HoverInlineText text={`${abs5}%`} maxCharacters={16} />
+        </Label>
+      </HideExtraSmall>
       <Label end={1} fontWeight={400}>
         <ExternalLink
           href={getEtherscanLink(
@@ -376,18 +394,26 @@ export default function TransactionTable({
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.tokenAmount)} end={1}>
               {activeNetwork.id === SupportedNetwork.UNISWAP_V3 ? 'NFT ID' : 'Quantity'} {arrow(SORT_FIELD.tokenAmount)}
             </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.reserve0)}>
-              Token Amount {arrow(SORT_FIELD.reserve0)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.reserve1)}>
-              Token Amount {arrow(SORT_FIELD.reserve1)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
-              Total Value {arrow(SORT_FIELD.totalReservesDrivedUSD)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaPremium)}>
-              Premium % {arrow(SORT_FIELD.aquaPremium)}
-            </ClickableText>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.reserve0)}>
+                Token Amount {arrow(SORT_FIELD.reserve0)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.reserve1)}>
+                Token Amount {arrow(SORT_FIELD.reserve1)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
+                Total Value {arrow(SORT_FIELD.totalReservesDrivedUSD)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaPremium)}>
+                Premium % {arrow(SORT_FIELD.aquaPremium)}
+              </ClickableText>
+            </HideExtraSmall>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.staker)}>
               Account {arrow(SORT_FIELD.staker)}
             </ClickableText>
@@ -400,21 +426,31 @@ export default function TransactionTable({
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.tokenAmount)} end={1}>
               {activeNetwork.id === SupportedNetwork.UNISWAP_V3 ? 'NFT ID' : 'Quantity'} {arrow(SORT_FIELD.tokenAmount)}
             </ClickableText>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.tokenAmount)} end={1}>
-              Pool {arrow(SORT_FIELD.tokenAmount)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
-              Total Value {arrow(SORT_FIELD.totalReservesDrivedUSD)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaPremiumAmount)}>
-              Premium Paid {arrow(SORT_FIELD.aquaPremiumAmount)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaAmount)}>
-              Total Reward {arrow(SORT_FIELD.aquaAmount)}
-            </ClickableText>
-            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
-              Premium % {arrow(SORT_FIELD.totalReservesDrivedUSD)}
-            </ClickableText>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.tokenAmount)} end={1}>
+                Pool {arrow(SORT_FIELD.tokenAmount)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
+                Total Value {arrow(SORT_FIELD.totalReservesDrivedUSD)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaPremiumAmount)}>
+                Premium Paid {arrow(SORT_FIELD.aquaPremiumAmount)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.aquaAmount)}>
+                Total Reward {arrow(SORT_FIELD.aquaAmount)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalReservesDrivedUSD)}>
+                Premium % {arrow(SORT_FIELD.totalReservesDrivedUSD)}
+              </ClickableText>
+            </HideExtraSmall>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.staker)}>
               Account {arrow(SORT_FIELD.staker)}
             </ClickableText>

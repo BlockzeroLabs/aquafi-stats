@@ -69,10 +69,13 @@ export interface PoolData {
 export type PoolChartEntry = {
   date: number
   totalValueLockedDrivedUSD: number
+  aquaPremiumAmount: number
   aquaPremiumAmountDrivedUSD: number
+  aquaAmount: number
   aquaAmountDrivedUSD: number
   stakeCount: number
   unstakeCount: number
+  activeStakeCount: number
 }
 
 export interface PoolsState {

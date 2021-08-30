@@ -30,6 +30,7 @@ import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { EthereumNetworkInfo, SupportedNetwork } from 'constants/networks'
 import { GenericImageWrapper } from 'components/Logo'
+import Chart from 'components/LineChart/alt'
 
 const ContentLayout = styled.div`
   display: grid;
@@ -89,7 +90,7 @@ export default function PoolPage({
   const chartData = usePoolChartData(address)
   const transactions = usePoolTransactions(address)
 
-  const [view, setView] = useState(ChartView.TVL)
+  const [view, setView] = useState<ChartView>(ChartView.TVL)
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
 
@@ -111,7 +112,7 @@ export default function PoolPage({
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.aquaAmountDrivedUSD,
+          value: day.aquaAmount,
         }
       })
     } else {
@@ -124,7 +125,7 @@ export default function PoolPage({
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.stakeCount,
+          value: day.activeStakeCount,
         }
       })
     } else {
@@ -286,17 +287,16 @@ export default function PoolPage({
                   <TYPE.label fontSize="24px" height="30px">
                     <MonoSpace>
                       {view === ChartView.TVL
-                        ? formatAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                        : view === ChartView.AQUA_AMUOUNT
-                        ? formatAmount(formattedAquaAmountData[formattedAquaAmountData.length - 1]?.value)
-                        : formattedStakeData[formattedStakeData.length - 1]?.value}{' '}
-                      {/* {latestValue
                         ? latestValue
+                          ? formatDollarAmount(latestValue)
+                          : formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
                         : view === ChartView.AQUA_AMUOUNT
-                        ? formatAmount(formattedAquaAmountData[formattedAquaAmountData.length - 1]?.value)
-                        : view === ChartView.STAKE
-                        ? ''
-                        : formattedStakeData[formattedStakeData.length - 1]?.value}{' '} */}
+                        ? latestValue
+                          ? `${formatAmount(latestValue)} AQUA`
+                          : `${formatAmount(formattedAquaAmountData[formattedAquaAmountData.length - 1]?.value)} AQUA`
+                        : latestValue
+                        ? latestValue
+                        : formattedStakeData[formattedStakeData.length - 1]?.value}
                     </MonoSpace>
                   </TYPE.label>
                   <TYPE.main height="20px" fontSize="12px">
@@ -340,7 +340,7 @@ export default function PoolPage({
                   label={valueLabel}
                 />
               ) : view === ChartView.AQUA_AMUOUNT ? (
-                <BarChart
+                <LineChart
                   data={formattedAquaAmountData}
                   color={backgroundColor}
                   minHeight={400}
@@ -350,7 +350,7 @@ export default function PoolPage({
                   label={valueLabel}
                 />
               ) : (
-                <BarChart
+                <LineChart
                   data={formattedStakeData}
                   color={backgroundColor}
                   minHeight={400}

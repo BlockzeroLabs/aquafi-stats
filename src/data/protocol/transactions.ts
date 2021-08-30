@@ -159,8 +159,6 @@ export async function fetchTopTransactions(
       fetchPolicy: 'cache-first',
     })
 
-    console.log('PROTOCOL_DATA_TRANS', error || loading || !data, error, loading, !data)
-
     if (error || loading || !data) {
       return undefined
     }

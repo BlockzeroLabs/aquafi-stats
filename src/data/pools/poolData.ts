@@ -137,18 +137,6 @@ export function usePoolDatas(
   const anyError = Boolean(error || error24 || blockError)
   const anyLoading = Boolean(loading || loading24)
 
-  useEffect(() => {
-    console.log('POOL_DATA_INSIDE_3', error24)
-  }, [error24])
-
-  useEffect(() => {
-    console.log('POOL_DATA_INSIDE_2', !error, !error24, !blockError)
-  }, [error, error24, blockError])
-
-  useEffect(() => {
-    console.log('POOL_DATA_INSIDE', anyError, anyLoading, anyError || anyLoading)
-  }, [anyError, anyLoading])
-
   // return early if not all data yet
   if (anyError || anyLoading) {
     return {

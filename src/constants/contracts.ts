@@ -9,4 +9,5 @@ export const PROTOCOL_NAMES = {
   AQUAFI_UNISWAP_V2: 'Uniswap V2',
   AQUAFI_UNISWAP_V3: 'Uniswap V3',
   AQUAFI_SUSHISWAP: 'Sushiswap',
+  OVER_VIEW: 'Overview',
 }

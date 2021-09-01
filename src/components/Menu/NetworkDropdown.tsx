@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { StyledInternalLink, TYPE } from 'theme'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { AutoColumn } from 'components/Column'
-import { EthereumNetworkInfo } from '../../constants/networks'
+import { GlobalNetwork } from '../../constants/networks'
 
 const Container = styled.div`
   position: relative;
@@ -115,10 +115,7 @@ export default function NetworkDropdown() {
             </TYPE.main>
             {SUPPORTED_NETWORK_VERSIONS.map((n) => {
               return (
-                <StyledInternalLink
-                  key={n.id}
-                  to={`${n === EthereumNetworkInfo ? '' : '/' + n.name.toLocaleLowerCase()}/`}
-                >
+                <StyledInternalLink key={n.id} to={`${n === GlobalNetwork ? '' : '/' + n.name.toLocaleLowerCase()}/`}>
                   <NetworkRow
                     onClick={() => {
                       setShowMenu(false)

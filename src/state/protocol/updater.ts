@@ -4,6 +4,7 @@ import { useFetchProtocolData } from 'data/protocol/overview'
 import { useFetchGlobalChartData } from 'data/protocol/chart'
 import { fetchTopTransactions } from 'data/protocol/transactions'
 import { useClients } from 'state/application/hooks'
+import { uniswapV2Client } from 'apollo/client'
 
 export default function Updater(): null {
   // client for data fetching

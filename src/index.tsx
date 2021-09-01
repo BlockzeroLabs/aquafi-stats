@@ -14,9 +14,13 @@ import ProtocolUpdater from './state/protocol/updater'
 import PoolUpdater from './state/pools/updater'
 import ApplicationUpdater from './state/application/updater'
 import ListUpdater from './state/lists/updater'
+import GlobalUpdater from './state/overall/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import { ApolloProvider } from '@apollo/client/react'
 import { client } from 'apollo/client'
+import { useActiveNetworkVersion } from 'state/application/hooks'
+import { SupportedNetwork } from 'constants/networks'
+import { useEffect } from 'react'
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string') {
@@ -39,13 +43,34 @@ window.addEventListener('error', (error) => {
   })
 })
 
+// function Updaters() {
+//   return (
+//     <>
+//       <ListUpdater />
+//       <UserUpdater />
+//       <GlobalUpdater />
+//       <ProtocolUpdater />
+//       {/* <TokenUpdater /> */}
+//       <PoolUpdater />
+//       <ApplicationUpdater />
+//     </>
+//   )
+// }
+
 function Updaters() {
-  return (
+  const [activeNetwork] = useActiveNetworkVersion()
+
+  useEffect(() => {
+    console.log('ACTIVE_NET_VER', activeNetwork)
+  }, [activeNetwork])
+
+  return activeNetwork.id === SupportedNetwork.OVER_VIEW ? (
+    <GlobalUpdater />
+  ) : (
     <>
       <ListUpdater />
       <UserUpdater />
       <ProtocolUpdater />
-      {/* <TokenUpdater /> */}
       <PoolUpdater />
       <ApplicationUpdater />
     </>

@@ -19,6 +19,7 @@ export default function Updater(): null {
   const { data: chartDataV3, error: errorChartV3 } = useFetchOverallChartData(uniswapV3Client)
   const { data: chartDataSushi, error: errorChartSushi } = useFetchOverallChartData(suhiswapClient)
 
+  // Update each protocol chart data
   useEffect(() => {
     if (!chart1 && chartDataV2 && !errorChartV2) {
       setChartData(chartDataV2, SupportedProtocol.UNISWAP_V2)
@@ -37,14 +38,24 @@ export default function Updater(): null {
     }
   }, [chart3, chartDataSushi, errorChartSushi])
 
+  // Update each protocol data
   useEffect(() => {
-    if (!anyLoading && !anyError && !data1 && dataV2 && dataV3 && dataSushi) {
-      console.log('GB_DATA_LIST', dataV2, dataV3, dataSushi)
+    if (!loadingV2 && !errorV2 && !data1 && dataV2) {
       setProtocolData(dataV2, SupportedProtocol.UNISWAP_V2)
+    }
+  }, [loadingV2, errorV2, dataV2, data1])
+
+  useEffect(() => {
+    if (!loadingV3 && !errorV3 && !data2 && dataV3) {
       setProtocolData(dataV3, SupportedProtocol.UNISWAP_V3)
+    }
+  }, [loadingV3, errorV3, dataV3, data2])
+
+  useEffect(() => {
+    if (!loadingSushi && !errorSushi && !data3 && dataSushi) {
       setProtocolData(dataSushi, SupportedProtocol.SUSHISWAP)
     }
-  }, [anyLoading, anyError, dataV2, dataV3, dataSushi, data1])
+  }, [loadingSushi, errorSushi, dataSushi, data3])
 
   return null
 }

@@ -63,7 +63,7 @@ interface ChartResults {
   }[]
 }
 
-async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
+export async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
   let data: {
     date: number
 

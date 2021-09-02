@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
 import Percent from 'components/Percent'
+import { SupportedNetwork } from 'constants/networks'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -21,6 +22,11 @@ const ChartWrapper = styled.div`
     width: 100%;
   `};
 `
+
+interface ChartType {
+  time: string
+  value: number
+}
 
 export default function Global() {
   const [activeNetwork] = useActiveNetworkVersion()
@@ -44,8 +50,16 @@ export default function Global() {
   const [chartV2, chartV3, chartSushi] = useOverallChartData()
 
   useEffect(() => {
-    setLiquidityHoverV2(undefined)
-    setVolumeHoverV2(undefined)
+    if (activeNetwork.id === SupportedNetwork.OVER_VIEW) {
+      setLiquidityHoverV2(undefined)
+      setVolumeHoverV2(undefined)
+
+      setLiquidityHoverV3(undefined)
+      setVolumeHoverV3(undefined)
+
+      setLiquidityHoverSushi(undefined)
+      setVolumeHoverSushi(undefined)
+    }
   }, [activeNetwork])
 
   // if hover value undefined, reset to current day value
@@ -61,11 +75,6 @@ export default function Global() {
     }
   }, [liquidityHoverV2, dataV2])
 
-  useEffect(() => {
-    setLiquidityHoverV3(undefined)
-    setVolumeHoverV3(undefined)
-  }, [activeNetwork])
-
   // if hover value undefined, reset to current day value
   useEffect(() => {
     if (!volumeHoverV3 && dataV3) {
@@ -78,11 +87,6 @@ export default function Global() {
       setLiquidityHoverV3(dataV3.activeTotalValueLockedDrivedUSD)
     }
   }, [liquidityHoverV3, dataV3])
-
-  useEffect(() => {
-    setLiquidityHoverSushi(undefined)
-    setVolumeHoverSushi(undefined)
-  }, [activeNetwork])
 
   // if hover value undefined, reset to current day value
   useEffect(() => {
@@ -242,7 +246,6 @@ export default function Global() {
                   <TYPE.label mr="4px">{`${formatAmount(dataV2?.aquaAmount)} AQUA`}</TYPE.label>
                   <Percent value={dataV2?.aquaAmountDrivedUSDChange} wrap={true} />
                 </RowFixed>
-                {/* <HideMedium> */}
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Premium Paid: </TYPE.main>
                   <TYPE.label mr="4px">{`${formatAmount(dataV2?.aquaPremiumAmount)} AQUA`}</TYPE.label>
@@ -255,7 +258,6 @@ export default function Global() {
                   <TYPE.main></TYPE.main>
                   <Percent value={dataV2?.activeStakeCountChange} wrap={true} />
                 </RowFixed>
-                {/* </HideMedium> */}
               </RowFixed>
             </RowBetween>
           </DarkGreyCard>
@@ -325,7 +327,6 @@ export default function Global() {
                   <TYPE.label mr="4px">{`${formatAmount(dataV3?.aquaAmount)} AQUA`}</TYPE.label>
                   <Percent value={dataV3?.aquaAmountDrivedUSDChange} wrap={true} />
                 </RowFixed>
-                {/* <HideMedium> */}
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Premium Paid: </TYPE.main>
                   <TYPE.label mr="4px">{`${formatAmount(dataV3?.aquaPremiumAmount)} AQUA`}</TYPE.label>
@@ -338,7 +339,6 @@ export default function Global() {
                   <TYPE.main></TYPE.main>
                   <Percent value={dataV3?.activeStakeCountChange} wrap={true} />
                 </RowFixed>
-                {/* </HideMedium> */}
               </RowFixed>
             </RowBetween>
           </DarkGreyCard>
@@ -408,11 +408,9 @@ export default function Global() {
                   <TYPE.label mr="4px">{`${formatAmount(dataSushi?.aquaAmount)} AQUA`}</TYPE.label>
                   <Percent value={dataSushi?.aquaAmountDrivedUSDChange} wrap={true} />
                 </RowFixed>
-                {/* <HideMedium> */}
                 <RowFixed mr="20px">
                   <TYPE.main mr="4px">Premium Paid: </TYPE.main>
                   <TYPE.label mr="4px">{`${formatAmount(dataSushi?.aquaPremiumAmount)} AQUA`}</TYPE.label>
-                  <TYPE.main></TYPE.main>
                   <Percent value={dataSushi?.aquaPremiumAmountDrivedUSDChange} wrap={true} />
                 </RowFixed>
                 <RowFixed mr="20px">
@@ -421,7 +419,6 @@ export default function Global() {
                   <TYPE.main></TYPE.main>
                   <Percent value={dataSushi?.activeStakeCountChange} wrap={true} />
                 </RowFixed>
-                {/* </HideMedium> */}
               </RowFixed>
             </RowBetween>
           </DarkGreyCard>

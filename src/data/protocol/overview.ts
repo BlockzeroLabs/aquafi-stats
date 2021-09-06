@@ -62,9 +62,9 @@ export function useFetchProtocolData(
   const activeBlockClient = blockClientOverride ?? blockClient
 
   // get blocks from historic timestamps
-  const [t24, t48, tWeek] = useDeltaTimestamps()
-  const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek], activeBlockClient)
-  const [block24, block48, blockWeek] = blocks ?? []
+  const [t24, t48] = useDeltaTimestamps()
+  const { blocks, error: blockError } = useBlocksFromTimestamps([t24], activeBlockClient)
+  const [block24] = blocks ?? []
 
   // fetch all data
   const { loading, error, data } = useQuery<GlobalResponse>(GLOBAL_DATA(), { client: activeDataClient })
@@ -74,17 +74,17 @@ export function useFetchProtocolData(
     { client: activeDataClient }
   )
 
-  const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<GlobalResponse>(
-    GLOBAL_DATA(blockWeek?.number ?? undefined),
-    { client: activeDataClient }
-  )
+  // const { loading: loadingWeek, error: errorWeek, data: dataWeek } = useQuery<GlobalResponse>(
+  //   GLOBAL_DATA(blockWeek?.number ?? undefined),
+  //   { client: activeDataClient }
+  // )
 
-  const anyError = Boolean(error || error24 || errorWeek || blockError)
-  const anyLoading = Boolean(loading || loading24 || loadingWeek)
+  const anyError = Boolean(error || error24 || blockError)
+  const anyLoading = Boolean(loading || loading24)
 
   const parsed = data?.aquaFis?.[0]
   const parsed24 = data24?.aquaFis?.[0]
-  const parsedWeek = dataWeek?.aquaFis?.[0]
+  // const parsedWeek = dataWeek?.aquaFis?.[0]
 
   const formattedData: ProtocolData | undefined = useMemo(() => {
     if (anyError || anyLoading || !parsed || !blocks) {
@@ -108,23 +108,23 @@ export function useFetchProtocolData(
     // total value locked
     const totalValueLockedDrivedUSDChange = getPercentChange(
       parsed?.totalValueLockedDrivedUSD,
-      parsedWeek?.totalValueLockedDrivedUSD
+      parsed24?.totalValueLockedDrivedUSD
     )
 
     // total value locked
     const activeTotalValueLockedDrivedUSDChange = getPercentChange(
       parsed?.activeTotalValueLockedDrivedUSD,
-      parsedWeek?.activeTotalValueLockedDrivedUSD
+      parsed24?.activeTotalValueLockedDrivedUSD
     )
 
     // aqua premium amount
     const aquaPremiumAmountDrivedUSDChange = getPercentChange(
       parsed?.aquaPremiumAmountDrivedUSD,
-      parsedWeek?.aquaPremiumAmountDrivedUSD
+      parsed24?.aquaPremiumAmountDrivedUSD
     )
 
     // aqua amount
-    const aquaAmountDrivedUSDChange = getPercentChange(parsed?.aquaAmountDrivedUSD, parsedWeek?.aquaAmountDrivedUSD)
+    const aquaAmountDrivedUSDChange = getPercentChange(parsed?.aquaAmountDrivedUSD, parsed24?.aquaAmountDrivedUSD)
 
     // // stake transactions
     // const stakeCountChange = getPercentChange(parsed?.stakeCount, parsed24?.stakeCount)
@@ -133,7 +133,7 @@ export function useFetchProtocolData(
     // const unstakeCountChange = getPercentChange(parsed?.unstakeCount, parsed24?.unstakeCount)
 
     // active stakes transactions
-    const stakeCountChange = getPercentChange(parsed?.activeStakeCount, parsedWeek?.activeStakeCount)
+    const stakeCountChange = getPercentChange(parsed?.activeStakeCount, parsed24?.activeStakeCount)
 
     // 24H transactions
     // const txCount =
@@ -185,7 +185,7 @@ export function useFetchProtocolData(
       activeStakeCount: parseFloat(parsed?.activeStakeCount),
       activeStakeCountChange: stakeCountChange,
     }
-  }, [anyError, anyLoading, blocks, parsed, parsed24, parsedWeek])
+  }, [anyError, anyLoading, blocks, parsed, parsed24])
 
   return {
     loading: anyLoading,

@@ -36,7 +36,7 @@ export const mainnetBlockClient = new ApolloClient({
 })
 
 export const uniswapV2Client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/mshahzaibhabib/aquafi-uniswap-v2-stats',
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-uniswap-v2-stats-subgraph',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -64,7 +64,7 @@ export const uniswapV2Client = new ApolloClient({
 })
 
 export const suhiswapClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/mshahzaibhabib/aquafi-sushiswap-stats',
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-sushiswap-stats-subgraph',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -92,7 +92,7 @@ export const suhiswapClient = new ApolloClient({
 })
 
 export const uniswapV3Client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/mshahzaibhabib/aquafi-uniswap-v3-stats',
+  uri: 'https://api.thegraph.com/subgraphs/name/blockzerohello/aquafi-uniswap-v3-stats-subgraph',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

@@ -1,11 +1,19 @@
 import { useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useClients } from 'state/application/hooks'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { SupportedNetwork } from 'constants/networks'
+import { CONTRACT_ADDRESSES } from 'constants/contracts'
 
 export const TOP_POOLS = gql`
-  query topPools {
-    pools(first: 50, orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
+  query topPools($address: String!) {
+    pools(
+      first: 50
+      orderBy: totalValueLockedDrivedUSD
+      orderDirection: desc
+      subgraphError: allow
+      where: { status: true, id_not: $address }
+    ) {
       id
     }
   }
@@ -26,8 +34,12 @@ export function useTopPoolAddresses(): {
   addresses: string[] | undefined
 } {
   const { dataClient } = useClients()
+  const [activeNetwork] = useActiveNetworkVersion()
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
     client: dataClient,
+    variables: {
+      address: activeNetwork.id == SupportedNetwork.UNISWAP_V2 ? '' : CONTRACT_ADDRESSES.AQUA_WETH_POOL_ADDRESS,
+    },
     fetchPolicy: 'cache-first',
   })
 

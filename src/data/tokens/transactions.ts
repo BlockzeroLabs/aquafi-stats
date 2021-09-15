@@ -322,7 +322,7 @@ export async function fetchTokenTransactions(
 
     const mints0 = data.mintsAs0.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.STAKE,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.origin,
@@ -337,7 +337,7 @@ export async function fetchTokenTransactions(
     })
     const mints1 = data.mintsAs1.map((m) => {
       return {
-        type: TransactionType.MINT,
+        type: TransactionType.STAKE,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.origin,
@@ -353,7 +353,7 @@ export async function fetchTokenTransactions(
 
     const burns0 = data.burnsAs0.map((m) => {
       return {
-        type: TransactionType.BURN,
+        type: TransactionType.UNSTAKE,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.owner,
@@ -368,7 +368,7 @@ export async function fetchTokenTransactions(
     })
     const burns1 = data.burnsAs1.map((m) => {
       return {
-        type: TransactionType.BURN,
+        type: TransactionType.UNSTAKE,
         hash: m.transaction.id,
         timestamp: m.timestamp,
         sender: m.owner,
@@ -382,39 +382,44 @@ export async function fetchTokenTransactions(
       }
     })
 
-    const swaps0 = data.swapsAs0.map((m) => {
-      return {
-        type: TransactionType.SWAP,
-        hash: m.transaction.id,
-        timestamp: m.timestamp,
-        sender: m.origin,
-        token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-        token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-        token0Address: m.pool.token0.id,
-        token1Address: m.pool.token1.id,
-        amountUSD: parseFloat(m.amountUSD),
-        amountToken0: parseFloat(m.amount0),
-        amountToken1: parseFloat(m.amount1),
-      }
-    })
+    // const swaps0 = data.swapsAs0.map((m) => {
+    //   return {
+    //     type: TransactionType.UNSTAKE,
+    //     hash: m.transaction.id,
+    //     timestamp: m.timestamp,
+    //     sender: m.origin,
+    //     token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
+    //     token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
+    //     token0Address: m.pool.token0.id,
+    //     token1Address: m.pool.token1.id,
+    //     amountUSD: parseFloat(m.amountUSD),
+    //     amountToken0: parseFloat(m.amount0),
+    //     amountToken1: parseFloat(m.amount1),
+    //   }
+    // })
 
-    const swaps1 = data.swapsAs1.map((m) => {
-      return {
-        type: TransactionType.SWAP,
-        hash: m.transaction.id,
-        timestamp: m.timestamp,
-        sender: m.origin,
-        token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
-        token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
-        token0Address: m.pool.token0.id,
-        token1Address: m.pool.token1.id,
-        amountUSD: parseFloat(m.amountUSD),
-        amountToken0: parseFloat(m.amount0),
-        amountToken1: parseFloat(m.amount1),
-      }
-    })
+    // const swaps1 = data.swapsAs1.map((m) => {
+    //   return {
+    //     type: TransactionType.UNSTAKE,
+    //     hash: m.transaction.id,
+    //     timestamp: m.timestamp,
+    //     sender: m.origin,
+    //     token0Symbol: formatTokenSymbol(m.pool.token0.id, m.pool.token0.symbol),
+    //     token1Symbol: formatTokenSymbol(m.pool.token1.id, m.pool.token1.symbol),
+    //     token0Address: m.pool.token0.id,
+    //     token1Address: m.pool.token1.id,
+    //     amountUSD: parseFloat(m.amountUSD),
+    //     amountToken0: parseFloat(m.amount0),
+    //     amountToken1: parseFloat(m.amount1),
+    //   }
+    // })
 
-    return { data: [...mints0, ...mints1, ...burns0, ...burns1, ...swaps0, ...swaps1], error: false, loading: false }
+    // return { data: [...mints0, ...mints1, ...burns0, ...burns1], error: false, loading: false }
+    return {
+      data: undefined,
+      error: true,
+      loading: false,
+    }
   } catch {
     return {
       data: undefined,

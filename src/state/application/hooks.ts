@@ -1,11 +1,15 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import {
-  arbitrumBlockClient,
-  arbitrumClient,
-  blockClient,
-  client,
-  optimismClient,
-  optimismBlockClient,
+  // arbitrumBlockClient,
+  // arbitrumClient,
+  // client,
+  // optimismClient,
+  // optimismBlockClient,
+  rinkebyBlockClient,
+  mainnetBlockClient,
+  uniswapV2Client,
+  uniswapV3Client,
+  suhiswapClient,
 } from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
@@ -124,29 +128,41 @@ export function useActiveNetworkVersion(): [NetworkInfo, (activeNetworkVersion: 
 export function useDataClient(): ApolloClient<NormalizedCacheObject> {
   const [activeNetwork] = useActiveNetworkVersion()
   switch (activeNetwork.id) {
-    case SupportedNetwork.ETHEREUM:
-      return client
-    case SupportedNetwork.ARBITRUM:
-      return arbitrumClient
-    case SupportedNetwork.OPTIMISM:
-      return optimismClient
+    case SupportedNetwork.UNISWAP_V2:
+      return uniswapV2Client
+    case SupportedNetwork.UNISWAP_V3:
+      return uniswapV3Client
+    case SupportedNetwork.SUSHISWAP:
+      return suhiswapClient
     default:
-      return client
+      return uniswapV2Client
   }
 }
 
+// // get the apollo client related to the active network for fetching blocks
+// export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
+//   const [activeNetwork] = useActiveNetworkVersion()
+//   switch (activeNetwork.id) {
+//     case SupportedNetwork.ETHEREUM:
+//       return blockClient
+//     case SupportedNetwork.ARBITRUM:
+//       return arbitrumBlockClient
+//     case SupportedNetwork.OPTIMISM:
+//       return optimismBlockClient
+//     default:
+//       return blockClient
+//   }
+// }
+
 // get the apollo client related to the active network for fetching blocks
 export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
-  const [activeNetwork] = useActiveNetworkVersion()
-  switch (activeNetwork.id) {
-    case SupportedNetwork.ETHEREUM:
-      return blockClient
-    case SupportedNetwork.ARBITRUM:
-      return arbitrumBlockClient
-    case SupportedNetwork.OPTIMISM:
-      return optimismBlockClient
+  switch (process.env.REACT_APP_CHAIN_ID) {
+    case '1':
+      return mainnetBlockClient
+    case '4':
+      return rinkebyBlockClient
     default:
-      return blockClient
+      return mainnetBlockClient
   }
 }
 

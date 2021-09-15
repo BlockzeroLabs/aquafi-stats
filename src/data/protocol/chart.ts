@@ -13,8 +13,8 @@ dayjs.extend(weekOfYear)
 const ONE_DAY_UNIX = 24 * 60 * 60
 
 const GLOBAL_CHART = gql`
-  query uniswapDayDatas($startTime: Int!, $skip: Int!) {
-    uniswapDayDatas(
+  query aquaFiDayDatas($startTime: Int!, $skip: Int!) {
+    aquaFiDayDatas(
       first: 1000
       skip: $skip
       subgraphError: allow
@@ -23,26 +23,62 @@ const GLOBAL_CHART = gql`
       orderDirection: asc
     ) {
       id
+
       date
-      volumeUSD
-      tvlUSD
+
+      totalValueLockedDrivedUSD
+
+      activeTotalValueLockedDrivedUSD
+
+      aquaPremiumAmount
+      aquaPremiumAmountDrivedUSD
+
+      aquaAmount
+      aquaAmountDrivedUSD
+
+      stakeCount
+      unstakeCount
     }
   }
 `
 
 interface ChartResults {
-  uniswapDayDatas: {
+  aquaFiDayDatas: {
+    id: string
+
     date: number
-    volumeUSD: string
-    tvlUSD: string
+
+    totalValueLockedDrivedUSD: string
+
+    activeTotalValueLockedDrivedUSD: string
+
+    aquaPremiumAmount: string
+    aquaPremiumAmountDrivedUSD: string
+
+    aquaAmount: string
+    aquaAmountDrivedUSD: string
+
+    stakeCount: string
+    unstakeCount: string
   }[]
 }
 
-async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
+export async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
   let data: {
     date: number
-    volumeUSD: string
-    tvlUSD: string
+
+    totalValueLockedDrivedUSD: string
+
+    activeTotalValueLockedDrivedUSD: string
+
+    aquaPremiumAmount: string
+    aquaPremiumAmountDrivedUSD: string
+
+    aquaAmount: string
+    aquaAmountDrivedUSD: string
+
+    stakeCount: string
+    unstakeCount: string
   }[] = []
   const startTimestamp = 1619170975
   const endTimestamp = dayjs.utc().unix()
@@ -63,11 +99,11 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
       })
       if (!loading) {
         skip += 1000
-        if (chartResData.uniswapDayDatas.length < 1000 || error) {
+        if (chartResData.aquaFiDayDatas.length < 1000 || error) {
           allFound = true
         }
         if (chartResData) {
-          data = data.concat(chartResData.uniswapDayDatas)
+          data = data.concat(chartResData.aquaFiDayDatas)
         }
       }
     }
@@ -80,8 +116,23 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
       const roundedDate = parseInt((dayData.date / ONE_DAY_UNIX).toFixed(0))
       accum[roundedDate] = {
         date: dayData.date,
-        volumeUSD: parseFloat(dayData.volumeUSD),
-        tvlUSD: parseFloat(dayData.tvlUSD),
+
+        totalValueLockedDrivedUSD: parseFloat(dayData.totalValueLockedDrivedUSD),
+
+        activeTotalValueLockedDrivedUSD: parseFloat(dayData.activeTotalValueLockedDrivedUSD),
+
+        aquaPremiumAmount: parseFloat(dayData.aquaPremiumAmount),
+        aquaPremiumAmountDrivedUSD: parseFloat(dayData.aquaPremiumAmountDrivedUSD),
+
+        aquaAmount: parseFloat(dayData.aquaAmount),
+        aquaAmountDrivedUSD: parseFloat(dayData.aquaAmountDrivedUSD),
+
+        stakeCount: parseFloat(dayData.stakeCount),
+        unstakeCount: parseFloat(dayData.unstakeCount),
+
+        // date: dayData.date,
+        // volumeUSD: parseFloat(dayData.volumeUSD),
+        // tvlUSD: parseFloat(dayData.tvlUSD),
       }
       return accum
     }, {})
@@ -90,18 +141,30 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
 
     // fill in empty days ( there will be no day datas if no trades made that day )
     let timestamp = firstEntry?.date ?? startTimestamp
-    let latestTvl = firstEntry?.tvlUSD ?? 0
+    let latestTvl = firstEntry?.activeTotalValueLockedDrivedUSD ?? 0
+    const latestAquaAmount = firstEntry?.aquaAmountDrivedUSD ?? 0
     while (timestamp < endTimestamp - ONE_DAY_UNIX) {
       const nextDay = timestamp + ONE_DAY_UNIX
       const currentDayIndex = parseInt((nextDay / ONE_DAY_UNIX).toFixed(0))
       if (!Object.keys(formattedExisting).includes(currentDayIndex.toString())) {
         formattedExisting[currentDayIndex] = {
           date: nextDay,
-          volumeUSD: 0,
-          tvlUSD: latestTvl,
+
+          totalValueLockedDrivedUSD: 0,
+
+          activeTotalValueLockedDrivedUSD: latestTvl,
+
+          aquaPremiumAmount: 0,
+          aquaPremiumAmountDrivedUSD: 0,
+
+          aquaAmount: 0,
+          aquaAmountDrivedUSD: latestAquaAmount,
+
+          stakeCount: 0,
+          unstakeCount: 0,
         }
       } else {
-        latestTvl = formattedExisting[currentDayIndex].tvlUSD
+        latestTvl = formattedExisting[currentDayIndex].activeTotalValueLockedDrivedUSD
       }
       timestamp = nextDay
     }

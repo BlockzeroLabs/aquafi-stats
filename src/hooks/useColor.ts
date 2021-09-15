@@ -5,6 +5,7 @@ import { hex } from 'wcag-contrast'
 import { Token, ChainId } from '@uniswap/sdk-core'
 import uriToHttp from 'utils/uriToHttp'
 import { isAddress } from 'utils'
+import { useActiveNetworkVersion } from 'state/application/hooks'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
@@ -45,7 +46,8 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 }
 
 export function useColor(address?: string) {
-  const [color, setColor] = useState('#2172E5')
+  const [activeNetwork] = useActiveNetworkVersion()
+  const [color, setColor] = useState(activeNetwork.bgColor)
 
   const formattedAddress = isAddress(address)
 
@@ -66,7 +68,7 @@ export function useColor(address?: string) {
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(activeNetwork.bgColor)
     }
   }, [token])
 

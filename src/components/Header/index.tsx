@@ -2,7 +2,8 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import styled from 'styled-components'
-import LogoDark from '../../assets/svg/logo_white.svg'
+// import LogoDark from '../../assets/svg/logo_white.svg'
+import LogoDark from '../../assets/images/aquaLogo.png'
 import Menu from '../Menu'
 import Row, { RowFixed, RowBetween } from '../Row'
 import SearchSmall from 'components/Search'
@@ -10,6 +11,7 @@ import NetworkDropdown from 'components/Menu/NetworkDropdown'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { networkPrefix } from 'utils/networkPrefix'
 import { AutoColumn } from 'components/Column'
+import { SupportedNetwork } from 'constants/networks'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -160,7 +162,7 @@ export default function Header() {
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title to={networkPrefix(activeNewtork)}>
+        <Title to="/">
           <UniIcon>
             <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
@@ -173,17 +175,16 @@ export default function Header() {
           >
             Overview
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
-            Pools
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
-            Tokens
-          </StyledNavLink>
+          {activeNewtork.id != SupportedNetwork.OVER_VIEW && (
+            <StyledNavLink id={`stake-nav-link`} to={networkPrefix(activeNewtork) + 'pools'}>
+              Pools
+            </StyledNavLink>
+          )}
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
         <NetworkDropdown />
-        <SearchSmall />
+        {activeNewtork.id != SupportedNetwork.OVER_VIEW && <SearchSmall />}
         <Menu />
       </HeaderControls>
       <SmallContentGrouping>
@@ -192,7 +193,7 @@ export default function Header() {
             <NetworkDropdown />
             <Menu />
           </RowBetween>
-          <SearchSmall />
+          {activeNewtork.id != SupportedNetwork.OVER_VIEW && <SearchSmall />}
         </AutoColumn>
       </SmallContentGrouping>
     </HeaderFrame>

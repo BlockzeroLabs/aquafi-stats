@@ -15,14 +15,15 @@ export interface Pool {
 export interface PoolData {
   // basic token info
   address: string
-  feeTier: number
+  aquaPremium: number
 
   token0: {
     name: string
     symbol: string
     address: string
     decimals: number
-    derivedETH: number
+    drivedETH: number
+    drivedUSD: number
   }
 
   token1: {
@@ -30,36 +31,51 @@ export interface PoolData {
     symbol: string
     address: string
     decimals: number
-    derivedETH: number
+    drivedETH: number
+    drivedUSD: number
   }
 
-  // for tick math
-  liquidity: number
-  sqrtPrice: number
-  tick: number
+  reserve0: number
+  reserve1: number
 
-  // volume
-  volumeUSD: number
-  volumeUSDChange: number
-  volumeUSDWeek: number
+  reserve0Staked: number
+  reserve1Staked: number
 
-  // liquidity
-  tvlUSD: number
-  tvlUSDChange: number
+  totalValueLockedDrivedUSD: number
+  totalValueLockedDrivedUSDChange: number
 
-  // prices
+  aquaPremiumAmount: number
+  aquaPremiumAmountDrivedUSD: number
+  aquaPremiumAmountDrivedUSDChange: number
+
+  aquaAmount: number
+  aquaAmountDrivedUSD: number
+  aquaAmountDrivedUSDChange: number
+
+  stakeCount: number
+  activeStakeCount: number
+  activeStakeCountChange: number
+  unstakeCount: number
+
+  // temporary
+  feeTier: number
   token0Price: number
   token1Price: number
-
-  // token amounts
-  tvlToken0: number
-  tvlToken1: number
+  volumeUSD: number
+  volumeUSDChange: number
+  tvlUSD: number
 }
 
 export type PoolChartEntry = {
   date: number
-  volumeUSD: number
-  totalValueLockedUSD: number
+  totalValueLockedDrivedUSD: number
+  aquaPremiumAmount: number
+  aquaPremiumAmountDrivedUSD: number
+  aquaAmount: number
+  aquaAmountDrivedUSD: number
+  stakeCount: number
+  unstakeCount: number
+  activeStakeCount: number
 }
 
 export interface PoolsState {
@@ -79,9 +95,9 @@ export interface PoolsState {
 
 export const initialState: PoolsState = {
   byAddress: {
-    [SupportedNetwork.ETHEREUM]: {},
-    [SupportedNetwork.ARBITRUM]: {},
-    [SupportedNetwork.OPTIMISM]: {},
+    [SupportedNetwork.UNISWAP_V2]: {},
+    [SupportedNetwork.UNISWAP_V3]: {},
+    [SupportedNetwork.SUSHISWAP]: {},
   },
 }
 

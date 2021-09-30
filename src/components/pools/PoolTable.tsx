@@ -28,7 +28,7 @@ const ResponsiveGrid = styled.div`
   grid-gap: 1em;
   align-items: center;
 
-  grid-template-columns: 20px 3.5fr repeat(5, 2fr);
+  grid-template-columns: 20px 2.5fr repeat(6, 2fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -113,6 +113,11 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
         <HideExtraSmall>
           <Label end={1} fontWeight={400}>
             {poolData.activeStakeCount}
+          </Label>
+        </HideExtraSmall>
+        <HideExtraSmall>
+          <Label end={1} fontWeight={400}>
+            {formatDollarAmount(poolData.volumeUSDChange)}
           </Label>
         </HideExtraSmall>
         <Label end={1} fontWeight={400}>
@@ -218,6 +223,11 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             <HideExtraSmall>
               <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.activeStakeCount)}>
                 Active Stakes {arrow(SORT_FIELD.activeStakeCount)}
+              </ClickableText>
+            </HideExtraSmall>
+            <HideExtraSmall>
+              <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+                Volume (24h) {arrow(SORT_FIELD.volumeUSD)}
               </ClickableText>
             </HideExtraSmall>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.totalValueLockedDrivedUSD)}>

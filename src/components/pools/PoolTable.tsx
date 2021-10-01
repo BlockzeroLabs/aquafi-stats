@@ -117,7 +117,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
         </HideExtraSmall>
         <HideExtraSmall>
           <Label end={1} fontWeight={400}>
-            {formatDollarAmount(poolData.volumeUSDChange)}
+            {formatDollarAmount(poolData.volumeUSD)}
           </Label>
         </HideExtraSmall>
         <Label end={1} fontWeight={400}>

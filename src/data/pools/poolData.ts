@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
@@ -99,6 +100,18 @@ interface PairsVolumeResponse {
   pairs: PairsVolumeField[]
 }
 
+interface PoolsVolumeResponse {
+  pools: PairsVolumeField[]
+}
+
+function instanceOfPairsVolumeResponse(object: any): object is PairsVolumeResponse {
+  return 'pairs' in object
+}
+
+function instanceOfPoolsVolumeResponse(object: any): object is PoolsVolumeResponse {
+  return 'pools' in object
+}
+
 interface PoolFields {
   id: string
   aquaPremium: string
@@ -155,38 +168,43 @@ export function usePoolDatas(
   const { dataClient, volumeClient } = useClients()
   const [activeNetwork] = useActiveNetworkVersion()
   const isPair = activeNetwork.id === SupportedNetwork.UNISWAP_V3 ? false : true
+  // const volumeField = isPair ? PairsVolumeResponse : PoolsVolumeResponse
 
   // get blocks from historic timestamps
   const [t24, t48] = useDeltaTimestamps()
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48])
-  const [block24] = blocks ?? []
+  const [block24, block48] = blocks ?? []
 
   const { loading, error, data } = useQuery<PoolDataResponse>(POOLS_BULK(undefined, poolAddresses), {
     client: dataClient,
   })
 
-  const { loading: loadingVolume, error: errorVolume, data: dataVolume } = useQuery<PairsVolumeResponse>(
-    PAIRS_BULK_VOLUME(undefined, poolAddresses, isPair),
-    {
-      client: volumeClient,
-    }
-  )
+  const { loading: loadingVolume, error: errorVolume, data: dataVolume } = useQuery<
+    PairsVolumeResponse | PoolsVolumeResponse
+  >(PAIRS_BULK_VOLUME(undefined, poolAddresses, isPair), {
+    client: volumeClient,
+  })
 
   const { loading: loading24, error: error24, data: data24 } = useQuery<PoolDataResponse>(
     POOLS_BULK(block24?.number, poolAddresses),
     { client: dataClient }
   )
 
-  const { loading: loadingVolume24, error: errorVolume24, data: dataVolume24 } = useQuery<PairsVolumeResponse>(
-    PAIRS_BULK_VOLUME(block24?.number, poolAddresses, isPair),
-    {
-      client: volumeClient,
-    }
-  )
+  const { loading: loadingVolume24, error: errorVolume24, data: dataVolume24 } = useQuery<
+    PairsVolumeResponse | PoolsVolumeResponse
+  >(PAIRS_BULK_VOLUME(block24?.number, poolAddresses, isPair), {
+    client: volumeClient,
+  })
 
-  useEffect(() => {
-    console.log('DATA_VOLUME', dataVolume, dataVolume24)
-  }, [dataVolume, dataVolume24])
+  const { loading: loadingVolume48, error: errorVolume48, data: dataVolume48 } = useQuery<
+    PairsVolumeResponse | PoolsVolumeResponse
+  >(PAIRS_BULK_VOLUME(block48?.number, poolAddresses, isPair), {
+    client: volumeClient,
+  })
+
+  // useEffect(() => {
+  //   console.log('POOL_DATA', data, data24)
+  // }, [data, data24])
 
   // const { loading: loading48, error: error48, data: data48 } = useQuery<PoolDataResponse>(
   //   POOLS_BULK(block48?.number, poolAddresses),
@@ -200,18 +218,22 @@ export function usePoolDatas(
   // const anyError = Boolean(error || error24 || blockError)
   // const anyLoading = Boolean(loading || loading24)
 
-  const anyError = Boolean(error || errorVolume || error24 || errorVolume24 || blockError)
-  const anyLoading = Boolean(loading || loadingVolume || loading24 || loadingVolume24)
+  const anyError = Boolean(error || errorVolume || error24 || errorVolume24 || errorVolume48 || blockError)
+  const anyLoading = Boolean(loading || loadingVolume || loading24 || loadingVolume24 || loadingVolume48)
 
-  useEffect(() => {
-    console.log('ANY_ERROR', error, errorVolume, error24, errorVolume24, blockError)
-  }),
-    [error, errorVolume, error24, errorVolume24, blockError]
+  // useEffect(() => {
+  //   console.log('DATA_VOLUME_E', dataVolume)
+  // }, [dataVolume])
 
-  useEffect(() => {
-    console.log('ANY_LOADING', loading, loadingVolume, loading24, loadingVolume24)
-  }),
-    [loading, loadingVolume, loading24, loadingVolume24]
+  // useEffect(() => {
+  //   console.log('ANY_ERROR', error, errorVolume, error24, errorVolume24, errorVolume48, blockError)
+  // }),
+  //   [error, errorVolume, error24, errorVolume24, blockError]
+
+  // useEffect(() => {
+  //   console.log('ANY_LOADING', loading, loadingVolume, loading24, loadingVolume24, loadingVolume48)
+  // }),
+  //   [loading, loadingVolume, loading24, loadingVolume24]
 
   // return early if not all data yet
   if (anyError || anyLoading) {
@@ -234,20 +256,54 @@ export function usePoolDatas(
         return accum
       }, {})
     : {}
-  const parsedVolume = dataVolume?.pairs
+  // const parsedVolume = dataVolume?.pairs
+  //   ? dataVolume.pairs.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+  //       accum[poolData.id] = poolData
+  //       return accum
+  //     }, {})
+  //   : {}
+  const parsedVolume = instanceOfPairsVolumeResponse(dataVolume)
     ? dataVolume.pairs.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
         accum[poolData.id] = poolData
         return accum
       }, {})
+    : instanceOfPoolsVolumeResponse(dataVolume)
+    ? dataVolume?.pools.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+        accum[poolData.id] = poolData
+        return accum
+      }, {})
     : {}
-  const parsedVolume24 = dataVolume24?.pairs
+  // const parsedVolume24 = dataVolume24?.pairs
+  //   ? dataVolume24.pairs.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+  //       accum[poolData.id] = poolData
+  //       return accum
+  //     }, {})
+  //   : {}
+  const parsedVolume24 = instanceOfPairsVolumeResponse(dataVolume24)
     ? dataVolume24.pairs.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+        accum[poolData.id] = poolData
+        return accum
+      }, {})
+    : instanceOfPoolsVolumeResponse(dataVolume24)
+    ? dataVolume24?.pools.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
         accum[poolData.id] = poolData
         return accum
       }, {})
     : {}
 
-  console.log('DATA_VOLUME_PARSED', parsedVolume, parsedVolume24)
+  const parsedVolume48 = instanceOfPairsVolumeResponse(dataVolume48)
+    ? dataVolume48.pairs.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+        accum[poolData.id] = poolData
+        return accum
+      }, {})
+    : instanceOfPoolsVolumeResponse(dataVolume48)
+    ? dataVolume48?.pools.reduce((accum: { [address: string]: PairsVolumeField }, poolData) => {
+        accum[poolData.id] = poolData
+        return accum
+      }, {})
+    : {}
+
+  // console.log('DATA_VOLUME_PARSED', parsedVolume, parsedVolume24, parsedVolume48)
 
   // const parsed48 = data48?.pools
   //   ? data48.pools.reduce((accum: { [address: string]: PoolFields }, poolData) => {
@@ -268,6 +324,7 @@ export function usePoolDatas(
     const oneDay: PoolFields | undefined = parsed24[address]
     const currentVolume: PairsVolumeField | undefined = parsedVolume[address]
     const oneDayVolume: PairsVolumeField | undefined = parsedVolume24[address]
+    const twoDayVolume: PairsVolumeField | undefined = parsedVolume48[address]
     // const twoDay: PoolFields | undefined = parsed48[address]
     // const week: PoolFields | undefined = parsedWeek[address]
 
@@ -299,12 +356,19 @@ export function usePoolDatas(
         ? parseFloat(current.activeStakeCount)
         : 0
 
-    const volumeUSDChange =
-      currentVolume && oneDayVolume
-        ? parseFloat(currentVolume.volumeUSD) - parseFloat(oneDayVolume.volumeUSD)
-        : currentVolume
-        ? parseFloat(currentVolume.volumeUSD)
-        : 0
+    // const volumeUSDChange =
+    //   currentVolume && oneDayVolume
+    //     ? parseFloat(currentVolume.volumeUSD) - parseFloat(oneDayVolume.volumeUSD)
+    //     : currentVolume
+    //     ? parseFloat(currentVolume.volumeUSD)
+    //     : 0
+
+    const [volumeUSD, volumeUSDChange] =
+      current && oneDayVolume && twoDayVolume
+        ? get2DayChange(currentVolume.volumeUSD, oneDayVolume.volumeUSD, twoDayVolume.volumeUSD)
+        : current
+        ? [parseFloat(currentVolume.volumeUSD), 0]
+        : [0, 0]
 
     if (current && currentVolume) {
       accum[address] = {
@@ -352,8 +416,10 @@ export function usePoolDatas(
         feeTier: parseInt(current.feeTier),
         token0Price: 0,
         token1Price: 0,
-        volumeUSD: parseInt(currentVolume.volumeUSD),
-        volumeUSDChange: volumeUSDChange,
+        // volumeUSD: parseInt(currentVolume.volumeUSD),
+        // volumeUSDChange: volumeUSDChange,
+        volumeUSD,
+        volumeUSDChange,
         tvlUSD: 0,
       }
     }

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle } from 'react-feather'
+import { BookOpen, Code, Facebook, Info, MessageCircle, Twitter, Youtube } from 'react-feather'
+import DiscordLogo from './../../assets/images/Discord.png'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -97,21 +98,21 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
-            <Info size={14} />
-            About
+          <MenuItem id="link" href="https://twitter.com/blockzerolabs">
+            <Twitter size={14} />
+            Twitter
           </MenuItem>
-          <MenuItem id="link" href="https://docs.uniswap.org/">
-            <BookOpen size={14} />
-            Docs
-          </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Github
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/FCfyBSbCU5">
-            <MessageCircle size={14} />
+          {/* <MenuItem id="link" href="https://discord.com/invite/XHXPEWsS">
+            <img src={DiscordLogo} alt="" width={14} />
             Discord
+          </MenuItem> */}
+          <MenuItem id="link" href="https://www.youtube.com/channel/UCiOjFfIi1-jjQbRjJkJas2Q">
+            <Youtube size={14} />
+            Youtube
+          </MenuItem>
+          <MenuItem id="link" href="https://www.facebook.com/groups/xionetwork">
+            <Facebook size={14} />
+            Facebook
           </MenuItem>
         </MenuFlyout>
       )}

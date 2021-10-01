@@ -10,6 +10,9 @@ import {
   uniswapV2Client,
   uniswapV3Client,
   suhiswapClient,
+  uniswapV2MainClient,
+  uniswapV3MainClient,
+  sushiswapMainClient,
 } from 'apollo/client'
 import { NetworkInfo, SupportedNetwork } from 'constants/networks'
 import { useCallback, useMemo } from 'react'
@@ -139,6 +142,20 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
   }
 }
 
+export function useVolumeClient(): ApolloClient<NormalizedCacheObject> {
+  const [activeNetwork] = useActiveNetworkVersion()
+  switch (activeNetwork.id) {
+    case SupportedNetwork.UNISWAP_V2:
+      return uniswapV2MainClient
+    case SupportedNetwork.UNISWAP_V3:
+      return uniswapV3MainClient
+    case SupportedNetwork.SUSHISWAP:
+      return sushiswapMainClient
+    default:
+      return uniswapV2Client
+  }
+}
+
 // // get the apollo client related to the active network for fetching blocks
 // export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
 //   const [activeNetwork] = useActiveNetworkVersion()
@@ -170,11 +187,14 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
 export function useClients(): {
   dataClient: ApolloClient<NormalizedCacheObject>
   blockClient: ApolloClient<NormalizedCacheObject>
+  volumeClient: ApolloClient<NormalizedCacheObject>
 } {
   const dataClient = useDataClient()
   const blockClient = useBlockClient()
+  const volumeClient = useVolumeClient()
   return {
     dataClient,
     blockClient,
+    volumeClient,
   }
 }

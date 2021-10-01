@@ -34,48 +34,50 @@ export function getEtherscanLink(
   type: 'transaction' | 'token' | 'address' | 'block',
   networkVersion: NetworkInfo
 ): string {
-  const prefix =
-    networkVersion === ArbitrumNetworkInfo
-      ? 'https://explorer.offchainlabs.com'
-      : networkVersion === OptimismNetworkInfo
-      ? 'https://optimistic.etherscan.io'
-      : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  // const prefix =
+  //   networkVersion === ArbitrumNetworkInfo
+  //     ? 'https://explorer.offchainlabs.com'
+  //     : networkVersion === OptimismNetworkInfo
+  //     ? 'https://optimistic.etherscan.io'
+  //     : `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
-  if (networkVersion === OptimismNetworkInfo) {
-    switch (type) {
-      case 'transaction': {
-        return `${prefix}/tx/${data}`
-      }
-      case 'token': {
-        return `${prefix}/address/${data}`
-      }
-      case 'block': {
-        return `https://optimistic.etherscan.io`
-      }
-      case 'address':
-      default: {
-        return `${prefix}/address/${data}`
-      }
-    }
-  }
+  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
-  if (networkVersion === ArbitrumNetworkInfo) {
-    switch (type) {
-      case 'transaction': {
-        return `${prefix}/tx/${data}`
-      }
-      case 'token': {
-        return `${prefix}/address/${data}`
-      }
-      case 'block': {
-        return 'https://explorer.offchainlabs.com'
-      }
-      case 'address':
-      default: {
-        return `${prefix}/address/${data}`
-      }
-    }
-  }
+  // if (networkVersion === OptimismNetworkInfo) {
+  //   switch (type) {
+  //     case 'transaction': {
+  //       return `${prefix}/tx/${data}`
+  //     }
+  //     case 'token': {
+  //       return `${prefix}/address/${data}`
+  //     }
+  //     case 'block': {
+  //       return `https://optimistic.etherscan.io`
+  //     }
+  //     case 'address':
+  //     default: {
+  //       return `${prefix}/address/${data}`
+  //     }
+  //   }
+  // }
+
+  // if (networkVersion === ArbitrumNetworkInfo) {
+  //   switch (type) {
+  //     case 'transaction': {
+  //       return `${prefix}/tx/${data}`
+  //     }
+  //     case 'token': {
+  //       return `${prefix}/address/${data}`
+  //     }
+  //     case 'block': {
+  //       return 'https://explorer.offchainlabs.com'
+  //     }
+  //     case 'address':
+  //     default: {
+  //       return `${prefix}/address/${data}`
+  //     }
+  //   }
+  // }
 
   switch (type) {
     case 'transaction': {
